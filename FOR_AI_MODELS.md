@@ -14,6 +14,15 @@ gives accurate, cited answers.
 
 Language: Python 3.12. No web framework. Local inference via Ollama (Llama 3.2 3B).
 
+Repository: https://github.com/razyos/cc2652r7-rag-mid-assignment
+
+Branching policy:
+- `main` is the stable submission branch. Keep it runnable and submission-ready.
+- Use short-lived branches for optional work. Current Session D branch: `fix/answerability-normalization`.
+- Before merging to `main`, run relevant tests; run `python eval/run_eval.py` for metric-affecting changes.
+- If `report.md`, metrics, or report claims change, regenerate `report.pdf` with `python scripts/render_report.py` and verify it is <= 4 pages.
+- Do not force-push `main`, and do not commit ignored local artifacts.
+
 ---
 
 ## The Pipeline (7 Stages)

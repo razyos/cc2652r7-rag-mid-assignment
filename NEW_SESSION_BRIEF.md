@@ -10,6 +10,19 @@ Run Session D from `WORK_PLAN.md`: fix only the `Answerable@Context` hyphen/spac
 
 `/Users/razyosef/AI_course/mid_ass/`
 
+## Git Repository and Branching
+
+Standalone GitHub repo: `https://github.com/razyos/cc2652r7-rag-mid-assignment`
+
+Branch policy:
+
+- `main` is the stable submission branch. It should remain runnable and submission-ready.
+- `fix/answerability-normalization` is the branch prepared for Session D.
+- Do not make risky changes directly on `main`.
+- Commit Session D work to `fix/answerability-normalization`, push it, and merge to `main` only after verification.
+- If the eval metric or report text changes, update `report.md`, regenerate `report.pdf` with `python scripts/render_report.py`, and verify `pdfinfo report.pdf` is still 4 pages or fewer.
+- Do not force-push `main`.
+
 ## Current State as of 2026-05-23
 
 This is a university mid-assignment RAG project over TI CC2652R7 technical documentation. The system uses a manual 7-stage pipeline: dense FAISS retrieval with `BAAI/bge-large-en-v1.5`, BM25 retrieval, hybrid merge, identifier-aware reranking, datasheet anchor injection, context budgeting, deterministic extractors, and local Ollama `llama3.2` fallback.
@@ -67,6 +80,9 @@ We are continuing the CC2652R7 RAG mid-assignment project in:
 /Users/razyosef/AI_course/mid_ass/
 
 Deadline: Tuesday, May 26, 2026 at 12:00 noon Asia/Jerusalem.
+
+Repository: https://github.com/razyos/cc2652r7-rag-mid-assignment
+Use branch fix/answerability-normalization for this work. Keep main as the stable submission branch.
 
 Sessions A-C are complete. report.md and report.pdf exist; report.pdf is 2 pages and within the assignment's "up to 4 pages" limit. The current priority is Session D only: fix the Answerable@Context hyphen/spacing normalization bug.
 

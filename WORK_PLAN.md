@@ -6,6 +6,25 @@
 
 **Status update, 2026-05-23:** Sessions A-C are complete. `REPORT_NOTES.md`, `report.md`, and `report.pdf` exist; `report.pdf` is 2 A4 pages, which satisfies the assignment's "up to 4 pages" limit. Session C audit verified required files, README commands, manifest fields, `RAGSystem.answer(question: str) -> dict`, and refreshed eval metrics. The safest next session is Session D only.
 
+## Repository and Branching Strategy
+
+Standalone repository:
+
+- GitHub: `https://github.com/razyos/cc2652r7-rag-mid-assignment`
+- Local path: `/Users/razyosef/AI_course/mid_ass`
+- Default branch: `main`
+- Current work branch for Session D: `fix/answerability-normalization`
+
+DevOps policy:
+
+- Treat `main` as the stable submission branch. It should always be runnable and contain a valid `report.pdf`.
+- Do optional work on short-lived branches named by intent, such as `fix/answerability-normalization` or `docs/submission-audit`.
+- Before merging a branch into `main`, run the smallest relevant tests and record the result in the final session summary.
+- If code changes can affect metrics, run `python eval/run_eval.py`.
+- If metrics, report claims, or report source change, update `report.md`, regenerate `report.pdf` with `python scripts/render_report.py`, and verify `pdfinfo report.pdf` reports 4 pages or fewer.
+- Do not force-push `main`. Prefer a pull request or a fast-forward/merge commit.
+- Do not commit local caches, `.DS_Store`, `.claude/`, `__pycache__/`, `.pytest_cache/`, or stale eval artifacts ignored by `.gitignore`.
+
 ## Current Project State
 
 The project already has a working 7-stage RAG pipeline over TI CC2652R7 documentation:
