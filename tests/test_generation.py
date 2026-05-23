@@ -2,7 +2,13 @@
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from unittest.mock import patch
-from src.generation import format_context, generate_answer, deduplicate_and_budget, validate_answer
+from src.generation import (
+    check_answerability,
+    format_context,
+    generate_answer,
+    deduplicate_and_budget,
+    validate_answer,
+)
 
 SAMPLE_CHUNKS = [
     {"chunk_id": "trm_chunk_0003", "text": "RFCCpePatchFxp must be called before RF_open.",
@@ -90,3 +96,33 @@ def test_validate_answer_returns_required_keys():
     assert "ungrounded_literals" in result
     assert "checked_literals" in result
     assert "warning" in result
+
+
+def test_check_answerability_matches_voltage_terms_with_hyphenated_units():
+    chunks = [
+        {
+            "chunk_id": "datasheet_hier_chunk_0000",
+            "text": "1.8-V to 3.8-V single supply voltage",
+            "metadata": {},
+        }
+    ]
+
+    result = check_answerability("1.8V to 3.8V", chunks)
+
+    assert result["answerable"] is True
+    assert result["missing_terms"] == []
+
+
+def test_check_answerability_matches_voltage_terms_with_spaces_and_hyphens():
+    chunks = [
+        {
+            "chunk_id": "datasheet_hier_chunk_0000",
+            "text": "Recommended operating range: 1.8-V minimum, 3.8-V maximum.",
+            "metadata": {},
+        }
+    ]
+
+    result = check_answerability("1.8 V minimum and 3.8 V maximum", chunks)
+
+    assert result["answerable"] is True
+    assert result["missing_terms"] == []

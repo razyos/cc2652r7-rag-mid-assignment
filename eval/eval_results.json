@@ -1,6 +1,6 @@
 {
   "hit_at_k": 1.0,
-  "answerable_at_k": 0.54,
+  "answerable_at_k": 0.56,
   "k": 5,
   "results": [
     {
@@ -100,15 +100,12 @@
         "trm_hier_chunk_0572"
       ],
       "hit_at_k": 1.0,
-      "answerable": false,
+      "answerable": true,
       "answerability_key_terms": [
         "1.8V",
         "3.8V"
       ],
-      "answerability_missing": [
-        "1.8V",
-        "3.8V"
-      ]
+      "answerability_missing": []
     },
     {
       "question": "What package is the CC2652R7 available in?",
@@ -519,8 +516,8 @@
       ],
       "answerability_missing": [
         "5V",
-        "1.8V",
-        "3.8V"
+        "3.8V",
+        "1.8V"
       ]
     },
     {
@@ -672,8 +669,8 @@
         "CC2652R7"
       ],
       "answerability_missing": [
-        "352 KB",
-        "CC2652R1"
+        "CC2652R1",
+        "352 KB"
       ]
     },
     {
@@ -746,8 +743,8 @@
         "SRAM"
       ],
       "answerability_missing": [
-        "80 KB",
         "CC2652R1",
+        "80 KB",
         "256 KB"
       ]
     },
@@ -827,8 +824,8 @@
         "CC2652RB"
       ],
       "answerability_missing": [
-        "CC2652RB",
-        "BAW"
+        "BAW",
+        "CC2652RB"
       ]
     },
     {
@@ -987,8 +984,8 @@
         "RF_open"
       ],
       "answerability_missing": [
-        "RF_open",
-        "RF_EventLastCmdDone"
+        "RF_EventLastCmdDone",
+        "RF_open"
       ]
     },
     {

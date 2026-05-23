@@ -66,17 +66,17 @@ The gold set contains 50 questions: 10 factual, 10 numerical, 10 negation/absenc
 | Metric | Value | Count | Caveat |
 |---|---:|---:|---|
 | Hit@5 | 1.000 | 50/50 | Not discriminative: all 50 gold entries have empty `must_cite_chunk_ids` |
-| Answerable@Context | 0.540 | 27/50 | Checks reference key terms in context, not full answer correctness |
+| Answerable@Context | 0.560 | 28/50 | Checks reference key terms in context, not full answer correctness |
 
 | Category | N | Hit@5 | Answerable@Context |
 |---|---:|---:|---:|
 | Numerical | 10 | 1.000 | 0.900 |
-| Factual | 10 | 1.000 | 0.600 |
+| Factual | 10 | 1.000 | 0.700 |
 | Negation | 10 | 1.000 | 0.600 |
 | Debugging | 10 | 1.000 | 0.400 |
 | Comparison | 10 | 1.000 | 0.200 |
 
-These metrics must be interpreted carefully. Hit@5 currently proves that the evaluation harness ran, not that the retriever found labeled relevant chunks. Answerable@Context has false negatives from normalization, for example references containing `1.8V` and `3.8V` while the corpus writes `1.8-V` and `3.8-V`. Some reference answers are also wrong for CC2652R7: the gold set says 256 KB SRAM, but the indexed datasheet says 144 KB; it also contains an 85 deg C temperature expectation while current corpus evidence supports -40 to +105 deg C.
+These metrics must be interpreted carefully. Hit@5 currently proves that the evaluation harness ran, not that the retriever found labeled relevant chunks. Answerable@Context now normalizes spaces and hyphens for key terms, fixing the voltage false negative where references contain `1.8V` and `3.8V` while the corpus writes `1.8-V` and `3.8-V`; it still checks key-term presence rather than full answer correctness. Some reference answers are also wrong for CC2652R7: the gold set says 256 KB SRAM, but the indexed datasheet says 144 KB; it also contains an 85 deg C temperature expectation while current corpus evidence supports -40 to +105 deg C.
 
 Manual inspection of 12 latest answers found 6 correct, 2 partially correct, 3 incorrect, and 1 unsupported/hallucinated. Correct answers include flash size, SRAM size, voltage range, package, UART count, and Wi-Fi absence. Failures include maximum RF output power (`+0 dBm` instead of `+20 dBm`), standard-mode TX power, RF API questions outside the corpus, and generic hard-fault debugging answers.
 
@@ -86,7 +86,7 @@ Two ablation scripts were run for retrieval. Both completed after model access w
 
 | Experiment | Retrieval/generation change | Hit@5 | Answerable@Context | Interpretation |
 |---|---|---:|---:|---|
-| Full pipeline | Hybrid dense+BM25, rerank, anchor injection, extractor-first generation | 1.000 | 0.540 | Current headline run |
+| Full pipeline | Hybrid dense+BM25, rerank, anchor injection, extractor-first generation | 1.000 | 0.560 | Current headline run |
 | Dense only | FAISS dense retrieval only | 1.000 | Not measured | Inconclusive because citation labels are empty |
 | No rerank | Hybrid retrieval without cross-encoder reranking | 1.000 | Not measured | Inconclusive for the same reason |
 
@@ -98,4 +98,4 @@ The main failures are data and evaluation limitations rather than only model mis
 
 There are also system-level errors. The TX-power extractor/retrieval path selects a nearby current table instead of the maximum-output-power specification. Some debugging answers retrieve generic TRM exception text that is not specific to RF initialization. Negation handling is conservative but incomplete; unsupported-feature questions should be answered from an authoritative support list rather than by asking a small LLM to infer absence.
 
-Next improvements are, in priority order: label required source chunks so Hit@5 becomes meaningful; normalize hyphens and spaces in `check_answerability`; add the RF Driver API Reference; add competitor datasheets or rewrite comparison questions to facts in the corpus; improve TX-power anchoring and extractor ranking; and strengthen strict-format validation for LLM fallback answers.
+Next improvements are, in priority order: label required source chunks so Hit@5 becomes meaningful; add the RF Driver API Reference; add competitor datasheets or rewrite comparison questions to facts in the corpus; improve TX-power anchoring and extractor ranking; and strengthen strict-format validation for LLM fallback answers.

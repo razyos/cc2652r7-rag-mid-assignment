@@ -177,7 +177,7 @@ def check_answerability(reference_answer: str, final_chunks: list[dict]) -> dict
         return {"answerable": False, "key_terms": [], "missing_terms": []}
 
     context_text = " ".join(c.get("text", "") for c in final_chunks).lower()
-    context_nospace = _re.sub(r"\s+", "", context_text)
+    context_normalized = _re.sub(r"[\s-]+", "", context_text)
 
     key_term_patterns = [
         _re.compile(r"\b[+-]?\d+(?:\.\d+)?\s*(?:KB|kB|MB|MHz|GHz|dBm|V|mA|uA|ns|ms|°C|dB)\b", _re.IGNORECASE),
@@ -202,7 +202,7 @@ def check_answerability(reference_answer: str, final_chunks: list[dict]) -> dict
         term
         for term in key_terms
         if term.lower() not in context_text
-        and _re.sub(r"\s+", "", term.lower()) not in context_nospace
+        and _re.sub(r"[\s-]+", "", term.lower()) not in context_normalized
     ]
     return {
         "answerable": len(missing) == 0 or len(key_terms) == 0,
