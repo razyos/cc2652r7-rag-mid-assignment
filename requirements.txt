@@ -1,0 +1,10 @@
+pypdf==4.3.1
+beautifulsoup4==4.12.3
+lxml==5.2.2
+sentence-transformers==3.1.1
+faiss-cpu==1.8.0
+rank_bm25==0.2.2
+ollama==0.3.3
+pyserial==3.5
+pytest==8.3.2
+numpy==1.26.4

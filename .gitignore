@@ -1,0 +1,22 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+.venv/
+venv/
+env/
+.env
+
+.claude/
+
+# Local course/reference material, not part of the assignment submission.
+rag-complete-guide.md
+docs/superpowers/
+
+# Stale manual annotation artifact; current results are in eval/eval_results.json.
+eval/eval_results_annotated.json

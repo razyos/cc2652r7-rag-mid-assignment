@@ -1,0 +1,1035 @@
+{
+  "hit_at_k": 1.0,
+  "answerable_at_k": 0.54,
+  "k": 5,
+  "results": [
+    {
+      "question": "What is the maximum RF output power of the CC2652R7?",
+      "category": "factual",
+      "reference_answer": "+20 dBm via integrated high-power PA",
+      "system_answer": "QUOTE: PARAMETER TEST CONDITIONS TYP UNIT Radio receive current 2440 MHz 6.4 mA Radio transmit current 2.4 GHz PA (Bluetooth Low Energy)0 dBm output power setting 2440 MHz7.3 mA +5 dBm output power setting 2440 MHz9.7 mA 7.7 Nonvolatile (Flash) Memory Characteristics Over operating free-air temperature range an\nANSWER: +0 dBm\nSOURCE: datasheet_hier_chunk_0012",
+      "sources": [
+        "datasheet_hier_chunk_0012",
+        "trm_hier_chunk_0902",
+        "trm_hier_chunk_0573",
+        "trm_hier_chunk_0134"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": false,
+      "answerability_key_terms": [
+        "20 dBm"
+      ],
+      "answerability_missing": [
+        "20 dBm"
+      ]
+    },
+    {
+      "question": "What wireless protocols does the CC2652R7 support?",
+      "category": "factual",
+      "reference_answer": "Bluetooth 5.2 (BLE), IEEE 802.15.4 (Zigbee, Thread), proprietary sub-1GHz and 2.4GHz",
+      "system_answer": "QUOTE: Wireless protocol support \u2022Thread , Zigbee , Matter \u2022Bluetooth 5.2 Low Energy \u2022SimpleLink TI 15.4-stack \u20226LoWPAN \u2022Proprietary systems High performance radio\nANSWER: Bluetooth 5.2 Low Energy, Zigbee, Thread, Matter, TI 15.4-Stack, 6LoWPAN, proprietary systems\nSOURCE: datasheet_hier_chunk_0000",
+      "sources": [
+        "datasheet_hier_chunk_0000",
+        "datasheet_hier_chunk_0035",
+        "datasheet_hier_chunk_0001_sub0",
+        "datasheet_hier_chunk_0002_sub1",
+        "datasheet_hier_chunk_0047"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": true,
+      "answerability_key_terms": [
+        "-1GHz",
+        "2.4GHz",
+        "BLE",
+        "IEEE"
+      ],
+      "answerability_missing": []
+    },
+    {
+      "question": "What CPU core does the CC2652R7 use?",
+      "category": "factual",
+      "reference_answer": "ARM Cortex-M4F at 48 MHz",
+      "system_answer": "QUOTE: 8.2 System CPU The CC2652R7 SimpleLink Wireless MCU contains an Arm Cortex-M4F system CPU, which runs the application and the higher layers of radio protocol stacks.\nANSWER: Arm Cortex-M4F\nSOURCE: datasheet_hier_chunk_0035",
+      "sources": [
+        "datasheet_hier_chunk_0035",
+        "datasheet_hier_chunk_0042",
+        "datasheet_hier_chunk_0001_sub0",
+        "datasheet_hier_chunk_0002_sub1",
+        "datasheet_hier_chunk_0003"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": true,
+      "answerability_key_terms": [
+        "48 MHz",
+        "ARM",
+        "M4F"
+      ],
+      "answerability_missing": []
+    },
+    {
+      "question": "What function must be called before RF_open() on the CC2652R7?",
+      "category": "factual",
+      "reference_answer": "RFCCpePatchFxp() must be called before RF_open() to patch the RF core",
+      "system_answer": "ANSWER: The information was not found in the provided documentation.",
+      "sources": [
+        "trm_hier_chunk_2083_sub1",
+        "trm_hier_chunk_0133",
+        "trm_hier_chunk_1024",
+        "sdk_guide_hier_chunk_2332",
+        "trm_hier_chunk_2053"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": false,
+      "answerability_key_terms": [
+        "RF_open"
+      ],
+      "answerability_missing": [
+        "RF_open"
+      ]
+    },
+    {
+      "question": "What is the operating voltage range of the CC2652R7?",
+      "category": "factual",
+      "reference_answer": "1.8V to 3.8V",
+      "system_answer": "QUOTE: 1.8-V to 3.8-V single supply voltage\nANSWER: 1.8 V to 3.8 V\nSOURCE: datasheet_hier_chunk_0000",
+      "sources": [
+        "datasheet_hier_chunk_0000",
+        "trm_hier_chunk_0116",
+        "datasheet_hier_chunk_0040",
+        "datasheet_hier_chunk_0045",
+        "trm_hier_chunk_0572"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": false,
+      "answerability_key_terms": [
+        "1.8V",
+        "3.8V"
+      ],
+      "answerability_missing": [
+        "1.8V",
+        "3.8V"
+      ]
+    },
+    {
+      "question": "What package is the CC2652R7 available in?",
+      "category": "factual",
+      "reference_answer": "7x7 mm 48-pin QFN package (RGZ)",
+      "system_answer": "QUOTE: 7-mm x 7-mm RGZ VQFN48 (31 GPIOs)\nANSWER: 7 mm x 7 mm 48-pin VQFN package (RGZ)\nSOURCE: datasheet_hier_chunk_0000",
+      "sources": [
+        "datasheet_hier_chunk_0000",
+        "datasheet_hier_chunk_0002_sub1",
+        "datasheet_hier_chunk_0047",
+        "datasheet_hier_chunk_0039",
+        "datasheet_hier_chunk_0046"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": true,
+      "answerability_key_terms": [
+        "QFN",
+        "RGZ"
+      ],
+      "answerability_missing": []
+    },
+    {
+      "question": "What is the temperature range for the CC2652R7?",
+      "category": "factual",
+      "reference_answer": "-40\u00b0C to +85\u00b0C (industrial grade)",
+      "system_answer": "QUOTE: -40 to +105\u00b0C Package\nANSWER: -40\u00b0C to +105\u00b0C (operating ambient)\nSOURCE: datasheet_hier_chunk_0000",
+      "sources": [
+        "datasheet_hier_chunk_0000",
+        "datasheet_hier_chunk_0045",
+        "datasheet_hier_chunk_0027",
+        "datasheet_hier_chunk_0041",
+        "datasheet_hier_chunk_0021",
+        "datasheet_hier_chunk_0010"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": false,
+      "answerability_key_terms": [
+        "40\u00b0C",
+        "85\u00b0C"
+      ],
+      "answerability_missing": [
+        "85\u00b0C"
+      ]
+    },
+    {
+      "question": "What coprocessor does the CC2652R7 include for RF operations?",
+      "category": "factual",
+      "reference_answer": "A dedicated RF core (Cortex-M0) handles the RF protocol stack independently from the main CPU",
+      "system_answer": "QUOTE: The CC2652R7 has a software defined radio powered by an Arm Cortex M0, which allows support for multiple physical layers and RF standards.\nANSWER: A dedicated RF core with an Arm Cortex-M0 processor\nSOURCE: datasheet_hier_chunk_0001_sub0",
+      "sources": [
+        "datasheet_hier_chunk_0001_sub0",
+        "datasheet_hier_chunk_0035",
+        "datasheet_hier_chunk_0039",
+        "datasheet_hier_chunk_0002_sub1",
+        "datasheet_hier_chunk_0044"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": true,
+      "answerability_key_terms": [
+        "CPU"
+      ],
+      "answerability_missing": []
+    },
+    {
+      "question": "What is the receive sensitivity of the CC2652R7 in BLE mode?",
+      "category": "factual",
+      "reference_answer": "-97 dBm in BLE 1M mode",
+      "system_answer": "QUOTE: PARAMETER TEST CONDITIONS MIN TYP MAX UNIT General Parameters Receiver sensitivity PER = 1% -99 dBm Receiver saturation PER = 1% > 5 dBm Adjacent channel rejectionWanted signal at -82 dBm, modulated interferer at \u00b15 MHz, PER = 1%36 dB Alternate chan\nANSWER: -99 dBm\nSOURCE: datasheet_hier_chunk_0018",
+      "sources": [
+        "datasheet_hier_chunk_0001_sub0",
+        "datasheet_hier_chunk_0018",
+        "datasheet_hier_chunk_0046",
+        "datasheet_hier_chunk_0049"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": true,
+      "answerability_key_terms": [
+        "97 dBm",
+        "BLE"
+      ],
+      "answerability_missing": []
+    },
+    {
+      "question": "How many independent RF commands can be chained in the CC2652R7 RF scheduler?",
+      "category": "factual",
+      "reference_answer": "RF commands can be chained using a linked list structure; the number is limited by available RAM",
+      "system_answer": "ANSWER: The information was not found in the provided documentation.",
+      "sources": [
+        "datasheet_hier_chunk_0001_sub0",
+        "datasheet_hier_chunk_0043",
+        "trm_hier_chunk_2098",
+        "trm_hier_chunk_2076",
+        "trm_hier_chunk_2077"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": true,
+      "answerability_key_terms": [
+        "RAM"
+      ],
+      "answerability_missing": []
+    },
+    {
+      "question": "What is the flash memory size of the CC2652R7?",
+      "category": "numerical",
+      "reference_answer": "704 KB of flash memory",
+      "system_answer": "QUOTE: 704KB flash program memory\nANSWER: 704 KB of flash memory\nSOURCE: datasheet_hier_chunk_0000",
+      "sources": [
+        "datasheet_hier_chunk_0000",
+        "datasheet_hier_chunk_0037_sub1",
+        "datasheet_hier_chunk_0012",
+        "trm_hier_chunk_0706",
+        "trm_hier_chunk_0891"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": true,
+      "answerability_key_terms": [
+        "704 KB"
+      ],
+      "answerability_missing": []
+    },
+    {
+      "question": "What is the SRAM size of the CC2652R7?",
+      "category": "numerical",
+      "reference_answer": "256 KB of SRAM",
+      "system_answer": "QUOTE: 144KB of ultra-low leakage SRAM with parity for high-reliability operation\nANSWER: 144 KB of SRAM\nSOURCE: datasheet_hier_chunk_0000",
+      "sources": [
+        "datasheet_hier_chunk_0000",
+        "datasheet_hier_chunk_0046",
+        "trm_hier_chunk_0872",
+        "datasheet_hier_chunk_0037_sub1"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": true,
+      "answerability_key_terms": [
+        "256 KB",
+        "SRAM"
+      ],
+      "answerability_missing": []
+    },
+    {
+      "question": "How many GPIO pins does the CC2652R7 have?",
+      "category": "numerical",
+      "reference_answer": "31 GPIOs",
+      "system_answer": "QUOTE: 7-mm x 7-mm RGZ VQFN48 (31 GPIOs)\nANSWER: 31 GPIOs\nSOURCE: datasheet_hier_chunk_0000",
+      "sources": [
+        "datasheet_hier_chunk_0000",
+        "trm_hier_chunk_1172",
+        "trm_hier_chunk_0131",
+        "datasheet_hier_chunk_0035",
+        "trm_hier_chunk_1173",
+        "datasheet_hier_chunk_0001_sub0"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": true,
+      "answerability_key_terms": [
+        "31"
+      ],
+      "answerability_missing": []
+    },
+    {
+      "question": "What is the ADC resolution of the CC2652R7?",
+      "category": "numerical",
+      "reference_answer": "12-bit ADC",
+      "system_answer": "QUOTE: PARAMETER TEST CONDITIONS MIN TYP MAX UNIT Input voltage range 0 VDDS V Resolution 12 Bits Sample Rate 200 ksps Offset Internal 4.3 V equivalent reference(2)\u00b12 LSB Gain error Internal 4.3 V equivalent reference(2)\u00b17 LSB DNL(4)Differential n\nANSWER: 12-bit ADC\nSOURCE: datasheet_hier_chunk_0023",
+      "sources": [
+        "trm_hier_chunk_0132",
+        "trm_hier_chunk_1588",
+        "trm_hier_chunk_1668",
+        "datasheet_hier_chunk_0023",
+        "trm_hier_chunk_1589"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": true,
+      "answerability_key_terms": [
+        "ADC"
+      ],
+      "answerability_missing": []
+    },
+    {
+      "question": "How many UART interfaces does the CC2652R7 have?",
+      "category": "numerical",
+      "reference_answer": "2 UARTs",
+      "system_answer": "QUOTE: Two UART, two SSI, I2C, I2S\nANSWER: 2 UART interfaces\nSOURCE: datasheet_hier_chunk_0000",
+      "sources": [
+        "datasheet_hier_chunk_0000",
+        "trm_hier_chunk_0129",
+        "trm_hier_chunk_0889",
+        "datasheet_hier_chunk_0001_sub0"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": true,
+      "answerability_key_terms": [],
+      "answerability_missing": []
+    },
+    {
+      "question": "How many SPI interfaces does the CC2652R7 have?",
+      "category": "numerical",
+      "reference_answer": "2 SPI interfaces",
+      "system_answer": "QUOTE: Two UART, two SSI, I2C, I2S\nANSWER: 2 SSI interfaces compatible with SPI\nSOURCE: datasheet_hier_chunk_0000",
+      "sources": [
+        "datasheet_hier_chunk_0000",
+        "datasheet_hier_chunk_0041",
+        "datasheet_hier_chunk_0001_sub0",
+        "datasheet_hier_chunk_0043"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": true,
+      "answerability_key_terms": [
+        "SPI"
+      ],
+      "answerability_missing": []
+    },
+    {
+      "question": "What is the CPU clock frequency of the CC2652R7?",
+      "category": "numerical",
+      "reference_answer": "48 MHz",
+      "system_answer": "QUOTE: Powerful 48-MHz Arm Cortex -M4F processor\nANSWER: 48 MHz\nSOURCE: datasheet_hier_chunk_0000",
+      "sources": [
+        "datasheet_hier_chunk_0000",
+        "trm_hier_chunk_2031",
+        "datasheet_hier_chunk_0040",
+        "trm_hier_chunk_1577"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": true,
+      "answerability_key_terms": [
+        "48 MHz"
+      ],
+      "answerability_missing": []
+    },
+    {
+      "question": "How many I2C interfaces does the CC2652R7 have?",
+      "category": "numerical",
+      "reference_answer": "1 I2C interface",
+      "system_answer": "QUOTE: Two UART, two SSI, I2C, I2S\nANSWER: 1 I2C interface\nSOURCE: datasheet_hier_chunk_0000",
+      "sources": [
+        "datasheet_hier_chunk_0000",
+        "datasheet_hier_chunk_0041",
+        "trm_hier_chunk_0129",
+        "trm_hier_chunk_1995"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": true,
+      "answerability_key_terms": [
+        "I2C"
+      ],
+      "answerability_missing": []
+    },
+    {
+      "question": "What is the RF transmit power in standard mode (without PA) for CC2652R7?",
+      "category": "numerical",
+      "reference_answer": "+5 dBm in standard mode",
+      "system_answer": "ANSWER: The RF transmit power in standard mode (without PA) for CC2652R7 is not directly stated. However, the document does mention that CMD_SET_TX20_POWER sets the transmit power of the 20 dBm PA, and the value to write to the bias control field of the PA is specified as 6-7 bits.",
+      "sources": [
+        "trm_hier_chunk_0584",
+        "trm_hier_chunk_2119",
+        "trm_hier_chunk_0572",
+        "trm_hier_chunk_0573",
+        "trm_hier_chunk_0568"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": false,
+      "answerability_key_terms": [
+        "5 dBm"
+      ],
+      "answerability_missing": [
+        "5 dBm"
+      ]
+    },
+    {
+      "question": "How many hardware timers does the CC2652R7 have?",
+      "category": "numerical",
+      "reference_answer": "4 general-purpose timers (GPT)",
+      "system_answer": "QUOTE: Four 32-bit or eight 16-bit general-purpose timers\nANSWER: 4 general-purpose 32-bit timers, configurable as 8 16-bit timers\nSOURCE: datasheet_hier_chunk_0000",
+      "sources": [
+        "datasheet_hier_chunk_0000",
+        "datasheet_hier_chunk_0040",
+        "datasheet_hier_chunk_0039",
+        "datasheet_hier_chunk_0001_sub0"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": true,
+      "answerability_key_terms": [
+        "GPT"
+      ],
+      "answerability_missing": []
+    },
+    {
+      "question": "Does the CC2652R7 support Wi-Fi?",
+      "category": "negation",
+      "reference_answer": "No, the CC2652R7 does not support Wi-Fi. It supports BLE, Zigbee, Thread, and proprietary protocols.",
+      "system_answer": "QUOTE: Personal electronics -Home theater & entertainment - smart speakers , smart display , set-top box -Wearables (non-medical) - smart trackers , smart clothing 3 Description The SimpleLink CC2652R7 device is a multiprotocol 2.4-GHz wireless microcontroller (MCU) supporting Thread , Zigbee, Matter, Bluetooth 5.2 Low Energy , IEEE 802.15.4g, IPv6-enabled smart objects (6LoWPAN), TI 15.4-Stack (2.4 GHz), and concurrent...\nANSWER: No, the provided CC2652R7 support list does not include Wi-Fi.\nSOURCE: datasheet_hier_chunk_0001_sub0",
+      "sources": [
+        "datasheet_hier_chunk_0001_sub0",
+        "datasheet_hier_chunk_0035",
+        "datasheet_hier_chunk_0047",
+        "datasheet_hier_chunk_0002_sub1",
+        "datasheet_hier_chunk_0039"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": true,
+      "answerability_key_terms": [
+        "BLE",
+        "CC2652R7"
+      ],
+      "answerability_missing": []
+    },
+    {
+      "question": "Does the CC2652R7 have an integrated antenna?",
+      "category": "negation",
+      "reference_answer": "No, the CC2652R7 does not have an integrated antenna. It requires an external antenna connected to the RF pins.",
+      "system_answer": "ANSWER: The information was not found in the provided documentation.",
+      "sources": [
+        "datasheet_hier_chunk_0001_sub0",
+        "datasheet_hier_chunk_0035",
+        "datasheet_hier_chunk_0044",
+        "trm_hier_chunk_0126",
+        "datasheet_hier_chunk_0049"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": true,
+      "answerability_key_terms": [
+        "CC2652R7"
+      ],
+      "answerability_missing": []
+    },
+    {
+      "question": "Does the CC2652R7 support LTE or cellular connectivity?",
+      "category": "negation",
+      "reference_answer": "No, the CC2652R7 does not support LTE or cellular. It is a short-range wireless MCU.",
+      "system_answer": "QUOTE: Personal electronics -Home theater & entertainment - smart speakers , smart display , set-top box -Wearables (non-medical) - smart trackers , smart clothing 3 Description The SimpleLink CC2652R7 device is a multiprotocol 2.4-GHz wireless microcontroller (MCU) supporting Thread , Zigbee, Matter, Bluetooth 5.2 Low Energy , IEEE 802.15.4g, IPv6-enabled smart objects (6LoWPAN), TI 15.4-Stack (2.4 GHz), and concurrent...\nANSWER: No, the provided CC2652R7 support list does not include LTE.\nSOURCE: datasheet_hier_chunk_0001_sub0",
+      "sources": [
+        "datasheet_hier_chunk_0001_sub0",
+        "datasheet_hier_chunk_0002_sub1",
+        "datasheet_hier_chunk_0035",
+        "datasheet_hier_chunk_0039",
+        "datasheet_hier_chunk_0046"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": false,
+      "answerability_key_terms": [
+        "CC2652R7",
+        "LTE",
+        "MCU"
+      ],
+      "answerability_missing": [
+        "LTE"
+      ]
+    },
+    {
+      "question": "Can the CC2652R7 run without an external crystal oscillator?",
+      "category": "negation",
+      "reference_answer": "No, the CC2652R7 requires an external 48 MHz crystal for accurate RF operation.",
+      "system_answer": "QUOTE: Radio operation requires an external 48 MHz crystal.\nANSWER: No, radio operation requires an external 48 MHz crystal.\nSOURCE: datasheet_hier_chunk_0043",
+      "sources": [
+        "datasheet_hier_chunk_0043",
+        "trm_hier_chunk_0578",
+        "datasheet_hier_chunk_0042",
+        "trm_hier_chunk_0128",
+        "datasheet_hier_chunk_0001_sub0"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": true,
+      "answerability_key_terms": [
+        "48 MHz",
+        "CC2652R7"
+      ],
+      "answerability_missing": []
+    },
+    {
+      "question": "Does the CC2652R7 include a DAC?",
+      "category": "negation",
+      "reference_answer": "No, the CC2652R7 does not include a built-in DAC.",
+      "system_answer": "ANSWER: The information was not found in the provided documentation.",
+      "sources": [
+        "datasheet_hier_chunk_0035",
+        "datasheet_hier_chunk_0039",
+        "datasheet_hier_chunk_0001_sub0",
+        "datasheet_hier_chunk_0046",
+        "datasheet_hier_chunk_0047"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": true,
+      "answerability_key_terms": [
+        "CC2652R7",
+        "DAC"
+      ],
+      "answerability_missing": []
+    },
+    {
+      "question": "Is the CC2652R7 compatible with 5V logic directly?",
+      "category": "negation",
+      "reference_answer": "No, the CC2652R7 is not 5V tolerant. It operates at 1.8V to 3.8V.",
+      "system_answer": "ANSWER: No",
+      "sources": [
+        "datasheet_hier_chunk_0001_sub0",
+        "datasheet_hier_chunk_0035",
+        "datasheet_hier_chunk_0041",
+        "datasheet_hier_chunk_0046"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": false,
+      "answerability_key_terms": [
+        "1.8V",
+        "3.8V",
+        "5V",
+        "CC2652R7"
+      ],
+      "answerability_missing": [
+        "5V",
+        "1.8V",
+        "3.8V"
+      ]
+    },
+    {
+      "question": "Does the CC2652R7 support USB?",
+      "category": "negation",
+      "reference_answer": "No, the CC2652R7 does not have a native USB peripheral.",
+      "system_answer": "QUOTE: Personal electronics -Home theater & entertainment - smart speakers , smart display , set-top box -Wearables (non-medical) - smart trackers , smart clothing 3 Description The SimpleLink CC2652R7 device is a multiprotocol 2.4-GHz wireless microcontroller (MCU) supporting Thread , Zigbee, Matter, Bluetooth 5.2 Low Energy , IEEE 802.15.4g, IPv6-enabled smart objects (6LoWPAN), TI 15.4-Stack (2.4 GHz), and concurrent...\nANSWER: No, the provided CC2652R7 support list does not include USB.\nSOURCE: datasheet_hier_chunk_0001_sub0",
+      "sources": [
+        "datasheet_hier_chunk_0001_sub0",
+        "datasheet_hier_chunk_0039",
+        "datasheet_hier_chunk_0035",
+        "datasheet_hier_chunk_0046"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": false,
+      "answerability_key_terms": [
+        "CC2652R7",
+        "USB"
+      ],
+      "answerability_missing": [
+        "USB"
+      ]
+    },
+    {
+      "question": "Does the CC2652R7 support Bluetooth Classic (BR/EDR)?",
+      "category": "negation",
+      "reference_answer": "No, the CC2652R7 supports only Bluetooth Low Energy (BLE), not Bluetooth Classic.",
+      "system_answer": "QUOTE: Wireless protocol support \u2022Thread , Zigbee , Matter \u2022Bluetooth 5.2 Low Energy \u2022SimpleLink TI 15.4-stack \u20226LoWPAN \u2022Proprietary systems High performance radio\nANSWER: No, the provided CC2652R7 support list does not include Bluetooth Classic (BR/EDR).\nSOURCE: datasheet_hier_chunk_0000",
+      "sources": [
+        "datasheet_hier_chunk_0001_sub0",
+        "datasheet_hier_chunk_0000",
+        "datasheet_hier_chunk_0039",
+        "datasheet_hier_chunk_0035",
+        "datasheet_hier_chunk_0047"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": true,
+      "answerability_key_terms": [
+        "BLE",
+        "CC2652R7"
+      ],
+      "answerability_missing": []
+    },
+    {
+      "question": "Can RF_open() be called without applying the CPE patch first?",
+      "category": "negation",
+      "reference_answer": "No, RF_open() must not be called before applying the CPE patch via RFCCpePatchFxp(). Doing so causes RF core initialization failure.",
+      "system_answer": "ANSWER: The information was not found in the provided documentation.",
+      "sources": [
+        "trm_hier_chunk_0675",
+        "trm_hier_chunk_2293",
+        "trm_hier_chunk_2291",
+        "trm_hier_chunk_0553",
+        "sdk_guide_hier_chunk_2317"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": false,
+      "answerability_key_terms": [
+        "CPE",
+        "RF_open"
+      ],
+      "answerability_missing": [
+        "RF_open"
+      ]
+    },
+    {
+      "question": "Does the CC2652R7 have an Ethernet interface?",
+      "category": "negation",
+      "reference_answer": "No, the CC2652R7 does not have an Ethernet interface.",
+      "system_answer": "QUOTE: Personal electronics -Home theater & entertainment - smart speakers , smart display , set-top box -Wearables (non-medical) - smart trackers , smart clothing 3 Description The SimpleLink CC2652R7 device is a multiprotocol 2.4-GHz wireless microcontroller (MCU) supporting Thread , Zigbee, Matter, Bluetooth 5.2 Low Energy , IEEE 802.15.4g, IPv6-enabled smart objects (6LoWPAN), TI 15.4-Stack (2.4 GHz), and concurrent...\nANSWER: No, the provided CC2652R7 support list does not include Ethernet.\nSOURCE: datasheet_hier_chunk_0001_sub0",
+      "sources": [
+        "datasheet_hier_chunk_0035",
+        "datasheet_hier_chunk_0001_sub0",
+        "datasheet_hier_chunk_0039",
+        "datasheet_hier_chunk_0041"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": true,
+      "answerability_key_terms": [
+        "CC2652R7"
+      ],
+      "answerability_missing": []
+    },
+    {
+      "question": "How does the CC2652R7 TX power differ from CC2652R1?",
+      "category": "comparison",
+      "reference_answer": "CC2652R7 supports +20 dBm via integrated high-power PA; CC2652R1 supports +5 dBm without an integrated PA.",
+      "system_answer": "ANSWER: The information was not found in the provided documentation.",
+      "sources": [
+        "datasheet_hier_chunk_0001_sub0",
+        "datasheet_hier_chunk_0035",
+        "datasheet_hier_chunk_0030",
+        "datasheet_hier_chunk_0017",
+        "datasheet_hier_chunk_0042"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": false,
+      "answerability_key_terms": [
+        "20 dBm",
+        "5 dBm",
+        "CC2652R1",
+        "CC2652R7"
+      ],
+      "answerability_missing": [
+        "CC2652R1",
+        "20 dBm"
+      ]
+    },
+    {
+      "question": "What is the difference between the CC2652R7 and CC2652P in terms of PA?",
+      "category": "comparison",
+      "reference_answer": "Both include a high-power PA, but the CC2652P has +20 dBm with an external PA while CC2652R7 integrates the PA internally.",
+      "system_answer": "ANSWER: The information was not found in the provided documentation.",
+      "sources": [
+        "datasheet_hier_chunk_0001_sub0",
+        "datasheet_hier_chunk_0046",
+        "datasheet_hier_chunk_0047",
+        "datasheet_hier_chunk_0042"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": false,
+      "answerability_key_terms": [
+        "20 dBm",
+        "CC2652P",
+        "CC2652R7"
+      ],
+      "answerability_missing": [
+        "CC2652P"
+      ]
+    },
+    {
+      "question": "How does CC2652R7 flash size compare to CC2652R1?",
+      "category": "comparison",
+      "reference_answer": "CC2652R7 has 704 KB flash vs 352 KB on CC2652R1 \u2014 approximately double.",
+      "system_answer": "ANSWER: The information was not found in the provided documentation.",
+      "sources": [
+        "datasheet_hier_chunk_0000",
+        "datasheet_hier_chunk_0035",
+        "datasheet_hier_chunk_0046",
+        "datasheet_hier_chunk_0001_sub0",
+        "datasheet_hier_chunk_0037_sub1"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": false,
+      "answerability_key_terms": [
+        "352 KB",
+        "704 KB",
+        "CC2652R1",
+        "CC2652R7"
+      ],
+      "answerability_missing": [
+        "352 KB",
+        "CC2652R1"
+      ]
+    },
+    {
+      "question": "How does the CC2652R7 differ from CC1352R in protocol support?",
+      "category": "comparison",
+      "reference_answer": "CC1352R supports sub-1GHz and 2.4GHz; CC2652R7 focuses on 2.4GHz protocols (BLE, Zigbee, Thread) with higher TX power.",
+      "system_answer": "ANSWER: The information was not found in the provided documentation.",
+      "sources": [
+        "datasheet_hier_chunk_0035",
+        "datasheet_hier_chunk_0001_sub0",
+        "datasheet_hier_chunk_0046",
+        "trm_hier_chunk_0116",
+        "datasheet_hier_chunk_0047"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": false,
+      "answerability_key_terms": [
+        "-1GHz",
+        "2.4GHz",
+        "BLE",
+        "CC1352R",
+        "CC2652R7"
+      ],
+      "answerability_missing": [
+        "CC1352R"
+      ]
+    },
+    {
+      "question": "What advantage does the CC2652R7 have over CC2652R1 for range-critical applications?",
+      "category": "comparison",
+      "reference_answer": "The CC2652R7 integrated PA provides +20 dBm vs +5 dBm, giving approximately 15 dB more output power for longer range.",
+      "system_answer": "ANSWER: The information was not found in the provided documentation.",
+      "sources": [
+        "datasheet_hier_chunk_0035",
+        "datasheet_hier_chunk_0001_sub0",
+        "datasheet_hier_chunk_0047",
+        "datasheet_hier_chunk_0046",
+        "datasheet_hier_chunk_0002_sub1"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": false,
+      "answerability_key_terms": [
+        "15 dB",
+        "20 dBm",
+        "5 dBm",
+        "CC2652R7"
+      ],
+      "answerability_missing": [
+        "15 dB"
+      ]
+    },
+    {
+      "question": "How does CC2652R7 SRAM compare to CC2652R1?",
+      "category": "comparison",
+      "reference_answer": "CC2652R7 has 256 KB SRAM vs 80 KB on CC2652R1, more than 3x the memory.",
+      "system_answer": "ANSWER: The information was not found in the provided documentation.",
+      "sources": [
+        "datasheet_hier_chunk_0001_sub0",
+        "datasheet_hier_chunk_0046",
+        "datasheet_hier_chunk_0042",
+        "trm_hier_chunk_0872"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": false,
+      "answerability_key_terms": [
+        "256 KB",
+        "80 KB",
+        "CC2652R1",
+        "CC2652R7",
+        "SRAM"
+      ],
+      "answerability_missing": [
+        "80 KB",
+        "CC2652R1",
+        "256 KB"
+      ]
+    },
+    {
+      "question": "What is the difference between fixed chunking and hierarchical chunking for TRM retrieval?",
+      "category": "comparison",
+      "reference_answer": "Fixed chunking splits text by token count regardless of structure; hierarchical chunking splits by section boundaries first, preserving technical document structure.",
+      "system_answer": "ANSWER: The information was not found in the provided documentation.",
+      "sources": [
+        "datasheet_hier_chunk_0049",
+        "trm_hier_chunk_2042",
+        "trm_hier_chunk_2258_sub1",
+        "trm_hier_chunk_0706"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": true,
+      "answerability_key_terms": [],
+      "answerability_missing": []
+    },
+    {
+      "question": "How does dense retrieval differ from BM25 retrieval for firmware symbols?",
+      "category": "comparison",
+      "reference_answer": "Dense retrieval uses semantic embeddings and may miss exact symbol names; BM25 uses keyword matching and reliably finds exact terms like RFCCpePatchFxp.",
+      "system_answer": "ANSWER: The information was not found in the provided documentation.",
+      "sources": [
+        "trm_hier_chunk_2114",
+        "trm_hier_chunk_2222_sub1",
+        "trm_hier_chunk_2076",
+        "trm_hier_chunk_1940",
+        "trm_hier_chunk_1066"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": false,
+      "answerability_key_terms": [
+        "BM25"
+      ],
+      "answerability_missing": [
+        "BM25"
+      ]
+    },
+    {
+      "question": "How does the CC2652R7 package compare to CC2652R1?",
+      "category": "comparison",
+      "reference_answer": "Both use a 7x7mm 48-pin QFN package, making them pin-compatible in many configurations.",
+      "system_answer": "ANSWER: The information was not found in the provided documentation.",
+      "sources": [
+        "datasheet_hier_chunk_0000",
+        "datasheet_hier_chunk_0046",
+        "datasheet_hier_chunk_0001_sub0",
+        "datasheet_hier_chunk_0047",
+        "datasheet_hier_chunk_0002_sub1"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": true,
+      "answerability_key_terms": [
+        "QFN"
+      ],
+      "answerability_missing": []
+    },
+    {
+      "question": "How does the CC2652R7 differ from CC2652RB in clock source?",
+      "category": "comparison",
+      "reference_answer": "CC2652RB uses an internal BAW resonator eliminating the need for an external crystal; CC2652R7 requires an external 48 MHz crystal.",
+      "system_answer": "ANSWER: The information was not found in the provided documentation.",
+      "sources": [
+        "datasheet_hier_chunk_0000",
+        "datasheet_hier_chunk_0042",
+        "datasheet_hier_chunk_0040",
+        "datasheet_hier_chunk_0001_sub0"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": false,
+      "answerability_key_terms": [
+        "48 MHz",
+        "BAW",
+        "CC2652R7",
+        "CC2652RB"
+      ],
+      "answerability_missing": [
+        "CC2652RB",
+        "BAW"
+      ]
+    },
+    {
+      "question": "What error occurs when RF_open() is called without applying the CPE patch?",
+      "category": "debugging",
+      "reference_answer": "The RF core fails to initialize, resulting in RF_EventLastCmdDone not firing or an error event from the RF driver.",
+      "system_answer": "ANSWER: The information was not found in the provided documentation.",
+      "sources": [
+        "trm_hier_chunk_2088",
+        "trm_hier_chunk_2105",
+        "trm_hier_chunk_2256",
+        "trm_hier_chunk_0388"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": false,
+      "answerability_key_terms": [
+        "RF_EventLastCmdDone"
+      ],
+      "answerability_missing": [
+        "RF_EventLastCmdDone"
+      ]
+    },
+    {
+      "question": "Why does BLE advertising fail to start on CC2652R7?",
+      "category": "debugging",
+      "reference_answer": "Common causes include missing RF patch (RFCCpePatchFxp not called), incorrect RF driver initialization, or missing antenna configuration.",
+      "system_answer": "ANSWER: The information was not found in the provided documentation.",
+      "sources": [
+        "trm_hier_chunk_2193_sub0",
+        "trm_hier_chunk_2200_sub0",
+        "trm_hier_chunk_2172",
+        "trm_hier_chunk_2204_sub0"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": true,
+      "answerability_key_terms": [],
+      "answerability_missing": []
+    },
+    {
+      "question": "What happens if the 48 MHz crystal is not stable when the RF core starts?",
+      "category": "debugging",
+      "reference_answer": "The RF core will fail to calibrate and RF operations will produce errors or incorrect frequency output.",
+      "system_answer": "ANSWER: The device may enter an unresponsive state if the 48 MHz crystal oscillator stops due to entering Standby mode.",
+      "sources": [
+        "trm_hier_chunk_0578",
+        "datasheet_hier_chunk_0020",
+        "datasheet_hier_chunk_0043",
+        "trm_hier_chunk_2083_sub1",
+        "datasheet_hier_chunk_0008"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": true,
+      "answerability_key_terms": [],
+      "answerability_missing": []
+    },
+    {
+      "question": "How do you debug RF core initialization failures on CC2652R7?",
+      "category": "debugging",
+      "reference_answer": "Check UART debug output for RF driver error codes, verify RFCCpePatchFxp() is called before RF_open(), confirm crystal oscillator is stable.",
+      "system_answer": "QUOTE: 25.1 RF Core The RF core contains an Arm Cortex-M0 processor that interfaces the analog RF and baseband circuits, handles data to and from the system side, and assembles the information bits in a given packet s\nANSWER: A dedicated RF core with an Arm Cortex-M0 processor\nSOURCE: trm_hier_chunk_2077",
+      "sources": [
+        "trm_hier_chunk_2077",
+        "trm_hier_chunk_1346",
+        "trm_hier_chunk_1336",
+        "trm_hier_chunk_1326",
+        "trm_hier_chunk_1356"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": false,
+      "answerability_key_terms": [
+        "RF_open",
+        "UART"
+      ],
+      "answerability_missing": [
+        "UART",
+        "RF_open"
+      ]
+    },
+    {
+      "question": "What is the correct order of RF initialization calls on CC2652R7?",
+      "category": "debugging",
+      "reference_answer": "1. Power on RF core, 2. Apply CPE patch via RFCCpePatchFxp(), 3. Call RF_open(), 4. Submit RF commands.",
+      "system_answer": "ANSWER: The information was not found in the provided documentation.",
+      "sources": [
+        "datasheet_hier_chunk_0047",
+        "trm_hier_chunk_2183_sub0",
+        "trm_hier_chunk_2127",
+        "trm_hier_chunk_2007",
+        "sdk_guide_hier_chunk_2332"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": false,
+      "answerability_key_terms": [
+        "CPE",
+        "RF_open"
+      ],
+      "answerability_missing": [
+        "RF_open",
+        "CPE"
+      ]
+    },
+    {
+      "question": "Why might the CC2652R7 consume more current than expected during RF operation?",
+      "category": "debugging",
+      "reference_answer": "Possible causes: PA operating at full +20 dBm when lower power is sufficient, RF core not properly powered down between transmissions, or incorrect power mode configuration.",
+      "system_answer": "ANSWER: The information was not found in the provided documentation.",
+      "sources": [
+        "datasheet_hier_chunk_0001_sub0",
+        "datasheet_hier_chunk_0035",
+        "datasheet_hier_chunk_0011",
+        "datasheet_hier_chunk_0047",
+        "datasheet_hier_chunk_0012"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": false,
+      "answerability_key_terms": [
+        "20 dBm"
+      ],
+      "answerability_missing": [
+        "20 dBm"
+      ]
+    },
+    {
+      "question": "What causes a hard fault during RF driver initialization on CC2652R7?",
+      "category": "debugging",
+      "reference_answer": "A hard fault can occur if the RF patch is applied to uninitialized memory or if stack overflow occurs during RF command processing.",
+      "system_answer": "QUOTE: [The hard fault is caused by an error during exception processing or because an exception cannot be managed by any other exception mechanism.]",
+      "sources": [
+        "trm_hier_chunk_0872",
+        "trm_hier_chunk_0385",
+        "trm_hier_chunk_0386",
+        "trm_hier_chunk_0384",
+        "trm_hier_chunk_0391"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": true,
+      "answerability_key_terms": [],
+      "answerability_missing": []
+    },
+    {
+      "question": "How do you verify the RF patch was successfully applied on CC2652R7?",
+      "category": "debugging",
+      "reference_answer": "Check the return value of RFCCpePatchFxp(), verify RF_open() succeeds, and confirm RF commands complete with RF_EventLastCmdDone.",
+      "system_answer": "ANSWER: The information was not found in the provided documentation.",
+      "sources": [
+        "trm_hier_chunk_0116",
+        "datasheet_hier_chunk_0049",
+        "trm_hier_chunk_2087_sub1",
+        "trm_hier_chunk_0887",
+        "trm_hier_chunk_2115"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": false,
+      "answerability_key_terms": [
+        "RF_EventLastCmdDone",
+        "RF_open"
+      ],
+      "answerability_missing": [
+        "RF_open",
+        "RF_EventLastCmdDone"
+      ]
+    },
+    {
+      "question": "What is the symptom of incorrect VDDR trim on CC2652R7?",
+      "category": "debugging",
+      "reference_answer": "Incorrect VDDR trim causes RF output power to deviate from expected levels, potentially reducing range or causing regulatory compliance failures.",
+      "system_answer": "QUOTE: \"STAT R 0h VDDR recharge detector status.\" indicates that no recharge of VDDR has occurred since EN was set.",
+      "sources": [
+        "trm_hier_chunk_0133",
+        "trm_hier_chunk_1558",
+        "trm_hier_chunk_1839",
+        "trm_hier_chunk_0573",
+        "trm_hier_chunk_0134"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": true,
+      "answerability_key_terms": [
+        "VDDR"
+      ],
+      "answerability_missing": []
+    },
+    {
+      "question": "Why does the CC2652R7 fail to enter low-power mode after RF operation?",
+      "category": "debugging",
+      "reference_answer": "RF low-power mode entry fails if RF_close() is not called after RF operations complete, or if pending RF commands prevent power domain shutdown.",
+      "system_answer": "ANSWER: The information was not found in the provided documentation.",
+      "sources": [
+        "datasheet_hier_chunk_0001_sub0",
+        "datasheet_hier_chunk_0043",
+        "datasheet_hier_chunk_0035",
+        "trm_hier_chunk_0572",
+        "trm_hier_chunk_2090"
+      ],
+      "hit_at_k": 1.0,
+      "answerable": false,
+      "answerability_key_terms": [
+        "RF_close"
+      ],
+      "answerability_missing": [
+        "RF_close"
+      ]
+    }
+  ]
+}

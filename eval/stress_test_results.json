@@ -1,0 +1,229 @@
+[
+  {
+    "question": "What is the CC2652R7 Wi-Fi channel configuration?",
+    "category": "out_of_corpus",
+    "expected": "not found",
+    "answer": "The information was not found in the provided documentation.",
+    "status": "PASS",
+    "grounded": true,
+    "ungrounded_literals": [],
+    "identifier_pins": [
+      "datasheet_hier_chunk_0001_sub0",
+      "datasheet_hier_chunk_0046",
+      "datasheet_hier_chunk_0043",
+      "datasheet_hier_chunk_0041",
+      "datasheet_hier_chunk_0049",
+      "datasheet_hier_chunk_0047",
+      "datasheet_hier_chunk_0035"
+    ],
+    "deduplicated_count": 5,
+    "notes": []
+  },
+  {
+    "question": "How do I configure the CC2652R7 for LTE-M?",
+    "category": "out_of_corpus",
+    "expected": "not found",
+    "answer": "The information was not found in the provided documentation regarding how to configure the CC2652R7 for LTE-M.",
+    "status": "WARN",
+    "grounded": false,
+    "ungrounded_literals": [
+      "LTE"
+    ],
+    "identifier_pins": [
+      "datasheet_hier_chunk_0049",
+      "datasheet_hier_chunk_0001_sub0"
+    ],
+    "deduplicated_count": 5,
+    "notes": [
+      "ungrounded literals: ['LTE']"
+    ]
+  },
+  {
+    "question": "What is the price of the CC2652R7 on Mouser?",
+    "category": "out_of_corpus",
+    "expected": "not found",
+    "answer": "The information was not found in the provided documentation.",
+    "status": "PASS",
+    "grounded": true,
+    "ungrounded_literals": [],
+    "identifier_pins": [
+      "datasheet_hier_chunk_0046",
+      "datasheet_hier_chunk_0001_sub0",
+      "datasheet_hier_chunk_0049",
+      "datasheet_hier_chunk_0043",
+      "datasheet_hier_chunk_0047",
+      "datasheet_hier_chunk_0040",
+      "datasheet_hier_chunk_0052",
+      "datasheet_hier_chunk_0042",
+      "datasheet_hier_chunk_0039",
+      "datasheet_hier_chunk_0035",
+      "datasheet_hier_chunk_0041"
+    ],
+    "deduplicated_count": 4,
+    "notes": []
+  },
+  {
+    "question": "What does RFCCpePatchFxp do?",
+    "category": "exact_symbol",
+    "expected": "patch RF core",
+    "answer": "The information was not found in the provided documentation. The RFCCpePatchFxp is not mentioned in any of the documents provided.",
+    "status": "WARN",
+    "grounded": false,
+    "ungrounded_literals": [
+      "RFCCpePatchFxp"
+    ],
+    "identifier_pins": [],
+    "deduplicated_count": 5,
+    "notes": [
+      "ungrounded literals: ['RFCCpePatchFxp']"
+    ]
+  },
+  {
+    "question": "What is the address of RFC_PWR_PWMCLKEN?",
+    "category": "exact_symbol",
+    "expected": "hex address or register",
+    "answer": "The information was not found in the provided documentation.",
+    "status": "PASS",
+    "grounded": true,
+    "ungrounded_literals": [],
+    "identifier_pins": [],
+    "deduplicated_count": 4,
+    "notes": []
+  },
+  {
+    "question": "When should RF_open be called?",
+    "category": "exact_symbol",
+    "expected": "after patch",
+    "answer": "The information was not found in the provided documentation.",
+    "status": "PASS",
+    "grounded": true,
+    "ungrounded_literals": [],
+    "identifier_pins": [],
+    "deduplicated_count": 4,
+    "notes": []
+  },
+  {
+    "question": "Can I call RF_open without RFCCpePatchFxp?",
+    "category": "negation_trap",
+    "expected": "no / must call patch first",
+    "answer": "The information was not found in the provided documentation regarding calling RF_open without RFCCpePatchFxp.",
+    "status": "WARN",
+    "grounded": false,
+    "ungrounded_literals": [
+      "RFCCpePatchFxp",
+      "RF_open"
+    ],
+    "identifier_pins": [],
+    "deduplicated_count": 5,
+    "notes": [
+      "ungrounded literals: ['RFCCpePatchFxp', 'RF_open']"
+    ]
+  },
+  {
+    "question": "Does the CC2652R7 have 1MB of flash?",
+    "category": "negation_trap",
+    "expected": "no / 704KB",
+    "answer": "The information was not found in the provided documentation. The document does not mention the amount of flash memory available on the CC2652R7 device.",
+    "status": "PASS",
+    "grounded": true,
+    "ungrounded_literals": [],
+    "identifier_pins": [
+      "datasheet_hier_chunk_0046",
+      "datasheet_hier_chunk_0043",
+      "datasheet_hier_chunk_0001_sub0",
+      "datasheet_hier_chunk_0041",
+      "datasheet_hier_chunk_0044",
+      "datasheet_hier_chunk_0035",
+      "datasheet_hier_chunk_0039",
+      "datasheet_hier_chunk_0049",
+      "datasheet_hier_chunk_0047",
+      "datasheet_hier_chunk_0045"
+    ],
+    "deduplicated_count": 5,
+    "notes": []
+  },
+  {
+    "question": "What is the exact hex address of the RF core base register on CC2652R7?",
+    "category": "hallucination_trap",
+    "expected": "grounded or not found",
+    "answer": "The exact hex address of the RF core base register on CC2652R7 is not found in the provided documentation. However, it can be inferred that the RF core registers are likely located in a specific memory region.\n\nFrom Table 25-41, CMD_READ_RFREG takes an address as a parameter, with bits 2\u201315 representing the offset from the start of the RF core hardware register bank (0x4004). Adding this to the base address of 0x4004, we get:\n\n0x4004 + (address * 0x100) = RF core base address\n\nUnfortunately, without knowing the specific address or more information about the RF core registers, it's impossible to provide a precise hex address.\n\nHowever, from Figure 2-130 and Table 2-167, the MPU_RBAR Register field \"ADDR\" seems to be related to memory mapping and region base addresses. This might indicate that the RF core registers are located in a specific region or bank, but without further information, we can't pinpoint their exact address.\n\nTherefore, the answer is: The information was not found in the provided documentation.",
+    "status": "WARN",
+    "grounded": false,
+    "ungrounded_literals": [
+      "CC2652R7",
+      "0x100"
+    ],
+    "identifier_pins": [],
+    "deduplicated_count": 5,
+    "notes": [
+      "ungrounded literals: ['CC2652R7', '0x100']"
+    ]
+  },
+  {
+    "question": "What is the VDDR trim default value in decimal?",
+    "category": "hallucination_trap",
+    "expected": "grounded or not found",
+    "answer": "The VDDR trim default value is not explicitly stated in the provided documentation.\n\nHowever, Section 11.4.1.58 of the SWCU192 document describes the VOLT_TRIM Register, which includes a reserved area for VDDR_TRIM_HH (bits 28-24). The default value for this register is mentioned as \"Reserved\" with a reset value of X.\n\nThe document does not provide information on the actual default value for VDDR TRIM.",
+    "status": "PASS",
+    "grounded": true,
+    "ungrounded_literals": [],
+    "identifier_pins": [
+      "trm_hier_chunk_0573",
+      "trm_hier_chunk_1558",
+      "trm_hier_chunk_0993"
+    ],
+    "deduplicated_count": 5,
+    "notes": []
+  },
+  {
+    "question": "How does the CC2652R7 handle RF and BLE simultaneously?",
+    "category": "ambiguous",
+    "expected": "multi-protocol or not found",
+    "answer": "The information was not found in the provided documentation regarding how the CC2652R7 handles RF and BLE simultaneously. \n\nSource document: swcu192.pdf (page not specified)",
+    "status": "PASS",
+    "grounded": true,
+    "ungrounded_literals": [],
+    "identifier_pins": [
+      "trm_hier_chunk_2077",
+      "sdk_guide_hier_chunk_2301",
+      "datasheet_hier_chunk_0002_sub1",
+      "datasheet_hier_chunk_0047",
+      "datasheet_hier_chunk_0041",
+      "datasheet_hier_chunk_0036_sub0",
+      "datasheet_hier_chunk_0044",
+      "datasheet_hier_chunk_0043",
+      "datasheet_hier_chunk_0001_sub0",
+      "trm_hier_chunk_0116",
+      "datasheet_hier_chunk_0049",
+      "trm_hier_chunk_2180",
+      "trm_hier_chunk_0971",
+      "trm_hier_chunk_0972",
+      "trm_hier_chunk_0917",
+      "trm_hier_chunk_0916",
+      "trm_hier_chunk_1174",
+      "datasheet_hier_chunk_0046",
+      "datasheet_hier_chunk_0048"
+    ],
+    "deduplicated_count": 4,
+    "notes": []
+  },
+  {
+    "question": "What happens during CC2652R7 startup sequence?",
+    "category": "ambiguous",
+    "expected": "boot / power sequence",
+    "answer": "The information on the startup sequence of the CC2652R7 is not explicitly provided in the given context.\n\nHowever, based on the provided documentation for the ARM Cortex-M4F processor, which appears to be used in the CC2652R7, we can infer that the startup sequence involves the following steps:\n\n1. Power-up: The device powers up and initializes its internal components.\n2. Boot ROM: The boot ROM is executed, which typically includes code for initializing the system and setting up the peripherals.\n3. Exception Handling: The processor enters exception handling mode, which involves loading the EXC_RETURN value into the PC to indicate that an exception has occurred.\n\nThe exact details of the startup sequence are not provided in the context, but it appears that the processor uses exception handling to manage the boot process and load the code into memory.\n\nSource:\n[trm_hier_chunk_0389 | swcu192.pdf | page 322]",
+    "status": "PASS",
+    "grounded": true,
+    "ungrounded_literals": [],
+    "identifier_pins": [
+      "datasheet_hier_chunk_0007",
+      "datasheet_hier_chunk_0001_sub0",
+      "datasheet_hier_chunk_0046",
+      "datasheet_hier_chunk_0002_sub1",
+      "datasheet_hier_chunk_0003",
+      "datasheet_hier_chunk_0051"
+    ],
+    "deduplicated_count": 4,
+    "notes": []
+  }
+]
