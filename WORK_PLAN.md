@@ -4,7 +4,7 @@
 **Submission deadline:** 2026-05-26 at 12:00 noon, Asia/Jerusalem  
 **Planning decision:** The report was the critical path and is now submission-safe. Code improvements are optional and should remain narrow unless the report is re-audited afterward.
 
-**Status update, 2026-05-23:** Sessions A-C are complete. `REPORT_NOTES.md`, `report.md`, and `report.pdf` exist; `report.pdf` is 2 A4 pages, which satisfies the assignment's "up to 4 pages" limit. Session C audit verified required files, README commands, manifest fields, `RAGSystem.answer(question: str) -> dict`, and refreshed eval metrics. The safest next session is Session D only.
+**Status update, 2026-05-23:** Sessions A-D are complete and merged to `main`. `REPORT_NOTES.md`, `report.md`, and `report.pdf` exist; `report.pdf` is 2 A4 pages, which satisfies the assignment's "up to 4 pages" limit. Session C audit verified required files, README commands, manifest fields, and `RAGSystem.answer(question: str) -> dict`. Session D fixed the Answerable@Context hyphen/spacing normalization false negative and refreshed eval/report evidence. `main` is the stable submission branch.
 
 ## Repository and Branching Strategy
 
@@ -13,15 +13,18 @@ Standalone repository:
 - GitHub: `https://github.com/razyos/cc2652r7-rag-mid-assignment`
 - Local path: `/Users/razyosef/AI_course/mid_ass`
 - Default branch: `main`
-- Current work branch for Session D: `fix/answerability-normalization`
+- Current stable branch: `main`
+- Session D branch: `fix/answerability-normalization` was merged and pushed to `main` at commit `48dbd30`.
 
 DevOps policy:
 
 - Treat `main` as the stable submission branch. It should always be runnable and contain a valid `report.pdf`.
-- Do optional work on short-lived branches named by intent, such as `fix/answerability-normalization` or `docs/submission-audit`.
+- Do optional work on short-lived branches named by intent, such as `feature/negation-handling`, `feature/tx-power-extractor`, `exp/rf-driver-api-corpus`, or `exp/competitor-datasheets`.
+- Major or risky work is allowed only away from `main`. Corpus expansion, gold-set rewrites, retrieval changes, or answer-generation behavior changes must stay on separate branches until fully verified.
 - Before merging a branch into `main`, run the smallest relevant tests and record the result in the final session summary.
 - If code changes can affect metrics, run `python eval/run_eval.py`.
 - If metrics, report claims, or report source change, update `report.md`, regenerate `report.pdf` with `python scripts/render_report.py`, and verify `pdfinfo report.pdf` reports 4 pages or fewer.
+- For corpus expansion or gold-set changes, also rebuild indexes as needed, rerun eval from scratch, re-audit `report.md`/`report.pdf`, and only merge if the new result is clearly submission-safe.
 - Do not force-push `main`. Prefer a pull request or a fast-forward/merge commit.
 - Do not commit local caches, `.DS_Store`, `.claude/`, `__pycache__/`, `.pytest_cache/`, or stale eval artifacts ignored by `.gitignore`.
 
@@ -42,8 +45,8 @@ Current verified project status:
 - 2361 indexed chunks from three documents: CC2652R7 datasheet, TI TRM, and SimpleLink SDK User's Guide
 - 50-question gold set
 - Hit@5 = 1.000
-- Answerable@Context = 0.540
-- Focused verification after report: `python -m pytest tests/test_generation.py tests/test_utils.py -q` passed 19 tests; BM25-only index tests passed 2 tests; `python eval/run_eval.py` completed with Hit@5 = 1.000 and Answerable@Context = 0.540
+- Answerable@Context = 0.560
+- Focused verification after Session D merge to `main`: `python -m pytest tests/test_generation.py tests/test_utils.py -q` passed 21 tests; `python eval/run_eval.py` completed with Hit@5 = 1.000 and Answerable@Context = 0.560; `pdfinfo report.pdf` reports 2 pages.
 - Full 37-test suite was previously passing as of `PROJECT_STATUS.md`, but the latest full-suite audit attempt stalled during model-heavy tests and was stopped without a pass/fail result
 - Stress test passing as of the project status note
 - `demo.py` ready for live demo
@@ -68,14 +71,14 @@ The required order before the May 26 noon deadline was:
 3. Audit submission readiness.
 4. Only then spend spare time on optional metric or answer-quality improvements.
 
-Steps 1-3 are complete. Avoid starting corpus expansion or broad comparison support before submission unless there is enough time to rebuild indexes, rerun eval, update `report.md`, regenerate `report.pdf`, and redo Session C.
+Steps 1-4 are complete. Avoid merging corpus expansion or broad comparison support before submission unless there is enough time to rebuild indexes, rerun eval, update `report.md`, regenerate `report.pdf`, and redo the submission audit.
 
 Recommended remaining order:
 
-1. Run Session D only: fix Answerable@Context hyphen/spacing normalization.
-2. Rerun targeted tests and `python eval/run_eval.py`.
-3. If the metric changes, update `report.md`, regenerate `report.pdf`, and re-check page count.
-4. Stop there unless the user explicitly accepts the risk of broader code/corpus changes.
+1. Keep `main` frozen and submission-safe unless a clearly verified improvement is ready.
+2. If time remains, use `feature/negation-handling` for Session E because it is narrow and does not require corpus/index changes.
+3. Use experimental branches for major work: `exp/rf-driver-api-corpus`, `exp/competitor-datasheets`, or similar.
+4. Merge an improvement branch into `main` only after targeted tests, eval, report regeneration if needed, `pdfinfo report.pdf`, and a clean final status.
 
 ## Session A - Report Evidence Freeze
 
@@ -168,9 +171,9 @@ Produce concise notes with metrics, ablation table inputs, chunking explanation,
 - Embedding/index: `BAAI/bge-large-en-v1.5`, normalized embeddings, FAISS `IndexFlatIP`, BM25Okapi
 - Retrieval: dense + BM25 hybrid, max-score dedup, identifier-aware reranking
 - Generation: TOC filtering, deterministic extractors before LLM, Llama 3.2 fallback, strict cited output format
-- Evaluation: Hit@5 = 1.000, Answerable@Context = 0.540 unless Session A finds newer verified results
-- Failures: RF API corpus gap, competitor-device corpus gap, answerability hyphen normalization bug, negation/unsupported feature handling, gold-set mistakes
-- Future work: RF Driver API corpus, competitor datasheets or reframed comparison questions, metric normalization, negation extractor improvements
+- Evaluation: Hit@5 = 1.000, Answerable@Context = 0.560 after Session D
+- Failures: RF API corpus gap, competitor-device corpus gap, negation/unsupported feature handling, TX-power extraction, gold-set mistakes
+- Future work: RF Driver API corpus, competitor datasheets or reframed comparison questions, source-label evaluation, negation extractor improvements
 
 **Copy-paste prompt:**
 
@@ -178,8 +181,8 @@ Produce concise notes with metrics, ablation table inputs, chunking explanation,
 Write the final 4-page report.pdf for the CC2652R7 RAG assignment.
 First read mid_term_assignment.pdf, PROJECT_STATUS.md, FOR_AI_MODELS.md, data/MANIFEST.md, and REPORT_NOTES.md.
 Cover exactly: corpus, architecture, chunking strategies, embedding/index choice, retrieval, prompt/generation design, evaluation, ablations, failure analysis, and future work.
-Use current numbers: Hit@5=1.000 and Answerable@Context=0.540 unless REPORT_NOTES.md has newer verified results.
-Keep it concise, technical, and honest about corpus gaps, metric bugs, stale/incorrect gold answers, and local Llama 3.2 constraints.
+Use current numbers: Hit@5=1.000 and Answerable@Context=0.560 unless REPORT_NOTES.md has newer verified results.
+Keep it concise, technical, and honest about corpus gaps, metric limitations, stale/incorrect gold answers, and local Llama 3.2 constraints.
 Produce report.pdf and leave the editable source file in the repo.
 ```
 
@@ -232,7 +235,7 @@ Do not start risky refactors. Fix only tiny documentation mismatches needed for 
 Produce a short final checklist of required files and any remaining risks.
 ```
 
-## Session D - Metric Fix, Optional After Report Draft
+## Session D - Metric Fix, Completed
 
 **Goal:** Fix the Answerable@Context hyphen normalization false negatives.
 
@@ -252,13 +255,13 @@ Produce a short final checklist of required files and any remaining risks.
 
 **Dependencies:** Sessions B and C are complete; report is already submission-safe.
 
-**Priority:** Recommended next step. Keep this limited to the metric bug; do not change generation behavior.
+**Priority:** Completed and merged to `main` at commit `48dbd30`. This stayed limited to the metric bug and did not change generation behavior.
 
 **Known issue:**
 
-`check_answerability()` checks terms such as `1.8V` and `3.8V`, but the corpus often has `1.8-V` and `3.8-V`. This creates false negatives even when the system answer is correct.
+Before Session D, `check_answerability()` checked terms such as `1.8V` and `3.8V`, but the corpus often has `1.8-V` and `3.8-V`. This created false negatives even when the system answer was correct.
 
-Expected impact from current saved eval: likely one additional answerable question, improving Answerable@Context from 27/50 = 0.540 to about 28/50 = 0.560. This is still worth doing because it removes a known false negative, but it will not solve the broader 27/50 issue. Most remaining misses are corpus gaps, out-of-corpus comparison questions, negation metric limitations, or gold-set mistakes.
+Actual impact: Answerable@Context improved from 27/50 = 0.540 to 28/50 = 0.560. This removed the known voltage false negative, but did not solve the broader misses from corpus gaps, out-of-corpus comparison questions, negation metric limitations, or gold-set mistakes.
 
 **Likely implementation direction:**
 

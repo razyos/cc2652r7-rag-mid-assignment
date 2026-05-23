@@ -10,7 +10,9 @@ Branch strategy:
 
 - `main` is the stable submission branch. It should always contain a runnable, audited assignment state.
 - Feature or fix work happens on short-lived branches, for example `fix/answerability-normalization`.
+- Major or risky work must happen on separate experimental branches, for example `feature/negation-handling`, `feature/tx-power-extractor`, `exp/rf-driver-api-corpus`, or `exp/competitor-datasheets`.
 - Merge into `main` only after targeted tests, `python eval/run_eval.py` when relevant, and report regeneration if metrics or claims change.
+- Corpus expansion, gold-set rewrites, retrieval changes, or answer-generation behavior changes require a full report/eval audit before they can merge into `main`.
 - Do not force-push `main`. Prefer a pull request or a fast-forward/merge commit with a clear summary.
 - If `report.md` changes, regenerate `report.pdf` with `python scripts/render_report.py` and verify the PDF remains within the 4-page limit.
 

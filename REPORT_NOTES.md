@@ -6,6 +6,11 @@ Date: 2026-05-23
 Deadline: 2026-05-26 12:00 noon Asia/Jerusalem  
 Critical path: write `report.pdf`; no code changes were made in this session.
 
+Post-freeze update: Sessions B-D are now complete. Session D fixed the Answerable@Context
+hyphen/spacing normalization false negative and was merged to `main` at commit `48dbd30`.
+The latest eval is Hit@5 = 1.000 and Answerable@Context = 0.560 (28/50). `report.pdf`
+remains 2 pages.
+
 ## Assignment Requirements To Cover
 
 The final report is limited to 4 pages and must include:
@@ -95,19 +100,19 @@ Prompt/generation design:
 
 ## Current Evaluation Metrics
 
-Source: `eval/eval_results.json` as of 2026-05-23 21:05.
+Source: `eval/eval_results.json` after Session D on 2026-05-23.
 
 | Metric | Value | Count | Notes |
 |---|---:|---:|---|
 | Gold-set size | 50 | 50 | 10 questions each across factual, numerical, negation, comparison, debugging. |
 | k | 5 | - | Eval output uses `k=5`. |
 | Hit@5 | 1.000 | 50/50 | Caveat: every gold entry currently has empty `must_cite_chunk_ids`, so this metric is vacuous. |
-| Answerable@Context | 0.540 | 27/50 | Checks whether reference key technical terms appear in final retrieved context. This is not answer accuracy. |
+| Answerable@Context | 0.560 | 28/50 | Checks whether reference key technical terms appear in final retrieved context. This is not answer accuracy. |
 
 Metric caveats to state honestly in the report:
 
 - `eval/gold_set.jsonl` has 0/50 non-empty `must_cite_chunk_ids`. Therefore Hit@5=1.000 only proves the eval harness ran; it does not prove the retriever found a labeled relevant chunk.
-- Answerable@Context has false negatives from normalization. Example: the answer/reference contains `1.8V` and `3.8V`, while the corpus writes `1.8-V` and `3.8-V`.
+- Answerable@Context now normalizes spaces and hyphens for key-term matching. This fixed the voltage case where the answer/reference contains `1.8V` and `3.8V`, while the corpus writes `1.8-V` and `3.8-V`.
 - Answerable@Context can also be misleading when the gold answer is wrong or outside the indexed corpus.
 - Known gold-set problems: SRAM reference says 256 KB but CC2652R7 datasheet chunk says 144 KB; temperature reference says +85 deg C but current project evidence says operating ambient is -40 to +105 deg C.
 
@@ -118,7 +123,7 @@ Source: `eval/eval_results.json`.
 | Category | N | Hit@5 | Answerable@Context | Count | Main note |
 |---|---:|---:|---:|---:|---|
 | numerical | 10 | 1.000 | 0.900 | 9/10 | Strongest category; one TX-power-standard-mode miss. |
-| factual | 10 | 1.000 | 0.600 | 6/10 | Mix of correct spec answers, RF API corpus gap, max TX-power error, metric/gold issues. |
+| factual | 10 | 1.000 | 0.700 | 7/10 | Voltage normalization fixed; remaining misses include RF API corpus gap, max TX-power error, and gold issues. |
 | negation | 10 | 1.000 | 0.600 | 6/10 | Several current answers say "No" correctly, but Answerable misses LTE/USB/5V/RF_open terms. |
 | debugging | 10 | 1.000 | 0.400 | 4/10 | RF Driver API gap dominates; some generic TRM answers are not question-specific. |
 | comparison | 10 | 1.000 | 0.200 | 2/10 | Most require competitor-device facts not indexed. |
@@ -136,7 +141,7 @@ The first sandboxed attempt failed because `SentenceTransformer` tried to resolv
 
 | Experiment | Command | Reported metric | Result | Interpretation |
 |---|---|---:|---:|---|
-| Full current pipeline | `python eval/run_eval.py` / existing `eval/eval_results.json` | Hit@5 / Answerable@Context | 1.000 / 0.540 | Current headline numbers, but Hit@5 is vacuous because cite labels are empty. |
+| Full current pipeline | `python eval/run_eval.py` / existing `eval/eval_results.json` | Hit@5 / Answerable@Context | 1.000 / 0.560 | Current headline numbers, but Hit@5 is vacuous because cite labels are empty. |
 | Dense-only retrieval | `python eval/run_eval_dense_only.py 5` | Hit@5 | 1.000 | Inconclusive for the same empty-cite-label reason. |
 | Hybrid without rerank | `python eval/run_eval_no_rerank.py 5` | Hit@5 | 1.000 | Inconclusive for the same empty-cite-label reason. |
 
@@ -200,8 +205,8 @@ Use these in the report.
 
 4. Metric bug: hyphen/unit normalization
 
-- Example: voltage answer is correct, but Answerable@Context says false because reference has `1.8V`/`3.8V` and context has `1.8-V`/`3.8-V`.
-- Improvement: normalize hyphens and spaces for key-term matching in `check_answerability()`.
+- Status: fixed in Session D and merged to `main` at commit `48dbd30`.
+- Example: voltage answer is correct, and Answerable@Context now matches reference `1.8V`/`3.8V` against context `1.8-V`/`3.8-V`.
 
 5. Gold-set mistakes
 
@@ -227,14 +232,13 @@ Use these in the report.
 
 Report-first priority order:
 
-1. Write `report.pdf` immediately from these notes.
-2. Audit submission readiness: required files, <=4 page report, README commands, manifest, tests/eval if feasible.
-3. Optional smallest code/eval improvement after report is safe: fix Answerable@Context hyphen/spacing normalization only.
-4. Next small answer-quality improvement: fix max TX-power extraction/anchor terms.
-5. Next eval-quality improvement: fill `must_cite_chunk_ids` so Hit@5 becomes meaningful.
-6. Larger post-report improvements: add RF Driver API corpus and competitor datasheets; then rebuild indexes and rerun eval.
+1. Keep `main` frozen as the stable submission branch unless a branch passes verification.
+2. Preferred narrow branch: `feature/negation-handling`, because it does not require corpus or index changes.
+3. Next small answer-quality branch: `feature/tx-power-extractor`.
+4. Next eval-quality branch: fill `must_cite_chunk_ids` so Hit@5 becomes meaningful.
+5. Larger post-report branches: `exp/rf-driver-api-corpus` and `exp/competitor-datasheets`; rebuild indexes and rerun eval before considering merge.
 
-Do not start RF Driver API corpus expansion, competitor corpus expansion, or broad refactors before the final report is written and audited.
+Do not merge RF Driver API corpus expansion, competitor corpus expansion, gold-set rewrites, or broad refactors into `main` before a full eval/report/PDF audit passes.
 
 ## Report Recommendation
 

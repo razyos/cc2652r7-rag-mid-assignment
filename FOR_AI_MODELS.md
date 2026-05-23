@@ -18,9 +18,13 @@ Repository: https://github.com/razyos/cc2652r7-rag-mid-assignment
 
 Branching policy:
 - `main` is the stable submission branch. Keep it runnable and submission-ready.
-- Use short-lived branches for optional work. Current Session D branch: `fix/answerability-normalization`.
+- Session D (`fix/answerability-normalization`) was merged to `main` at commit `48dbd30`.
+- Use short-lived branches for optional work, such as `feature/negation-handling` or `feature/tx-power-extractor`.
+- Use experimental branches for major work, such as `exp/rf-driver-api-corpus` or `exp/competitor-datasheets`.
+- Do not make risky changes directly on `main`.
 - Before merging to `main`, run relevant tests; run `python eval/run_eval.py` for metric-affecting changes.
 - If `report.md`, metrics, or report claims change, regenerate `report.pdf` with `python scripts/render_report.py` and verify it is <= 4 pages.
+- Corpus expansion, gold-set rewrites, retrieval changes, or answer-generation behavior changes require a full eval/report/PDF audit before merging to `main`.
 - Do not force-push `main`, and do not commit ignored local artifacts.
 
 ---
@@ -89,18 +93,18 @@ Run: `python eval/run_eval.py`
 | Metric | Score |
 |--------|-------|
 | Hit@5 | 1.000 (50/50) |
-| Answerable@Context | 0.540 (27/50) |
+| Answerable@Context | 0.560 (28/50) |
 
 Per category:
 - numerical: Hit=1.0, Answerable=0.90 (9/10)
-- factual: Hit=1.0, Answerable=0.60 (6/10)
+- factual: Hit=1.0, Answerable=0.70 (7/10)
 - negation: Hit=1.0, Answerable=0.60 (6/10)
 - debugging: Hit=1.0, Answerable=0.40 (4/10)
 - comparison: Hit=1.0, Answerable=0.20 (2/10)
 
 Answerable@Context checks if reference answer key terms appear in retrieved context.
-**Known metric bug:** it matches "1.8V" but corpus has "1.8-V" → false negatives on
-voltage/temperature questions (the answers are actually correct).
+Session D fixed the known voltage metric bug by normalizing spaces and hyphens in
+`check_answerability()` so "1.8V" and "3.8V" match corpus text such as "1.8-V" and "3.8-V".
 
 ---
 
@@ -116,24 +120,27 @@ list chunk ("smart speakers, wearables...") and the 3B LLM quotes it instead of 
   "cellular", "bt classic", "br/edr"} → "No, the CC2652R7 does not support {feature}."
   Evidence: check that the feature word does NOT appear in the features list of chunk_0000.
 
-**2. Answerable metric — hyphen normalization**
-- Location: `src/generation.py` — `check_answerability()`
-- Fix: normalize key terms and corpus text by stripping hyphens before substring matching
-  `key_term_normalized = key_term.replace("-", "").replace(" ", "").lower()`
-  `corpus_normalized = corpus.replace("-", "").replace(" ", "").lower()`
+**2. TX-power extractor / anchoring**
+The maximum RF output power question currently answers `+0 dBm` from a transmit-current table
+instead of the expected `+20 dBm`. Keep this as a narrow `feature/tx-power-extractor` branch.
 
-**3. Report not written** — 4-page PDF required by assignment. Sections needed:
-  corpus, architecture, chunking, embedding, retrieval, prompt, eval results, ablation, failures, future work
+**3. Source-label evaluation**
+Hit@5 is not meaningful because `must_cite_chunk_ids` is empty for all current gold entries.
+Any gold-set relabeling or metric redesign belongs on a separate branch and must be re-audited
+before merging to `main`.
 
 ### Medium Priority
 
 **4. Add RF Driver API PDF to corpus**
 Adding TI's RF Driver API Reference would fix ~12 failing questions (debugging + factual + negation categories).
 Steps: place PDF in `data/raw/`, re-run `src/build_index.py` with the new document.
+This is major corpus work. Use `exp/rf-driver-api-corpus`, rebuild indexes, update manifest/report,
+rerun eval, and only merge to `main` if the full submission audit passes.
 
 **5. Comparison questions**
 8/10 comparison questions require CC2652R1/CC2652P/CC1352R specs not in corpus.
 Either add those datasheets or rewrite the comparison questions to be self-referential.
+Use `exp/competitor-datasheets` or a dedicated gold-set branch; do not mix this with small fixes.
 
 ---
 

@@ -7,7 +7,15 @@ built as a university mid-assignment. The system demonstrates that bare Llama 3.
 hallucinates on device-specific questions while RAG grounds answers in TI documentation.
 
 **Assignment:** Build, evaluate, and report on a RAG system.
-**Outstanding deliverable:** 4-page report.pdf (not yet written as of 2026-05-23).
+**Submission state:** `main` is submission-safe as of 2026-05-23. `report.md` and a 2-page `report.pdf` exist and reflect the latest Session D eval.
+
+## Branching and Change Policy
+
+- `main` is the stable submission branch. Keep it runnable and do not force-push it.
+- Session D (`fix/answerability-normalization`) was merged to `main` at commit `48dbd30`.
+- Use short-lived branches for narrow optional improvements, for example `feature/negation-handling` or `feature/tx-power-extractor`.
+- Use experimental branches for major work, for example `exp/rf-driver-api-corpus` or `exp/competitor-datasheets`.
+- Do not merge corpus expansion, gold-set rewrites, retrieval changes, or answer-generation behavior changes into `main` unless tests, `python eval/run_eval.py`, report updates, PDF regeneration, and `pdfinfo report.pdf` all pass.
 
 ---
 
@@ -142,21 +150,22 @@ Each entry: `{"question", "reference_answer", "must_cite_chunk_ids", "category"}
 | Metric | Score | Detail |
 |--------|-------|--------|
 | Hit@5 | **1.000** | 50/50 — perfect retrieval |
-| Answerable@Context | **0.540** | 27/50 — measures if reference key terms appear in retrieved context |
+| Answerable@Context | **0.560** | 28/50 — measures if reference key terms appear in retrieved context |
 
 **Per-category Answerable@Context:**
 
 | Category | Hit@5 | Answerable | Notes |
 |----------|-------|------------|-------|
 | numerical | 1.000 | 0.900 | 9/10 — only RF TX power (5 dBm) missing from corpus |
-| factual | 1.000 | 0.600 | 6/10 — voltage/temp metric bugs + corpus gaps |
+| factual | 1.000 | 0.700 | 7/10 — one voltage normalization false negative fixed; remaining misses are TX-power/gold/corpus issues |
 | negation | 1.000 | 0.600 | 6/10 — LTE/USB/Ethernet/Wi-Fi are corpus-absent |
 | debugging | 1.000 | 0.400 | 4/10 — RF API symbols absent from corpus |
 | comparison | 1.000 | 0.200 | 2/10 — needs CC2652R1/CC2652P specs not in corpus |
 
-**Note on Answerable@Context metric:** It has a known bug — checks "1.8V" but corpus
-has "1.8-V" (hyphen), causing false negatives on voltage/temperature questions.
-The system answers ARE correct; the metric undercounts them.
+**Note on Answerable@Context metric:** Session D fixed the known voltage normalization bug:
+`check_answerability()` now normalizes spaces and hyphens so "1.8V" / "3.8V" match
+corpus text such as "1.8-V" / "3.8-V". The metric still checks reference key-term
+presence, not full answer correctness.
 
 ---
 
@@ -174,10 +183,10 @@ those datasheets are not indexed.
 **Fix:** Either add competitor datasheets or reframe gold-set comparison questions to
 be self-referential (CC2652R7 properties only).
 
-### 3. Answerable Metric Bug — Hyphen Normalization (Impact: ~4 questions appear wrong)
-**Problem:** `check_answerability` matches "1.8V" but corpus has "1.8-V".
-**Fix:** Normalize both key terms and corpus text by removing hyphens before substring matching
-in `check_answerability()`.
+### 3. Answerable Metric Bug — Hyphen Normalization (Fixed in Session D)
+**Problem:** `check_answerability` matched "1.8V" but corpus has "1.8-V".
+**Status:** Fixed in `main` at commit `48dbd30`. The latest eval improved from 0.540 (27/50)
+to 0.560 (28/50).
 
 ### 4. LLM Negation Failures — Wi-Fi / USB / LTE / Ethernet (Impact: 4 negation questions)
 **Problem:** For "Does CC2652R7 support Wi-Fi?", LLM retrieves a product-applications
@@ -192,18 +201,11 @@ list chunk and quotes it instead of saying "No." The 3B model cannot reason abou
 "+5 dBm output power setting" without the label "standard mode without PA."
 **Fix:** Either correct the gold answer or add the RF characterization table text to corpus.
 
-### 6. Report Not Written
-**The 4-page report.pdf has not been started.** Required sections:
-  - Corpus description (what documents, how many chunks, chunking strategy)
-  - System architecture (the 7-stage pipeline)
-  - Chunking strategy (hierarchical section-aware, 500-token sub-splits)
-  - Embedding/index choice (BGE-large-en-v1.5, FAISS inner product, BM25Okapi)
-  - Retrieval method (hybrid + identifier-aware cross-encoder rerank)
-  - Prompt design (hard rules, extractor-first strategy, QUOTE/ANSWER/SOURCE format)
-  - Evaluation results (Hit@5=1.0, Answerable@Context=0.54, per-category breakdown)
-  - Ablation table (dense-only vs no-rerank vs full pipeline — eval scripts exist)
-  - Failure analysis (corpus gaps, metric bug, negation failures)
-  - Future improvements (items 1-5 above)
+### 6. Report Status
+`report.md` and `report.pdf` are complete. `report.pdf` is 2 A4 pages, within the
+assignment's 4-page limit. If future branches change metrics, corpus, or claims, update
+`report.md`, regenerate with `python scripts/render_report.py`, and verify
+`pdfinfo report.pdf` before merging to `main`.
 
 ---
 
