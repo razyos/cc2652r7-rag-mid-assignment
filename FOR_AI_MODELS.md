@@ -25,7 +25,8 @@ Deadline status:
 Branching policy:
 - `main` is the stable submission branch. Keep it runnable and submission-ready.
 - Session D (`fix/answerability-normalization`) was merged to `main` at commit `48dbd30`.
-- Session E (`feature/negation-handling`) is committed locally at `93789fb` but has not been merged to `main`; ask before merging.
+- Session E (`feature/negation-handling`) was verified, merged, and pushed to `main` at `ab8b70c`.
+- Current local branch for the next improvement is `feature/source-label-eval`.
 - Use short-lived branches for optional work, such as `feature/negation-handling`, `feature/source-label-eval`, or `feature/tx-power-extractor`.
 - Use experimental branches for major work, such as `exp/rf-driver-api-corpus` or `exp/competitor-datasheets`.
 - Do not make risky changes directly on `main`.
@@ -114,7 +115,7 @@ Answerable@Context checks if reference answer key terms appear in retrieved cont
 Session D fixed the known voltage metric bug by normalizing spaces and hyphens in
 `check_answerability()` so "1.8V" and "3.8V" match corpus text such as "1.8-V" and "3.8-V".
 
-Session E on `feature/negation-handling` did not change headline metrics, but it improved
+Session E did not change headline metrics, but it improved
 answer grounding for unsupported connectivity questions. Wi-Fi, USB, LTE/cellular, Ethernet,
 and Bluetooth Classic absence answers now cite `datasheet_hier_chunk_0000`.
 
@@ -124,30 +125,24 @@ and Bluetooth Classic absence answers now cite `datasheet_hier_chunk_0000`.
 
 ### High Priority
 
-**1. Merge or park Session E**
-`feature/negation-handling` is committed locally at `93789fb`. It extends Stage 5b anchor injection to
-unsupported connectivity/support terms and preserves the existing deterministic yes/no answer
-path. Before merge, rerun targeted tests, `python eval/run_eval.py`, `python scripts/render_report.py`,
-and `pdfinfo report.pdf`, then ask the user for merge approval.
-
-**2. Source-label evaluation**
+**1. Source-label evaluation**
 Hit@5 is not meaningful because `must_cite_chunk_ids` is empty for all current gold entries.
 Use `feature/source-label-eval` to add real source labels or a separate anchor-style source-hit
 metric, preferably with MRR. Preserve gold Q/A content unless a correction is explicitly documented.
 
-**3. TX-power extractor / anchoring**
+**2. TX-power extractor / anchoring**
 The maximum RF output power question currently answers `+0 dBm` from a transmit-current table
 instead of the expected `+20 dBm`. Keep this as a narrow `feature/tx-power-extractor` branch.
 
 ### Medium Priority
 
-**4. Add RF Driver API PDF to corpus**
+**3. Add RF Driver API PDF to corpus**
 Adding TI's RF Driver API Reference would fix ~12 failing questions (debugging + factual + negation categories).
 Steps: place PDF in `data/raw/`, re-run `src/build_index.py` with the new document.
 This is major corpus work. Use `exp/rf-driver-api-corpus`, rebuild indexes, update manifest/report,
 rerun eval, and only merge to `main` if the full submission audit passes.
 
-**5. Comparison questions**
+**4. Comparison questions**
 8/10 comparison questions require CC2652R1/CC2652P/CC1352R specs not in corpus.
 Either add those datasheets or rewrite the comparison questions to be self-referential.
 Use `exp/competitor-datasheets` or a dedicated gold-set branch; do not mix this with small fixes.

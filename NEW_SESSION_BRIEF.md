@@ -5,14 +5,12 @@ current state.
 
 ## Goal for the New Session
 
-Continue from the current local branch state, decide whether to merge or park the
-committed `feature/negation-handling` work, and then prepare the next controlled
-improvement under the new one-week extension.
+Continue from the current local branch state on `feature/source-label-eval`, which was
+created from the pushed Session E `main` commit `ab8b70c`.
 
-The next session should not start risky new work until Session E is either merged to
-`main` or explicitly left parked. After that, the highest-value improvement is
-`feature/source-label-eval`: make retrieval evaluation meaningful by adding real source
-labels or an anchor-style metric, inspired by the comparison `insurance-rag` repo.
+The highest-value next improvement is `feature/source-label-eval`: make retrieval
+evaluation meaningful by adding real source labels or an anchor-style metric, inspired
+by the comparison `insurance-rag` repo.
 
 An internal architecture/tradeoff note now exists at `SYSTEM_DESIGN_NOTES.md`. Read it
 before proposing retrieval or indexing changes; it explains why the current FAISS+BM25
@@ -31,13 +29,12 @@ Standalone GitHub repo: `https://github.com/razyos/cc2652r7-rag-mid-assignment`
 Branch policy:
 
 - `main` is the stable submission branch. It should remain runnable and submission-ready.
-- Latest known stable `main` commit before Session E: `9b6a725 Document post-Session D branch policy`.
-- Current work branch: `feature/negation-handling`.
-- Current Session E commit: `93789fb Handle unsupported connectivity anchors`.
+- Current pushed `main` commit: `ab8b70c Refresh Session E verification artifacts`.
+- Current work branch: `feature/source-label-eval`.
+- Session E commit chain on `main`: `93789fb Handle unsupported connectivity anchors`, `d9a2fe6 Update next session handoff`, `ab8b70c Refresh Session E verification artifacts`.
 - The current workspace should be clean, but inspect `git status` first.
 - Do not make risky changes directly on `main`.
 - Do not force-push `main`.
-- Merge `feature/negation-handling` into `main` only after reviewing the diff, rerunning verification, and ensuring report artifacts remain current.
 - Use short-lived branches for narrow improvements:
   - `feature/source-label-eval`
   - `feature/tx-power-extractor`
@@ -61,8 +58,7 @@ The system uses a manual 7-stage pipeline: dense FAISS retrieval with
 datasheet anchor injection, context budgeting, deterministic extractors, and local
 Ollama `llama3.2` fallback.
 
-Sessions A-D are complete and merged to `main`. Session E is committed locally on
-`feature/negation-handling` at `93789fb`:
+Sessions A-E are complete and merged to `main`. Session E is pushed at `ab8b70c`:
 
 - Unsupported connectivity questions now force `datasheet_hier_chunk_0000` into the final context:
   - Wi-Fi
@@ -78,7 +74,7 @@ Sessions A-D are complete and merged to `main`. Session E is committed locally o
 - `report.md` was updated to describe unsupported-connectivity extraction behavior.
 - `report.pdf` was regenerated and remains 2 A4 pages.
 
-Latest verified Session E command results:
+Latest verified Session E command results before merge:
 
 ```text
 python -m pytest tests/test_generation.py -q
@@ -174,22 +170,18 @@ Read these before changing code:
 
 ## Recommended Session Order Under the Extension
 
-1. **Resolve Session E**
-   Confirm the clean `feature/negation-handling` commit and either merge it to `main`
-   with user approval or explicitly leave it parked.
-
-2. **Source-label evaluation**
-   Create `feature/source-label-eval`. Add meaningful retrieval evidence labels or
+1. **Source-label evaluation**
+   Continue `feature/source-label-eval`. Add meaningful retrieval evidence labels or
    anchor-style matching so Hit@5 is no longer vacuous. Add MRR if feasible.
 
-3. **TX-power extractor**
+2. **TX-power extractor**
    Create `feature/tx-power-extractor`. Fix the max RF output power / standard-mode TX-power
    behavior without corpus expansion.
 
-4. **Report refresh**
+3. **Report refresh**
    Update `report.md`, regenerate `report.pdf`, and verify `pdfinfo report.pdf` is 4 pages or fewer.
 
-5. **Experimental only if time remains**
+4. **Experimental only if time remains**
    Consider `exp/rf-driver-api-corpus`. Do not start competitor datasheets unless everything
    else is complete and the user explicitly accepts the scope risk.
 
@@ -210,20 +202,20 @@ Branch policy:
 - main is the stable submission branch.
 - Do not make risky changes directly on main.
 - Do not force-push main.
-- Current local branch may be feature/negation-handling with committed Session E work.
+- Current local branch should be feature/source-label-eval.
 
 Current state:
-- Sessions A-D are complete and merged to main.
-- Stable main before Session E: 9b6a725 Document post-Session D branch policy.
-- Session E is committed locally on feature/negation-handling at 93789fb Handle unsupported connectivity anchors.
+- Sessions A-E are complete and merged to main.
+- Current pushed main: ab8b70c Refresh Session E verification artifacts.
+- feature/source-label-eval was created from main at ab8b70c.
 - The workspace should be clean, but inspect git status first.
-- Session E changes:
+- Merged Session E changes:
   - Unsupported connectivity/support questions now anchor datasheet_hier_chunk_0000.
   - Wi-Fi, USB, LTE/cellular, Ethernet, and Bluetooth Classic absence answers cite the CC2652R7 feature/protocol list.
   - LTE/cellular combined wording now says "LTE or cellular connectivity."
 - eval/eval_results.json, report.md, and report.pdf were refreshed.
 - SYSTEM_DESIGN_NOTES.md was added as an internal architecture/tradeoff note covering current design, industry alignment, and modern alternatives beyond FAISS/Chroma.
-- Latest verified metrics on the branch:
+- Latest verified metrics on `main`:
   - Hit@5 = 1.000 (50/50)
   - Answerable@Context = 0.560 (28/50)
   - report.pdf is 2 pages.
@@ -247,24 +239,19 @@ First read:
 
 Task:
 1. Inspect git status and confirm the current branch/commit.
-2. Verify feature/negation-handling contains only the narrow Session E changes plus handoff/internal documentation updates.
-3. If merging is requested or before starting new feature work, rerun targeted tests:
-   - python -m pytest tests/test_generation.py -q
-   - python -m pytest tests/test_rag_system.py::test_answer_injects_datasheet_anchor_for_unsupported_connectivity_questions -q
-4. Rerun python eval/run_eval.py if feasible.
-5. Run python scripts/render_report.py and verify pdfinfo report.pdf is <= 4 pages if report.md or metrics changed.
-6. Ask before merging to main. If user approves merge, merge only after verification.
-7. If the user does not want to merge now, explicitly park feature/negation-handling and do not lose the commit.
-8. After Session E is merged or explicitly parked, create feature/source-label-eval from the appropriate stable base. Goal: make Hit@5 meaningful by adding source labels or anchor-style source matching, preferably with MRR. Do not change the gold Q/A content unless explicitly necessary and documented.
-9. If present locally, use docs/superpowers/plans/2026-05-26-source-label-eval.md as the detailed implementation plan for source-label evaluation; otherwise follow WORK_PLAN.md Session F.
-10. Do not migrate from FAISS or BM25 yet. If retrieval modernization is considered, first use SYSTEM_DESIGN_NOTES.md to frame options, then wait until source-label evaluation exists so alternatives can be measured.
+2. Continue feature/source-label-eval. Goal: make Hit@5 meaningful by adding source labels or anchor-style source matching, preferably with MRR. Do not change the gold Q/A content unless explicitly necessary and documented.
+3. If present locally, use docs/superpowers/plans/2026-05-26-source-label-eval.md as the detailed implementation plan for source-label evaluation; otherwise follow WORK_PLAN.md Session F.
+4. Add focused tests for source-labeled Hit@k/MRR behavior before implementation.
+5. Run targeted tests and python eval/run_eval.py.
+6. If metrics or report claims change, update report.md, regenerate report.pdf with python scripts/render_report.py, and verify pdfinfo report.pdf is <= 4 pages.
+7. Do not migrate from FAISS or BM25 yet. If retrieval modernization is considered, first use SYSTEM_DESIGN_NOTES.md to frame options, then wait until source-label evaluation exists so alternatives can be measured.
 
 Constraints:
 - Do not add RF Driver API docs except on exp/rf-driver-api-corpus.
 - Do not add competitor datasheets except on exp/competitor-datasheets.
 - Do not rebuild indexes unless on an experimental corpus/index branch.
 - Do not do broad retrieval/corpus refactors.
-- Do not start feature/tx-power-extractor until Session E is merged or explicitly parked and source-label evaluation is handled or intentionally deferred.
+- Do not start feature/tx-power-extractor until source-label evaluation is handled or intentionally deferred.
 - Do not treat FAISS/Chroma as the full design space; SYSTEM_DESIGN_NOTES.md lists stronger modern options. Still, no backend migration should happen before measurable source-label eval.
 - If full pytest stalls in model-heavy tests, stop it and report the attempt; do not claim full-suite pass.
 ```

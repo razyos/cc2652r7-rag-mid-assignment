@@ -6,9 +6,9 @@ A complete Retrieval-Augmented Generation (RAG) pipeline over TI CC2652R7 docume
 
 - Original deadline: Tuesday, May 26, 2026 at 12:00 noon Asia/Jerusalem.
 - Extension: one week from May 26, 2026. Treat the working deadline as Tuesday, June 2, 2026, with the exact time still to confirm.
-- `main` is the stable submission branch.
-- Current local work branch: `feature/negation-handling`, committed locally at `93789fb` but not yet merged.
-- Recommended next order: decide whether to merge `feature/negation-handling`, then improve source-label evaluation, then address TX-power extraction.
+- `main` is the stable submission branch and includes Session E at `ab8b70c`.
+- Current local work branch: `feature/source-label-eval`, created from `main` at `ab8b70c`.
+- Recommended next order: improve source-label evaluation, then address TX-power extraction.
 
 ## Repository
 

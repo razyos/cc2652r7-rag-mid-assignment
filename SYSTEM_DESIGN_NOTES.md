@@ -3,7 +3,7 @@
 Internal engineering notes for explaining the system beyond the 4-page report.
 
 Date: 2026-05-26
-Current branch context: `feature/negation-handling`
+Current branch context: `feature/source-label-eval`
 Primary goal: make the design understandable, defensible, and easy to improve without
 treating the current implementation as the only possible RAG architecture.
 
@@ -650,33 +650,26 @@ Why not now:
 
 ## 15. Recommended Improvement Roadmap
 
-Priority 1: stabilize Session E.
-
-- Review, commit, and optionally merge `feature/negation-handling`.
-- Keep main stable.
-- Do not merge without targeted tests, eval, report regeneration if needed, and PDF
-  page-count verification.
-
-Priority 2: source-label evaluation.
+Priority 1: source-label evaluation.
 
 - Branch: `feature/source-label-eval`.
 - Add non-empty source labels for a defensible subset or a separate anchor-source file.
 - Compute real Hit@k and MRR.
 - Update report claims honestly.
 
-Priority 3: TX-power extractor.
+Priority 2: TX-power extractor.
 
 - Branch: `feature/tx-power-extractor`.
 - Fix maximum RF output power and standard-mode TX-power behavior.
 - Prefer table-aware evidence if it can be done narrowly.
 
-Priority 4: RF Driver API corpus expansion.
+Priority 3: RF Driver API corpus expansion.
 
 - Branch: `exp/rf-driver-api-corpus`.
 - Add exact RF Driver API source only with user approval.
 - Rebuild indexes, rerun eval, update report and PDF.
 
-Priority 5: broader retrieval modernization.
+Priority 4: broader retrieval modernization.
 
 - Only after source-label eval exists.
 - Compare current FAISS+BM25 against at least one modern alternative:

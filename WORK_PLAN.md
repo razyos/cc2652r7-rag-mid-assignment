@@ -3,13 +3,13 @@
 **Created:** 2026-05-23
 **Original submission deadline:** 2026-05-26 at 12:00 noon, Asia/Jerusalem
 **Extension:** one week from 2026-05-26. Treat the working deadline as 2026-06-02, exact time TBD; assume 12:00 noon Asia/Jerusalem until clarified.
-**Planning decision:** The report was the original critical path and is now submission-safe. With the extension, the best use of time is controlled improvement: stabilize Session E, make retrieval evaluation meaningful, then fix narrow answer-quality failures.
+**Planning decision:** The report was the original critical path and is now submission-safe. With the extension, the best use of time is controlled improvement: make retrieval evaluation meaningful, then fix narrow answer-quality failures.
 
 **Status update, 2026-05-23:** Sessions A-D are complete and merged to `main`. `REPORT_NOTES.md`, `report.md`, and `report.pdf` exist; `report.pdf` is 2 A4 pages, which satisfies the assignment's "up to 4 pages" limit. Session C audit verified required files, README commands, manifest fields, and `RAGSystem.answer(question: str) -> dict`. Session D fixed the Answerable@Context hyphen/spacing normalization false negative and refreshed eval/report evidence. `main` is the stable submission branch.
 
-**Status update, 2026-05-24:** Session E is complete on `feature/negation-handling` and is not merged to `main` yet. The branch improves unsupported connectivity answers for Wi-Fi, USB, LTE/cellular, Ethernet, and Bluetooth Classic by anchoring `datasheet_hier_chunk_0000` and keeping answers grounded in the CC2652R7 feature/protocol list. Branch eval remains Hit@5 = 1.000 and Answerable@Context = 0.560. `report.md` and `report.pdf` were refreshed; `pdfinfo report.pdf` reports 2 pages.
+**Status update, 2026-05-24:** Session E was completed on `feature/negation-handling`. The branch improved unsupported connectivity answers for Wi-Fi, USB, LTE/cellular, Ethernet, and Bluetooth Classic by anchoring `datasheet_hier_chunk_0000` and keeping answers grounded in the CC2652R7 feature/protocol list. Branch eval remained Hit@5 = 1.000 and Answerable@Context = 0.560. `report.md` and `report.pdf` were refreshed; `pdfinfo report.pdf` reported 2 pages.
 
-**Status update, 2026-05-26:** Session E was committed locally on `feature/negation-handling` at `93789fb` after fresh targeted tests, eval, report rendering, and PDF page-count verification. It has not been merged to `main`; ask before merging. The deadline extension makes source-label evaluation the highest-value next improvement after Session E is merged or explicitly parked. A comparison repo (`insurance-rag`) showed a stronger anchor/MRR-style retrieval evaluation pattern. Borrow the concept only; do not copy code or switch this project from FAISS to Chroma.
+**Status update, 2026-05-26:** Session E was verified, fast-forward merged, and pushed to `main` at `ab8b70c`. Fresh verification before merge: `tests/test_generation.py` passed 12 tests, the focused unsupported-connectivity RAG test passed 5 tests, `python eval/run_eval.py` reported Hit@5 = 1.000 and Answerable@Context = 0.560, `python scripts/render_report.py` completed, and `pdfinfo report.pdf` reported 2 pages. The active local branch is now `feature/source-label-eval`. A comparison repo (`insurance-rag`) showed a stronger anchor/MRR-style retrieval evaluation pattern. Borrow the concept only; do not copy code or switch this project from FAISS to Chroma.
 
 **Design note, 2026-05-26:** `SYSTEM_DESIGN_NOTES.md` was added as an internal architecture and tradeoff reference. It explains each pipeline stage, why the current design fits the assignment, where it aligns with industry practice, and when more advanced options such as RRF, Qdrant, Weaviate, Milvus, pgvector, sparse+dense retrieval, BGE-M3, ColBERT-style late interaction, or GraphRAG would be worth testing. Use it before proposing retrieval modernization.
 
@@ -22,7 +22,8 @@ Standalone repository:
 - Default branch: `main`
 - Current stable branch: `main`
 - Session D branch: `fix/answerability-normalization` was merged and pushed to `main` at commit `48dbd30`.
-- Session E branch: `feature/negation-handling` is committed locally at `93789fb` and should be merged only after user approval.
+- Session E branch: `feature/negation-handling` was merged and pushed to `main` at commit `ab8b70c`.
+- Current work branch: `feature/source-label-eval`.
 
 DevOps policy:
 
@@ -61,9 +62,9 @@ Current verified project status:
 - `report.md` and `report.pdf` are present; `scripts/render_report.py` regenerates the PDF from Markdown
 - `SYSTEM_DESIGN_NOTES.md` is present as the internal engineering rationale/tradeoff document
 
-Current Session E branch status:
+Current Session E status:
 
-- `feature/negation-handling` extends Stage 5b anchor injection for unsupported connectivity/support terms.
+- `main` at `ab8b70c` includes Stage 5b anchor injection for unsupported connectivity/support terms.
 - Unsupported Wi-Fi, USB, LTE/cellular, Ethernet, and Bluetooth Classic answers cite `datasheet_hier_chunk_0000`.
 - Focused tests passed:
   - `python -m pytest tests/test_generation.py -q` passed 12 tests.
@@ -96,11 +97,10 @@ Steps 1-4 are complete. Avoid merging corpus expansion or broad comparison suppo
 Recommended remaining order:
 
 1. Keep `main` frozen and submission-safe unless a clearly verified improvement is ready.
-2. Decide whether to merge `feature/negation-handling` only after confirming the latest targeted tests, eval, report regeneration, and `pdfinfo report.pdf` remain valid.
-3. Start `feature/source-label-eval` to replace the vacuous Hit@5 with real source labels or an anchor-style retrieval metric, preferably adding MRR.
-4. Use `feature/tx-power-extractor` for the next narrow answer-quality improvement.
-5. Run a final submission audit after each merge that changes code, metrics, report text, or PDF artifacts.
-6. Use experimental branches for major work: `exp/rf-driver-api-corpus`, `exp/competitor-datasheets`, or similar.
+2. Continue `feature/source-label-eval` to replace the vacuous Hit@5 with real source labels or an anchor-style retrieval metric, preferably adding MRR.
+3. Use `feature/tx-power-extractor` for the next narrow answer-quality improvement after source-label evaluation is handled.
+4. Run a final submission audit after each merge that changes code, metrics, report text, or PDF artifacts.
+5. Use experimental branches for major work: `exp/rf-driver-api-corpus`, `exp/competitor-datasheets`, or similar.
 
 ## Session A - Report Evidence Freeze
 
@@ -303,7 +303,7 @@ Report the old and new Answerable@Context numbers.
 If the metric changes, update report.md, regenerate report.pdf with python scripts/render_report.py, and verify pdfinfo report.pdf is still <= 4 pages.
 ```
 
-## Session E - Negation Quote/Answer Fix, Completed on Branch
+## Session E - Negation Quote/Answer Fix, Merged
 
 **Goal:** Make unsupported-feature questions answer cleanly with the authoritative CC2652R7 feature list.
 
@@ -324,7 +324,7 @@ If the metric changes, update report.md, regenerate report.pdf with python scrip
 
 **Dependencies:** Session B draft exists; preferably after Session D
 
-**Priority:** Completed and committed locally on `feature/negation-handling` at `93789fb`; ask before merging to `main`.
+**Priority:** Completed, verified, merged, and pushed to `main` at `ab8b70c`.
 
 **Important context:**
 
@@ -348,14 +348,12 @@ If the metric changes, update report.md, regenerate report.pdf with python scrip
 - `pdfinfo report.pdf` reports 2 pages.
 - Full `python -m pytest tests/ -q` was attempted but stopped after model-heavy no-output behavior.
 
-**Copy-paste prompt if Session E must be resumed:**
+**Copy-paste prompt if Session E behavior must be audited:**
 
 ```text
-Resume Session E on feature/negation-handling.
+Audit the merged Session E unsupported-connectivity behavior.
 Read NEW_SESSION_BRIEF.md, WORK_PLAN.md, FOR_AI_MODELS.md, PROJECT_STATUS.md, src/generation.py, src/rag_system.py, tests/test_generation.py, tests/test_rag_system.py, eval/eval_results.json, and report.md.
-Review the current branch diff and verify it only contains the narrow unsupported-connectivity improvement.
 Rerun targeted tests, rerun python eval/run_eval.py if feasible, regenerate report.pdf only if report.md or metrics changed, and verify pdfinfo report.pdf is <= 4 pages.
-If all checks pass, commit the branch; merge to main only with user approval.
 ```
 
 ## Session F - Source-Label Evaluation Upgrade
@@ -382,7 +380,7 @@ If all checks pass, commit the branch; merge to main only with user approval.
 
 **Time estimate:** 3-6 hours
 
-**Dependencies:** Session E should be merged or explicitly parked first.
+**Dependencies:** Session E is merged to `main`; work from `feature/source-label-eval`.
 
 **Priority:** Highest academic improvement after Session E. This directly addresses the current report's biggest evaluation caveat: all `must_cite_chunk_ids` are empty, so Hit@5 is not discriminative.
 
@@ -404,7 +402,7 @@ If all checks pass, commit the branch; merge to main only with user approval.
 **Copy-paste prompt:**
 
 ```text
-Start feature/source-label-eval after Session E is merged or explicitly parked.
+Continue feature/source-label-eval from `main` at `ab8b70c`.
 Read NEW_SESSION_BRIEF.md, WORK_PLAN.md, PROJECT_STATUS.md, FOR_AI_MODELS.md, REPORT_NOTES.md, eval/gold_set.jsonl, eval/run_eval.py, data/processed/chunks.json, and report.md.
 Goal: make Hit@5 meaningful. Add source labels or an anchor-style source-hit metric without rewriting the gold Q/A content.
 Start with a focused, defensible labeled subset if full labeling is too slow. Prefer obvious labels such as datasheet_hier_chunk_0000 for flash/SRAM/protocol/voltage/GPIO/package/unsupported-connectivity questions.
@@ -544,8 +542,8 @@ Keep this separate from the CC2652R7 report unless there is time after report.pd
 
 **May 25-26**
 
-- Decide whether to merge `feature/negation-handling` or keep it parked.
-- If merged, rerun targeted tests, eval, report rendering, and `pdfinfo report.pdf`.
+- Session E was verified, merged, and pushed to `main` at `ab8b70c`.
+- `feature/source-label-eval` was created from updated `main`.
 
 **May 27-28**
 
@@ -569,8 +567,7 @@ Keep this separate from the CC2652R7 report unless there is time after report.pd
 
 ## Decision Rules for Future Sessions
 
-- If `feature/negation-handling` is still unmerged, ask whether to merge it or explicitly park it before starting new feature work.
-- If `feature/negation-handling` is merged, run Session C-style final audit before optional code work.
+- Session E is merged. Start optional work from `feature/source-label-eval`, and run a Session C-style final audit before merging any future branch to `main`.
 - If less than 24 hours remain before the deadline, do not start corpus expansion.
 - If an optional fix changes metrics, rerun eval and update the report source before regenerating `report.pdf`.
 - If eval results conflict with `PROJECT_STATUS.md`, use the most recent verified command output and document the command/date.
@@ -578,14 +575,12 @@ Keep this separate from the CC2652R7 report unless there is time after report.pd
 
 ## Open Questions / User Decisions
 
-1. Should `feature/negation-handling` be merged to `main` before submission?
-2. After Session E is resolved, should the next branch be `feature/source-label-eval`?
-3. Should `feature/tx-power-extractor` wait until after source-label evaluation?
-4. Should RF Driver API expansion stay experimental?
+1. Should `feature/source-label-eval` remain the next branch?
+2. Should `feature/tx-power-extractor` wait until after source-label evaluation?
+3. Should RF Driver API expansion stay experimental?
 
 Recommended answers:
 
-1. Yes, but only after repeated targeted tests, eval, report regeneration, and `pdfinfo report.pdf`.
-2. Yes. It is the highest-value academic improvement because current Hit@5 is vacuous without source labels.
-3. Yes. TX power is useful but narrower; do it only after the evaluation metric is defensible.
-4. Yes. RF Driver API corpus expansion is major corpus/index work and should not merge without a full rebuild, eval, report refresh, PDF verification, and user approval.
+1. Yes. It is the highest-value academic improvement because current Hit@5 is vacuous without source labels.
+2. Yes. TX power is useful but narrower; do it only after the evaluation metric is defensible.
+3. Yes. RF Driver API corpus expansion is major corpus/index work and should not merge without a full rebuild, eval, report refresh, PDF verification, and user approval.

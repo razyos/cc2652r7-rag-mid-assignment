@@ -7,7 +7,7 @@ built as a university mid-assignment. The system demonstrates that bare Llama 3.
 hallucinates on device-specific questions while RAG grounds answers in TI documentation.
 
 **Assignment:** Build, evaluate, and report on a RAG system.
-**Submission state:** `main` is submission-safe as of 2026-05-23. `report.md` and a 2-page `report.pdf` exist and reflect the latest Session D eval. As of 2026-05-26, `feature/negation-handling` contains committed Session E work at `93789fb` with refreshed eval/report artifacts, but it has not been merged to `main` yet.
+**Submission state:** `main` is submission-safe and pushed to GitHub at `ab8b70c` as of 2026-05-26. `report.md` and a 2-page `report.pdf` reflect the latest Session E eval. The active local work branch is `feature/source-label-eval`, created from `main` at `ab8b70c`.
 **Deadline:** Original deadline was 2026-05-26 at 12:00 noon Asia/Jerusalem. A one-week extension was granted; treat the working deadline as 2026-06-02, exact time TBD, assuming noon until clarified.
 **Internal design note:** `SYSTEM_DESIGN_NOTES.md` explains the architecture, design tradeoffs, industry alignment, and modern retrieval/indexing alternatives beyond FAISS/Chroma.
 
@@ -15,7 +15,8 @@ hallucinates on device-specific questions while RAG grounds answers in TI docume
 
 - `main` is the stable submission branch. Keep it runnable and do not force-push it.
 - Session D (`fix/answerability-normalization`) was merged to `main` at commit `48dbd30`.
-- Session E (`feature/negation-handling`) is committed locally at `93789fb`; ask before merging it to `main`.
+- Session E (`feature/negation-handling`) was verified, merged, and pushed to `main` at commit `ab8b70c`.
+- Current branch for the next improvement is `feature/source-label-eval`.
 - Use short-lived branches for narrow optional improvements, for example `feature/negation-handling`, `feature/source-label-eval`, or `feature/tx-power-extractor`.
 - Use experimental branches for major work, for example `exp/rf-driver-api-corpus` or `exp/competitor-datasheets`.
 - Do not merge corpus expansion, gold-set rewrites, retrieval changes, or answer-generation behavior changes into `main` unless tests, `python eval/run_eval.py`, report updates, PDF regeneration, and `pdfinfo report.pdf` all pass.
@@ -149,7 +150,7 @@ Each entry: `{"question", "reference_answer", "must_cite_chunk_ids", "category"}
 
 ---
 
-## Evaluation Results (as of 2026-05-24 on `feature/negation-handling`)
+## Evaluation Results (as of 2026-05-26 on `main` at `ab8b70c`)
 
 | Metric | Score | Detail |
 |--------|-------|--------|
@@ -175,7 +176,7 @@ Session E did not change headline metrics, but it improved unsupported-connectiv
 grounding. The saved eval answers for Wi-Fi, USB, LTE/cellular, Ethernet, and Bluetooth
 Classic now answer from `datasheet_hier_chunk_0000` instead of nearby application text.
 
-Session E verification on `feature/negation-handling`:
+Session E verification before merging to `main`:
 
 - `python -m pytest tests/test_generation.py -q` passed 12 tests.
 - `python -m pytest tests/test_rag_system.py::test_answer_injects_datasheet_anchor_for_unsupported_connectivity_questions -q` passed 5 tests.
@@ -187,11 +188,10 @@ Session E verification on `feature/negation-handling`:
 
 The one-week extension should be used for controlled, reportable improvements:
 
-1. Decide whether to merge `feature/negation-handling` into `main` or keep it parked.
-2. Create `feature/source-label-eval` to add meaningful source labels or anchor-style source-hit evaluation, preferably with MRR. This addresses the biggest current evaluation weakness: Hit@5 is vacuous because `must_cite_chunk_ids` is empty.
-3. Create `feature/tx-power-extractor` for the narrow max RF output power / standard-mode TX-power answer failure.
-4. Refresh `report.md` and `report.pdf` after metric or claim changes.
-5. Treat RF Driver API corpus expansion as experimental only (`exp/rf-driver-api-corpus`), because it requires source approval, index rebuild, manifest/report updates, and a full audit.
+1. Continue `feature/source-label-eval` to add meaningful source labels or anchor-style source-hit evaluation, preferably with MRR. This addresses the biggest current evaluation weakness: Hit@5 is vacuous because `must_cite_chunk_ids` is empty.
+2. Create `feature/tx-power-extractor` for the narrow max RF output power / standard-mode TX-power answer failure after source-label evaluation is handled.
+3. Refresh `report.md` and `report.pdf` after metric or claim changes.
+4. Treat RF Driver API corpus expansion as experimental only (`exp/rf-driver-api-corpus`), because it requires source approval, index rebuild, manifest/report updates, and a full audit.
 
 ---
 
@@ -214,10 +214,10 @@ be self-referential (CC2652R7 properties only).
 **Status:** Fixed in `main` at commit `48dbd30`. The latest eval improved from 0.540 (27/50)
 to 0.560 (28/50).
 
-### 4. Unsupported Connectivity Negation — Improved on Session E Branch
+### 4. Unsupported Connectivity Negation — Merged in Session E
 **Problem:** For "Does CC2652R7 support Wi-Fi?", the system previously retrieved or quoted
 nearby product-application text rather than the authoritative support list.
-**Status:** Improved on `feature/negation-handling`. Unsupported Wi-Fi, USB, LTE/cellular,
+**Status:** Merged to `main` at `ab8b70c`. Unsupported Wi-Fi, USB, LTE/cellular,
 Ethernet, and Bluetooth Classic answers now cite `datasheet_hier_chunk_0000`. This has not
 changed Answerable@Context because the metric checks gold reference key terms, not answer
 quality or citation quality.
