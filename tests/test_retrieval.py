@@ -3,9 +3,10 @@ import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import numpy as np
 import faiss
+import pytest
 from rank_bm25 import BM25Okapi
-from sentence_transformers import SentenceTransformer
 from src.retrieval import retrieve_dense, retrieve_bm25, hybrid_retrieve
+from tests.fakes import FakeCrossEncoder, FakeEmbeddingModel
 
 CHUNKS = [
     {"chunk_id": "trm_chunk_0001", "doc_id": "trm", "text": "RF core initialization procedure for CC2652R7", "metadata": {"page": 1}},
@@ -15,10 +16,8 @@ CHUNKS = [
     {"chunk_id": "trm_chunk_0005", "doc_id": "trm", "text": "Zigbee stack configuration and commissioning", "metadata": {"page": 5}},
 ]
 
-MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
-
 def _build_test_faiss(chunks):
-    model = SentenceTransformer(MODEL_NAME)
+    model = FakeEmbeddingModel()
     embeddings = model.encode([c["text"] for c in chunks], normalize_embeddings=True)
     embeddings = np.array(embeddings, dtype="float32")
     index = faiss.IndexFlatIP(embeddings.shape[1])
@@ -28,6 +27,11 @@ def _build_test_faiss(chunks):
 def _build_test_bm25(chunks):
     tokenized = [c["text"].lower().split() for c in chunks]
     return BM25Okapi(tokenized)
+
+
+@pytest.fixture(autouse=True)
+def fake_cross_encoder(monkeypatch):
+    monkeypatch.setattr("src.retrieval._get_cross_encoder", lambda: FakeCrossEncoder())
 
 def test_retrieve_dense_returns_k_results():
     index, model = _build_test_faiss(CHUNKS)

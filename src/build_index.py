@@ -11,9 +11,10 @@ from rank_bm25 import BM25Okapi
 
 
 def build_faiss_index(chunks: list[dict], model_name: str = "BAAI/bge-large-en-v1.5",
-                       save_path: str = None) -> tuple:
+                       save_path: str = None, model=None) -> tuple:
     """Embed chunks and build a FAISS inner-product index."""
-    model = SentenceTransformer(model_name)
+    if model is None:
+        model = SentenceTransformer(model_name)
     texts = [c["text"] for c in chunks]
     embeddings = model.encode(texts, normalize_embeddings=True, show_progress_bar=True)
     embeddings = np.array(embeddings, dtype="float32")

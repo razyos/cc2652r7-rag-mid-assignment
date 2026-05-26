@@ -5,9 +5,9 @@ from unittest.mock import patch
 import pytest
 import numpy as np
 import faiss
-from sentence_transformers import SentenceTransformer
 from rank_bm25 import BM25Okapi
 from src.rag_system import RAGSystem
+from tests.fakes import FakeCrossEncoder, FakeEmbeddingModel
 
 CHUNKS = [
     {"chunk_id": "trm_chunk_0001", "doc_id": "trm",
@@ -16,7 +16,7 @@ CHUNKS = [
 ]
 
 def _make_system():
-    model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+    model = FakeEmbeddingModel()
     emb = model.encode([c["text"] for c in CHUNKS], normalize_embeddings=True)
     emb = np.array(emb, dtype="float32")
     index = faiss.IndexFlatIP(emb.shape[1])
@@ -24,6 +24,11 @@ def _make_system():
     tokenized = [c["text"].lower().split() for c in CHUNKS]
     bm25 = BM25Okapi(tokenized)
     return RAGSystem(index=index, chunks=CHUNKS, model=model, bm25=bm25)
+
+
+@pytest.fixture(autouse=True)
+def fake_cross_encoder(monkeypatch):
+    monkeypatch.setattr("src.retrieval._get_cross_encoder", lambda: FakeCrossEncoder())
 
 def test_answer_returns_required_keys():
     system = _make_system()
