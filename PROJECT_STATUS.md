@@ -7,7 +7,7 @@ built as a university mid-assignment. The system demonstrates that bare Llama 3.
 hallucinates on device-specific questions while RAG grounds answers in TI documentation.
 
 **Assignment:** Build, evaluate, and report on a RAG system.
-**Submission state:** `main` is submission-safe and pushed to GitHub at `ab8b70c` as of 2026-05-26. `report.md` and a 2-page `report.pdf` reflect the latest Session E eval. The active local work branch is `feature/source-label-eval`, created from `main` at `ab8b70c`.
+**Submission state:** `main` is submission-safe and pushed to GitHub at `aecde5e` as of 2026-05-26. `report.md` and a 2-page `report.pdf` reflect the latest Session E eval. The active local work branch is `feature/source-label-eval`, aligned with `main` at `aecde5e`.
 **Deadline:** Original deadline was 2026-05-26 at 12:00 noon Asia/Jerusalem. A one-week extension was granted; treat the working deadline as 2026-06-02, exact time TBD, assuming noon until clarified.
 **Internal design note:** `SYSTEM_DESIGN_NOTES.md` explains the architecture, design tradeoffs, industry alignment, and modern retrieval/indexing alternatives beyond FAISS/Chroma.
 
@@ -15,7 +15,7 @@ hallucinates on device-specific questions while RAG grounds answers in TI docume
 
 - `main` is the stable submission branch. Keep it runnable and do not force-push it.
 - Session D (`fix/answerability-normalization`) was merged to `main` at commit `48dbd30`.
-- Session E (`feature/negation-handling`) was verified, merged, and pushed to `main` at commit `ab8b70c`.
+- Session E (`feature/negation-handling`) was verified and merged at commit `ab8b70c`; handoff docs were refreshed and pushed at `aecde5e`.
 - Current branch for the next improvement is `feature/source-label-eval`.
 - Use short-lived branches for narrow optional improvements, for example `feature/negation-handling`, `feature/source-label-eval`, or `feature/tx-power-extractor`.
 - Use experimental branches for major work, for example `exp/rf-driver-api-corpus` or `exp/competitor-datasheets`.
@@ -150,7 +150,7 @@ Each entry: `{"question", "reference_answer", "must_cite_chunk_ids", "category"}
 
 ---
 
-## Evaluation Results (as of 2026-05-26 on `main` at `ab8b70c`)
+## Evaluation Results (as of 2026-05-26 on `main`; Session E verified at `ab8b70c`)
 
 | Metric | Score | Detail |
 |--------|-------|--------|

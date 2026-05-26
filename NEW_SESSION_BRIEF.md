@@ -6,7 +6,7 @@ current state.
 ## Goal for the New Session
 
 Continue from the current local branch state on `feature/source-label-eval`, which was
-created from the pushed Session E `main` commit `ab8b70c`.
+aligned with the pushed `main` commit `aecde5e`.
 
 The highest-value next improvement is `feature/source-label-eval`: make retrieval
 evaluation meaningful by adding real source labels or an anchor-style metric, inspired
@@ -29,9 +29,9 @@ Standalone GitHub repo: `https://github.com/razyos/cc2652r7-rag-mid-assignment`
 Branch policy:
 
 - `main` is the stable submission branch. It should remain runnable and submission-ready.
-- Current pushed `main` commit: `ab8b70c Refresh Session E verification artifacts`.
+- Current pushed `main` commit: `aecde5e Update post-Session E handoff docs`.
 - Current work branch: `feature/source-label-eval`.
-- Session E commit chain on `main`: `93789fb Handle unsupported connectivity anchors`, `d9a2fe6 Update next session handoff`, `ab8b70c Refresh Session E verification artifacts`.
+- Session E commit chain on `main`: `93789fb Handle unsupported connectivity anchors`, `d9a2fe6 Update next session handoff`, `ab8b70c Refresh Session E verification artifacts`, `aecde5e Update post-Session E handoff docs`.
 - The current workspace should be clean, but inspect `git status` first.
 - Do not make risky changes directly on `main`.
 - Do not force-push `main`.
@@ -58,7 +58,7 @@ The system uses a manual 7-stage pipeline: dense FAISS retrieval with
 datasheet anchor injection, context budgeting, deterministic extractors, and local
 Ollama `llama3.2` fallback.
 
-Sessions A-E are complete and merged to `main`. Session E is pushed at `ab8b70c`:
+Sessions A-E are complete and merged to `main`. `main` is pushed at `aecde5e`; the Session E verification artifact commit is `ab8b70c`:
 
 - Unsupported connectivity questions now force `datasheet_hier_chunk_0000` into the final context:
   - Wi-Fi
@@ -206,8 +206,8 @@ Branch policy:
 
 Current state:
 - Sessions A-E are complete and merged to main.
-- Current pushed main: ab8b70c Refresh Session E verification artifacts.
-- feature/source-label-eval was created from main at ab8b70c.
+- Current pushed main: aecde5e Update post-Session E handoff docs.
+- feature/source-label-eval is aligned with main at aecde5e.
 - The workspace should be clean, but inspect git status first.
 - Merged Session E changes:
   - Unsupported connectivity/support questions now anchor datasheet_hier_chunk_0000.
