@@ -8,7 +8,7 @@ A complete Retrieval-Augmented Generation (RAG) pipeline over TI CC2652R7 docume
 - Extension: one week from May 26, 2026. Treat the working deadline as Tuesday, June 2, 2026, with the exact time still to confirm.
 - `main` is the stable submission branch and has the post-Session E handoff docs.
 - Current local work branch: `feature/source-label-eval`, aligned with `main`.
-- Recommended next order: improve source-label evaluation, then address TX-power extraction.
+- Recommended next order: finish/merge source-label evaluation, then address TX-power extraction.
 
 ## Repository
 

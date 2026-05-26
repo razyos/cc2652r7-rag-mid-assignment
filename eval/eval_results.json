@@ -1,6 +1,11 @@
 {
   "hit_at_k": 1.0,
   "answerable_at_k": 0.56,
+  "source_metrics": {
+    "labeled_count": 14,
+    "source_hit_at_k": 1.0,
+    "source_mrr": 0.9642857142857143
+  },
   "k": 5,
   "results": [
     {
@@ -15,6 +20,9 @@
         "trm_hier_chunk_0134"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": false,
       "answerability_key_terms": [
         "20 dBm"
@@ -36,6 +44,9 @@
         "datasheet_hier_chunk_0047"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": true,
+      "source_hit_at_k": 1.0,
+      "source_mrr": 1.0,
       "answerable": true,
       "answerability_key_terms": [
         "-1GHz",
@@ -58,6 +69,9 @@
         "datasheet_hier_chunk_0003"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": true,
       "answerability_key_terms": [
         "48 MHz",
@@ -79,6 +93,9 @@
         "trm_hier_chunk_2053"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": false,
       "answerability_key_terms": [
         "RF_open"
@@ -100,6 +117,9 @@
         "trm_hier_chunk_0572"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": true,
+      "source_hit_at_k": 1.0,
+      "source_mrr": 1.0,
       "answerable": true,
       "answerability_key_terms": [
         "1.8V",
@@ -120,6 +140,9 @@
         "datasheet_hier_chunk_0046"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": true,
+      "source_hit_at_k": 1.0,
+      "source_mrr": 1.0,
       "answerable": true,
       "answerability_key_terms": [
         "QFN",
@@ -141,6 +164,9 @@
         "datasheet_hier_chunk_0010"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": false,
       "answerability_key_terms": [
         "40\u00b0C",
@@ -163,6 +189,9 @@
         "datasheet_hier_chunk_0044"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": true,
       "answerability_key_terms": [
         "CPU"
@@ -181,6 +210,9 @@
         "datasheet_hier_chunk_0049"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": true,
       "answerability_key_terms": [
         "97 dBm",
@@ -201,6 +233,9 @@
         "trm_hier_chunk_2077"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": true,
       "answerability_key_terms": [
         "RAM"
@@ -220,6 +255,9 @@
         "trm_hier_chunk_0891"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": true,
+      "source_hit_at_k": 1.0,
+      "source_mrr": 1.0,
       "answerable": true,
       "answerability_key_terms": [
         "704 KB"
@@ -238,6 +276,9 @@
         "datasheet_hier_chunk_0037_sub1"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": true,
+      "source_hit_at_k": 1.0,
+      "source_mrr": 1.0,
       "answerable": true,
       "answerability_key_terms": [
         "256 KB",
@@ -259,6 +300,9 @@
         "datasheet_hier_chunk_0001_sub0"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": true,
+      "source_hit_at_k": 1.0,
+      "source_mrr": 1.0,
       "answerable": true,
       "answerability_key_terms": [
         "31"
@@ -278,6 +322,9 @@
         "trm_hier_chunk_1589"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": true,
       "answerability_key_terms": [
         "ADC"
@@ -296,6 +343,9 @@
         "datasheet_hier_chunk_0001_sub0"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": true,
+      "source_hit_at_k": 1.0,
+      "source_mrr": 1.0,
       "answerable": true,
       "answerability_key_terms": [],
       "answerability_missing": []
@@ -312,6 +362,9 @@
         "datasheet_hier_chunk_0043"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": true,
+      "source_hit_at_k": 1.0,
+      "source_mrr": 1.0,
       "answerable": true,
       "answerability_key_terms": [
         "SPI"
@@ -330,6 +383,9 @@
         "trm_hier_chunk_1577"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": true,
       "answerability_key_terms": [
         "48 MHz"
@@ -348,6 +404,9 @@
         "trm_hier_chunk_1995"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": true,
       "answerability_key_terms": [
         "I2C"
@@ -367,6 +426,9 @@
         "trm_hier_chunk_0568"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": false,
       "answerability_key_terms": [
         "5 dBm"
@@ -387,6 +449,9 @@
         "datasheet_hier_chunk_0001_sub0"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": true,
+      "source_hit_at_k": 1.0,
+      "source_mrr": 1.0,
       "answerable": true,
       "answerability_key_terms": [
         "GPT"
@@ -407,6 +472,9 @@
         "datasheet_hier_chunk_0039"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": true,
+      "source_hit_at_k": 1.0,
+      "source_mrr": 1.0,
       "answerable": true,
       "answerability_key_terms": [
         "BLE",
@@ -427,6 +495,9 @@
         "datasheet_hier_chunk_0049"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": true,
       "answerability_key_terms": [
         "CC2652R7"
@@ -446,6 +517,9 @@
         "datasheet_hier_chunk_0039"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": true,
+      "source_hit_at_k": 1.0,
+      "source_mrr": 1.0,
       "answerable": false,
       "answerability_key_terms": [
         "CC2652R7",
@@ -469,6 +543,9 @@
         "datasheet_hier_chunk_0001_sub0"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": true,
       "answerability_key_terms": [
         "48 MHz",
@@ -489,6 +566,9 @@
         "datasheet_hier_chunk_0047"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": true,
       "answerability_key_terms": [
         "CC2652R7",
@@ -508,6 +588,9 @@
         "datasheet_hier_chunk_0046"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": false,
       "answerability_key_terms": [
         "1.8V",
@@ -516,9 +599,9 @@
         "CC2652R7"
       ],
       "answerability_missing": [
-        "3.8V",
         "5V",
-        "1.8V"
+        "1.8V",
+        "3.8V"
       ]
     },
     {
@@ -534,6 +617,9 @@
         "datasheet_hier_chunk_0046"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": true,
+      "source_hit_at_k": 1.0,
+      "source_mrr": 1.0,
       "answerable": false,
       "answerability_key_terms": [
         "CC2652R7",
@@ -556,6 +642,9 @@
         "datasheet_hier_chunk_0047"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": true,
+      "source_hit_at_k": 1.0,
+      "source_mrr": 0.5,
       "answerable": true,
       "answerability_key_terms": [
         "BLE",
@@ -576,6 +665,9 @@
         "sdk_guide_hier_chunk_2317"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": false,
       "answerability_key_terms": [
         "CPE",
@@ -597,6 +689,9 @@
         "datasheet_hier_chunk_0039"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": true,
+      "source_hit_at_k": 1.0,
+      "source_mrr": 1.0,
       "answerable": true,
       "answerability_key_terms": [
         "CC2652R7"
@@ -616,6 +711,9 @@
         "datasheet_hier_chunk_0042"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": false,
       "answerability_key_terms": [
         "20 dBm",
@@ -640,6 +738,9 @@
         "datasheet_hier_chunk_0042"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": false,
       "answerability_key_terms": [
         "20 dBm",
@@ -663,6 +764,9 @@
         "datasheet_hier_chunk_0037_sub1"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": false,
       "answerability_key_terms": [
         "352 KB",
@@ -688,6 +792,9 @@
         "datasheet_hier_chunk_0047"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": false,
       "answerability_key_terms": [
         "-1GHz",
@@ -713,6 +820,9 @@
         "datasheet_hier_chunk_0002_sub1"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": false,
       "answerability_key_terms": [
         "15 dB",
@@ -736,6 +846,9 @@
         "trm_hier_chunk_0872"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": false,
       "answerability_key_terms": [
         "256 KB",
@@ -745,9 +858,9 @@
         "SRAM"
       ],
       "answerability_missing": [
-        "256 KB",
+        "80 KB",
         "CC2652R1",
-        "80 KB"
+        "256 KB"
       ]
     },
     {
@@ -762,6 +875,9 @@
         "trm_hier_chunk_0706"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": true,
       "answerability_key_terms": [],
       "answerability_missing": []
@@ -779,6 +895,9 @@
         "trm_hier_chunk_1066"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": false,
       "answerability_key_terms": [
         "BM25"
@@ -800,6 +919,9 @@
         "datasheet_hier_chunk_0002_sub1"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": true,
       "answerability_key_terms": [
         "QFN"
@@ -818,6 +940,9 @@
         "datasheet_hier_chunk_0001_sub0"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": false,
       "answerability_key_terms": [
         "48 MHz",
@@ -826,8 +951,8 @@
         "CC2652RB"
       ],
       "answerability_missing": [
-        "CC2652RB",
-        "BAW"
+        "BAW",
+        "CC2652RB"
       ]
     },
     {
@@ -842,6 +967,9 @@
         "trm_hier_chunk_0388"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": false,
       "answerability_key_terms": [
         "RF_EventLastCmdDone"
@@ -862,6 +990,9 @@
         "trm_hier_chunk_2204_sub0"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": true,
       "answerability_key_terms": [],
       "answerability_missing": []
@@ -879,6 +1010,9 @@
         "datasheet_hier_chunk_0008"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": true,
       "answerability_key_terms": [],
       "answerability_missing": []
@@ -896,6 +1030,9 @@
         "trm_hier_chunk_1356"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": false,
       "answerability_key_terms": [
         "RF_open",
@@ -919,6 +1056,9 @@
         "sdk_guide_hier_chunk_2332"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": false,
       "answerability_key_terms": [
         "CPE",
@@ -942,6 +1082,9 @@
         "datasheet_hier_chunk_0012"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": false,
       "answerability_key_terms": [
         "20 dBm"
@@ -963,6 +1106,9 @@
         "trm_hier_chunk_0391"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": true,
       "answerability_key_terms": [],
       "answerability_missing": []
@@ -980,14 +1126,17 @@
         "trm_hier_chunk_2115"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": false,
       "answerability_key_terms": [
         "RF_EventLastCmdDone",
         "RF_open"
       ],
       "answerability_missing": [
-        "RF_open",
-        "RF_EventLastCmdDone"
+        "RF_EventLastCmdDone",
+        "RF_open"
       ]
     },
     {
@@ -1003,6 +1152,9 @@
         "trm_hier_chunk_0134"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": true,
       "answerability_key_terms": [
         "VDDR"
@@ -1022,6 +1174,9 @@
         "trm_hier_chunk_2090"
       ],
       "hit_at_k": 1.0,
+      "source_labeled": false,
+      "source_hit_at_k": null,
+      "source_mrr": null,
       "answerable": false,
       "answerability_key_terms": [
         "RF_close"

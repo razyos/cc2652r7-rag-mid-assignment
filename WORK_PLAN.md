@@ -11,6 +11,12 @@
 
 **Status update, 2026-05-26:** Session E was verified and fast-forward merged at `ab8b70c`; post-merge handoff docs are current on `main`. Fresh verification before merge: `tests/test_generation.py` passed 12 tests, the focused unsupported-connectivity RAG test passed 5 tests, `python eval/run_eval.py` reported Hit@5 = 1.000 and Answerable@Context = 0.560, `python scripts/render_report.py` completed, and `pdfinfo report.pdf` reported 2 pages. The active local branch is now `feature/source-label-eval`. A comparison repo (`insurance-rag`) showed a stronger anchor/MRR-style retrieval evaluation pattern. Borrow the concept only; do not copy code or switch this project from FAISS to Chroma.
 
+**Status update, 2026-05-26, source-label branch:** `feature/source-label-eval` now has
+focused metric tests, source-labeled Hit@5/MRR reporting, and 14 obvious
+`datasheet_hier_chunk_0000` labels without changing gold Q/A text. Latest branch eval:
+legacy Hit@5 = 1.000, source-labeled Hit@5 = 1.000 over 14 labels,
+source-labeled MRR@5 = 0.964, and Answerable@Context = 0.560.
+
 **Design note, 2026-05-26:** `SYSTEM_DESIGN_NOTES.md` was added as an internal architecture and tradeoff reference. It explains each pipeline stage, why the current design fits the assignment, where it aligns with industry practice, and when more advanced options such as RRF, Qdrant, Weaviate, Milvus, pgvector, sparse+dense retrieval, BGE-M3, ColBERT-style late interaction, or GraphRAG would be worth testing. Use it before proposing retrieval modernization.
 
 ## Repository and Branching Strategy
@@ -98,7 +104,7 @@ Steps 1-4 are complete. Avoid merging corpus expansion or broad comparison suppo
 Recommended remaining order:
 
 1. Keep `main` frozen and submission-safe unless a clearly verified improvement is ready.
-2. Continue `feature/source-label-eval` to replace the vacuous Hit@5 with real source labels or an anchor-style retrieval metric, preferably adding MRR.
+2. Finish or merge `feature/source-label-eval`; the first 14-label source-hit/MRR implementation is in place, and further work can expand labels or rerun ablations with source metrics.
 3. Use `feature/tx-power-extractor` for the next narrow answer-quality improvement after source-label evaluation is handled.
 4. Run a final submission audit after each merge that changes code, metrics, report text, or PDF artifacts.
 5. Use experimental branches for major work: `exp/rf-driver-api-corpus`, `exp/competitor-datasheets`, or similar.
@@ -383,7 +389,9 @@ Rerun targeted tests, rerun python eval/run_eval.py if feasible, regenerate repo
 
 **Dependencies:** Session E is merged to `main`; work from `feature/source-label-eval`.
 
-**Priority:** Highest academic improvement after Session E. This directly addresses the current report's biggest evaluation caveat: all `must_cite_chunk_ids` are empty, so Hit@5 is not discriminative.
+**Priority:** Highest academic improvement after Session E. The first subset is now addressed:
+14 `must_cite_chunk_ids` entries exist and source-labeled Hit@5/MRR are reported. Remaining
+work is expanding labels and rerunning ablations with those metrics.
 
 **Important context:**
 
@@ -398,7 +406,7 @@ Rerun targeted tests, rerun python eval/run_eval.py if feasible, regenerate repo
 - Inspect core factual/numerical/negation questions first because many map cleanly to `datasheet_hier_chunk_0000`.
 - Add labels in small batches and test `compute_hit_at_k()`.
 - Consider MRR using retrieved chunk rank when at least one labeled chunk appears.
-- Update report caveats from "Hit@5 is vacuous" to "Hit@5 is measured on N labeled questions" only after verification.
+- Update report caveats to keep legacy Hit@5 separate from source-labeled Hit@5/MRR and state the labeled count.
 
 **Copy-paste prompt:**
 
@@ -549,7 +557,7 @@ Keep this separate from the CC2652R7 report unless there is time after report.pd
 
 **May 27-28**
 
-- Run `feature/source-label-eval`.
+- Finish/merge `feature/source-label-eval`, or expand labels if there is time.
 - Update report metrics and regenerate PDF if evaluation claims change.
 
 **May 29-30**
@@ -577,12 +585,12 @@ Keep this separate from the CC2652R7 report unless there is time after report.pd
 
 ## Open Questions / User Decisions
 
-1. Should `feature/source-label-eval` remain the next branch?
+1. Should `feature/source-label-eval` be merged as the first source-label increment?
 2. Should `feature/tx-power-extractor` wait until after source-label evaluation?
 3. Should RF Driver API expansion stay experimental?
 
 Recommended answers:
 
-1. Yes. It is the highest-value academic improvement because current Hit@5 is vacuous without source labels.
+1. Yes, if the branch verification remains clean. The first source-label increment makes retrieval evaluation meaningful for 14 labeled rows.
 2. Yes. TX power is useful but narrower; do it only after the evaluation metric is defensible.
 3. Yes. RF Driver API corpus expansion is major corpus/index work and should not merge without a full rebuild, eval, report refresh, PDF verification, and user approval.

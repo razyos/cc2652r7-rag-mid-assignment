@@ -66,7 +66,7 @@ mid_ass/
 │   └── rag_system.py       # RAGSystem class: orchestrates all 7 stages
 ├── eval/
 │   ├── gold_set.jsonl      # 50 Q&A pairs (factual/numerical/negation/comparison/debugging)
-│   ├── run_eval.py         # Main eval: Hit@5 + Answerable@Context
+│   ├── run_eval.py         # Main eval: legacy Hit@5, source Hit@5/MRR, Answerable@Context
 │   ├── run_eval_dense_only.py  # Ablation: dense retrieval only
 │   ├── run_eval_no_rerank.py   # Ablation: no cross-encoder rerank
 │   ├── stress_test.py      # 13 adversarial questions
@@ -101,7 +101,9 @@ Run: `python eval/run_eval.py`
 
 | Metric | Score |
 |--------|-------|
-| Hit@5 | 1.000 (50/50) |
+| Legacy Hit@5 | 1.000 (50/50) |
+| Source-labeled Hit@5 | 1.000 (14/14 labeled) |
+| Source-labeled MRR@5 | 0.964 (14 labeled) |
 | Answerable@Context | 0.560 (28/50) |
 
 Per category:
@@ -126,9 +128,10 @@ and Bluetooth Classic absence answers now cite `datasheet_hier_chunk_0000`.
 ### High Priority
 
 **1. Source-label evaluation**
-Hit@5 is not meaningful because `must_cite_chunk_ids` is empty for all current gold entries.
-Use `feature/source-label-eval` to add real source labels or a separate anchor-style source-hit
-metric, preferably with MRR. Preserve gold Q/A content unless a correction is explicitly documented.
+`feature/source-label-eval` now adds a first source-labeled subset: 14 obvious
+`datasheet_hier_chunk_0000` entries plus source-labeled Hit@5/MRR. Further work should
+expand labels beyond this subset and rerun dense-only/no-rerank ablations with the
+source-labeled metrics. Preserve gold Q/A content unless a correction is explicitly documented.
 
 **2. TX-power extractor / anchoring**
 The maximum RF output power question currently answers `+0 dBm` from a transmit-current table

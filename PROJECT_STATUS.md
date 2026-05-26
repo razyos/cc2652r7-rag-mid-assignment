@@ -132,7 +132,8 @@ for specific peripheral queries if injected before.
 `load_rag_system()` — loads all indexes from `data/processed/`, returns ready `RAGSystem`.
 
 ### `eval/run_eval.py`
-Runs 50 gold-set questions, reports Hit@k and Answerable@Context per category.
+Runs 50 gold-set questions, reports legacy Hit@k, source-labeled Hit@k/MRR for
+entries with `must_cite_chunk_ids`, and Answerable@Context per category.
 Results saved to `eval/eval_results.json`.
 
 ### `eval/stress_test.py`
@@ -150,11 +151,13 @@ Each entry: `{"question", "reference_answer", "must_cite_chunk_ids", "category"}
 
 ---
 
-## Evaluation Results (as of 2026-05-26 on `main`; Session E verified at `ab8b70c`)
+## Evaluation Results (as of 2026-05-26 on `feature/source-label-eval`)
 
 | Metric | Score | Detail |
 |--------|-------|--------|
-| Hit@5 | **1.000** | 50/50 — perfect retrieval |
+| Legacy Hit@5 | **1.000** | 50/50 — continuity metric; unlabeled entries still count as hits |
+| Source-labeled Hit@5 | **1.000** | 14/14 labeled entries |
+| Source-labeled MRR@5 | **0.964** | 14 labeled entries; Bluetooth Classic anchor is rank 2 |
 | Answerable@Context | **0.560** | 28/50 — measures if reference key terms appear in retrieved context |
 
 **Per-category Answerable@Context:**
@@ -176,6 +179,14 @@ Session E did not change headline metrics, but it improved unsupported-connectiv
 grounding. The saved eval answers for Wi-Fi, USB, LTE/cellular, Ethernet, and Bluetooth
 Classic now answer from `datasheet_hier_chunk_0000` instead of nearby application text.
 
+Source-label evaluation update on `feature/source-label-eval`:
+
+- `eval/gold_set.jsonl` now labels 14 obvious datasheet-anchor entries with
+  `must_cite_chunk_ids: ["datasheet_hier_chunk_0000"]`.
+- `eval/run_eval.py` reports source-labeled Hit@5 and MRR@5 separately from legacy Hit@5.
+- Latest branch eval: legacy Hit@5 = 1.000, source-labeled Hit@5 = 1.000 over 14 labels,
+  source-labeled MRR@5 = 0.964, and Answerable@Context = 0.560.
+
 Session E verification before merging to `main`:
 
 - `python -m pytest tests/test_generation.py -q` passed 12 tests.
@@ -188,7 +199,7 @@ Session E verification before merging to `main`:
 
 The one-week extension should be used for controlled, reportable improvements:
 
-1. Continue `feature/source-label-eval` to add meaningful source labels or anchor-style source-hit evaluation, preferably with MRR. This addresses the biggest current evaluation weakness: Hit@5 is vacuous because `must_cite_chunk_ids` is empty.
+1. Finish or merge `feature/source-label-eval`; the first 14-label source-hit/MRR implementation is in place. Further work can expand labels and rerun retrieval ablations with source-labeled metrics.
 2. Create `feature/tx-power-extractor` for the narrow max RF output power / standard-mode TX-power answer failure after source-label evaluation is handled.
 3. Refresh `report.md` and `report.pdf` after metric or claim changes.
 4. Treat RF Driver API corpus expansion as experimental only (`exp/rf-driver-api-corpus`), because it requires source approval, index rebuild, manifest/report updates, and a full audit.
@@ -227,11 +238,13 @@ quality or citation quality.
 "+5 dBm output power setting" without the label "standard mode without PA."
 **Fix:** Either correct the gold answer or add the RF characterization table text to corpus.
 
-### 6. Evaluation Metric Weakness — Source Labels Missing
-**Problem:** `must_cite_chunk_ids` is empty for all current gold entries, making Hit@5
-non-discriminative.
-**Fix:** Use `feature/source-label-eval` to add source labels or a separate anchor-style
-metric. Preserve Q/A content unless a specific gold error must be documented.
+### 6. Evaluation Metric Weakness — Source Labels Incomplete
+**Problem:** `must_cite_chunk_ids` now covers 14/50 gold entries, so source-labeled
+Hit@5/MRR are meaningful for the focused subset but incomplete for the full gold set.
+Legacy Hit@5 remains non-discriminative for unlabeled entries.
+**Fix:** Expand source labels beyond the datasheet-anchor subset and rerun dense-only /
+no-rerank ablations with source-labeled metrics. Preserve Q/A content unless a specific
+gold error must be documented.
 
 ### 7. Report Status
 `report.md` and `report.pdf` are complete. `report.pdf` is 2 A4 pages, within the

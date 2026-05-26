@@ -439,17 +439,21 @@ Current evaluation:
 - `Hit@5` is computed from `must_cite_chunk_ids`.
 - `Answerable@Context` checks whether key technical terms from the reference answer
   appear in final retrieved context.
+- `feature/source-label-eval` adds a focused 14-question source-labeled subset and
+  reports source-labeled Hit@5/MRR separately from legacy Hit@5.
 
 Current metrics:
 
 | Metric | Value | Caveat |
 |---|---:|---|
-| Hit@5 | 1.000 | Vacuous because current `must_cite_chunk_ids` are empty |
+| Legacy Hit@5 | 1.000 | Kept for continuity; unlabeled entries still count as hits |
+| Source-labeled Hit@5 | 1.000 | Computed over 14 labeled datasheet-anchor entries |
+| Source-labeled MRR@5 | 0.964 | Rank-sensitive source metric over the same 14 entries |
 | Answerable@Context | 0.560 | Checks context term presence, not answer correctness |
 
 Why this is not enough:
 
-- Empty source labels make Hit@5 non-discriminative.
+- Incomplete source labels still make legacy Hit@5 non-discriminative for 36 unlabeled rows.
 - Answerable@Context can pass when the answer is wrong but key terms are present.
 - Answerable@Context can fail when the reference answer is wrong or the source formats
   terms differently.
@@ -457,9 +461,9 @@ Why this is not enough:
 
 Best next improvement:
 
-- Add source labels or an anchor-style evidence file for a focused subset.
-- Compute real Hit@k over labeled questions.
-- Add MRR so rank quality matters.
+- Expand source labels beyond the first datasheet-anchor subset.
+- Rerun dense-only, BM25-only, hybrid, and reranked retrieval with source-labeled metrics.
+- Keep MRR so rank quality matters.
 - Keep Answerable@Context for continuity, but stop treating it as answer accuracy.
 
 Production-style evaluation would include:
@@ -504,7 +508,7 @@ This project matches several production-like patterns:
 
 This project is not production-grade in these areas:
 
-- No real source-label retrieval evaluation yet.
+- Source-label retrieval evaluation exists for a focused subset, but it is not complete.
 - No continuous evaluation in CI.
 - No retrieval observability dashboard.
 - No user feedback loop.
@@ -637,7 +641,7 @@ Why not now:
 
 ## 14. Current Known Weaknesses
 
-1. Hit@5 is not meaningful until source labels are added.
+1. Legacy Hit@5 is not meaningful for unlabeled rows; source-labeled metrics currently cover 14/50 entries.
 2. RF Driver API questions are out of corpus.
 3. Competitor comparison questions are mostly out of corpus.
 4. TX-power extraction selects the wrong table evidence in at least one case.
@@ -653,9 +657,9 @@ Why not now:
 Priority 1: source-label evaluation.
 
 - Branch: `feature/source-label-eval`.
-- Add non-empty source labels for a defensible subset or a separate anchor-source file.
-- Compute real Hit@k and MRR.
-- Update report claims honestly.
+- First subset is implemented with 14 `datasheet_hier_chunk_0000` labels.
+- Next step is expanding labels and rerunning ablations with source-labeled Hit@k/MRR.
+- Keep report claims explicit about labeled subset size.
 
 Priority 2: TX-power extractor.
 

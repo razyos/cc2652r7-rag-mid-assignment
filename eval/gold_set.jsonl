@@ -1,33 +1,33 @@
 {"question": "What is the maximum RF output power of the CC2652R7?", "reference_answer": "+20 dBm via integrated high-power PA", "must_cite_chunk_ids": [], "category": "factual"}
-{"question": "What wireless protocols does the CC2652R7 support?", "reference_answer": "Bluetooth 5.2 (BLE), IEEE 802.15.4 (Zigbee, Thread), proprietary sub-1GHz and 2.4GHz", "must_cite_chunk_ids": [], "category": "factual"}
+{"question": "What wireless protocols does the CC2652R7 support?", "reference_answer": "Bluetooth 5.2 (BLE), IEEE 802.15.4 (Zigbee, Thread), proprietary sub-1GHz and 2.4GHz", "must_cite_chunk_ids": ["datasheet_hier_chunk_0000"], "category": "factual"}
 {"question": "What CPU core does the CC2652R7 use?", "reference_answer": "ARM Cortex-M4F at 48 MHz", "must_cite_chunk_ids": [], "category": "factual"}
 {"question": "What function must be called before RF_open() on the CC2652R7?", "reference_answer": "RFCCpePatchFxp() must be called before RF_open() to patch the RF core", "must_cite_chunk_ids": [], "category": "factual"}
-{"question": "What is the operating voltage range of the CC2652R7?", "reference_answer": "1.8V to 3.8V", "must_cite_chunk_ids": [], "category": "factual"}
-{"question": "What package is the CC2652R7 available in?", "reference_answer": "7x7 mm 48-pin QFN package (RGZ)", "must_cite_chunk_ids": [], "category": "factual"}
+{"question": "What is the operating voltage range of the CC2652R7?", "reference_answer": "1.8V to 3.8V", "must_cite_chunk_ids": ["datasheet_hier_chunk_0000"], "category": "factual"}
+{"question": "What package is the CC2652R7 available in?", "reference_answer": "7x7 mm 48-pin QFN package (RGZ)", "must_cite_chunk_ids": ["datasheet_hier_chunk_0000"], "category": "factual"}
 {"question": "What is the temperature range for the CC2652R7?", "reference_answer": "-40°C to +85°C (industrial grade)", "must_cite_chunk_ids": [], "category": "factual"}
 {"question": "What coprocessor does the CC2652R7 include for RF operations?", "reference_answer": "A dedicated RF core (Cortex-M0) handles the RF protocol stack independently from the main CPU", "must_cite_chunk_ids": [], "category": "factual"}
 {"question": "What is the receive sensitivity of the CC2652R7 in BLE mode?", "reference_answer": "-97 dBm in BLE 1M mode", "must_cite_chunk_ids": [], "category": "factual"}
 {"question": "How many independent RF commands can be chained in the CC2652R7 RF scheduler?", "reference_answer": "RF commands can be chained using a linked list structure; the number is limited by available RAM", "must_cite_chunk_ids": [], "category": "factual"}
-{"question": "What is the flash memory size of the CC2652R7?", "reference_answer": "704 KB of flash memory", "must_cite_chunk_ids": [], "category": "numerical"}
-{"question": "What is the SRAM size of the CC2652R7?", "reference_answer": "256 KB of SRAM", "must_cite_chunk_ids": [], "category": "numerical"}
-{"question": "How many GPIO pins does the CC2652R7 have?", "reference_answer": "31 GPIOs", "must_cite_chunk_ids": [], "category": "numerical"}
+{"question": "What is the flash memory size of the CC2652R7?", "reference_answer": "704 KB of flash memory", "must_cite_chunk_ids": ["datasheet_hier_chunk_0000"], "category": "numerical"}
+{"question": "What is the SRAM size of the CC2652R7?", "reference_answer": "256 KB of SRAM", "must_cite_chunk_ids": ["datasheet_hier_chunk_0000"], "category": "numerical"}
+{"question": "How many GPIO pins does the CC2652R7 have?", "reference_answer": "31 GPIOs", "must_cite_chunk_ids": ["datasheet_hier_chunk_0000"], "category": "numerical"}
 {"question": "What is the ADC resolution of the CC2652R7?", "reference_answer": "12-bit ADC", "must_cite_chunk_ids": [], "category": "numerical"}
-{"question": "How many UART interfaces does the CC2652R7 have?", "reference_answer": "2 UARTs", "must_cite_chunk_ids": [], "category": "numerical"}
-{"question": "How many SPI interfaces does the CC2652R7 have?", "reference_answer": "2 SPI interfaces", "must_cite_chunk_ids": [], "category": "numerical"}
+{"question": "How many UART interfaces does the CC2652R7 have?", "reference_answer": "2 UARTs", "must_cite_chunk_ids": ["datasheet_hier_chunk_0000"], "category": "numerical"}
+{"question": "How many SPI interfaces does the CC2652R7 have?", "reference_answer": "2 SPI interfaces", "must_cite_chunk_ids": ["datasheet_hier_chunk_0000"], "category": "numerical"}
 {"question": "What is the CPU clock frequency of the CC2652R7?", "reference_answer": "48 MHz", "must_cite_chunk_ids": [], "category": "numerical"}
 {"question": "How many I2C interfaces does the CC2652R7 have?", "reference_answer": "1 I2C interface", "must_cite_chunk_ids": [], "category": "numerical"}
 {"question": "What is the RF transmit power in standard mode (without PA) for CC2652R7?", "reference_answer": "+5 dBm in standard mode", "must_cite_chunk_ids": [], "category": "numerical"}
-{"question": "How many hardware timers does the CC2652R7 have?", "reference_answer": "4 general-purpose timers (GPT)", "must_cite_chunk_ids": [], "category": "numerical"}
-{"question": "Does the CC2652R7 support Wi-Fi?", "reference_answer": "No, the CC2652R7 does not support Wi-Fi. It supports BLE, Zigbee, Thread, and proprietary protocols.", "must_cite_chunk_ids": [], "category": "negation"}
+{"question": "How many hardware timers does the CC2652R7 have?", "reference_answer": "4 general-purpose timers (GPT)", "must_cite_chunk_ids": ["datasheet_hier_chunk_0000"], "category": "numerical"}
+{"question": "Does the CC2652R7 support Wi-Fi?", "reference_answer": "No, the CC2652R7 does not support Wi-Fi. It supports BLE, Zigbee, Thread, and proprietary protocols.", "must_cite_chunk_ids": ["datasheet_hier_chunk_0000"], "category": "negation"}
 {"question": "Does the CC2652R7 have an integrated antenna?", "reference_answer": "No, the CC2652R7 does not have an integrated antenna. It requires an external antenna connected to the RF pins.", "must_cite_chunk_ids": [], "category": "negation"}
-{"question": "Does the CC2652R7 support LTE or cellular connectivity?", "reference_answer": "No, the CC2652R7 does not support LTE or cellular. It is a short-range wireless MCU.", "must_cite_chunk_ids": [], "category": "negation"}
+{"question": "Does the CC2652R7 support LTE or cellular connectivity?", "reference_answer": "No, the CC2652R7 does not support LTE or cellular. It is a short-range wireless MCU.", "must_cite_chunk_ids": ["datasheet_hier_chunk_0000"], "category": "negation"}
 {"question": "Can the CC2652R7 run without an external crystal oscillator?", "reference_answer": "No, the CC2652R7 requires an external 48 MHz crystal for accurate RF operation.", "must_cite_chunk_ids": [], "category": "negation"}
 {"question": "Does the CC2652R7 include a DAC?", "reference_answer": "No, the CC2652R7 does not include a built-in DAC.", "must_cite_chunk_ids": [], "category": "negation"}
 {"question": "Is the CC2652R7 compatible with 5V logic directly?", "reference_answer": "No, the CC2652R7 is not 5V tolerant. It operates at 1.8V to 3.8V.", "must_cite_chunk_ids": [], "category": "negation"}
-{"question": "Does the CC2652R7 support USB?", "reference_answer": "No, the CC2652R7 does not have a native USB peripheral.", "must_cite_chunk_ids": [], "category": "negation"}
-{"question": "Does the CC2652R7 support Bluetooth Classic (BR/EDR)?", "reference_answer": "No, the CC2652R7 supports only Bluetooth Low Energy (BLE), not Bluetooth Classic.", "must_cite_chunk_ids": [], "category": "negation"}
+{"question": "Does the CC2652R7 support USB?", "reference_answer": "No, the CC2652R7 does not have a native USB peripheral.", "must_cite_chunk_ids": ["datasheet_hier_chunk_0000"], "category": "negation"}
+{"question": "Does the CC2652R7 support Bluetooth Classic (BR/EDR)?", "reference_answer": "No, the CC2652R7 supports only Bluetooth Low Energy (BLE), not Bluetooth Classic.", "must_cite_chunk_ids": ["datasheet_hier_chunk_0000"], "category": "negation"}
 {"question": "Can RF_open() be called without applying the CPE patch first?", "reference_answer": "No, RF_open() must not be called before applying the CPE patch via RFCCpePatchFxp(). Doing so causes RF core initialization failure.", "must_cite_chunk_ids": [], "category": "negation"}
-{"question": "Does the CC2652R7 have an Ethernet interface?", "reference_answer": "No, the CC2652R7 does not have an Ethernet interface.", "must_cite_chunk_ids": [], "category": "negation"}
+{"question": "Does the CC2652R7 have an Ethernet interface?", "reference_answer": "No, the CC2652R7 does not have an Ethernet interface.", "must_cite_chunk_ids": ["datasheet_hier_chunk_0000"], "category": "negation"}
 {"question": "How does the CC2652R7 TX power differ from CC2652R1?", "reference_answer": "CC2652R7 supports +20 dBm via integrated high-power PA; CC2652R1 supports +5 dBm without an integrated PA.", "must_cite_chunk_ids": [], "category": "comparison"}
 {"question": "What is the difference between the CC2652R7 and CC2652P in terms of PA?", "reference_answer": "Both include a high-power PA, but the CC2652P has +20 dBm with an external PA while CC2652R7 integrates the PA internally.", "must_cite_chunk_ids": [], "category": "comparison"}
 {"question": "How does CC2652R7 flash size compare to CC2652R1?", "reference_answer": "CC2652R7 has 704 KB flash vs 352 KB on CC2652R1 — approximately double.", "must_cite_chunk_ids": [], "category": "comparison"}

@@ -5,12 +5,11 @@ current state.
 
 ## Goal for the New Session
 
-Continue from the current local branch state on `feature/source-label-eval`, which was
-aligned with pushed `main`.
+Continue from the current local branch state on `feature/source-label-eval`.
 
-The highest-value next improvement is `feature/source-label-eval`: make retrieval
-evaluation meaningful by adding real source labels or an anchor-style metric, inspired
-by the comparison `insurance-rag` repo.
+The branch now contains the first source-label evaluation increment: focused metric
+tests, source-labeled Hit@5/MRR reporting, and 14 obvious `datasheet_hier_chunk_0000`
+labels without changing gold Q/A text.
 
 An internal architecture/tradeoff note now exists at `SYSTEM_DESIGN_NOTES.md`. Read it
 before proposing retrieval or indexing changes; it explains why the current FAISS+BM25
@@ -97,6 +96,25 @@ Pages: 2
 Full `python -m pytest tests/ -q` was attempted but stopped after the same model-heavy
 stall/no-output behavior noted in previous project docs. Do not report it as passed.
 
+Latest verified `feature/source-label-eval` branch results:
+
+```text
+python -m pytest tests/test_eval_metrics.py -q
+5 passed
+
+python eval/run_eval.py
+Legacy Hit@5 = 1.000 (50/50)
+Source-labeled Hit@5 = 1.000 (14 labeled)
+Source-labeled MRR@5 = 0.964
+Answerable@Context = 0.560 (28/50)
+
+python scripts/render_report.py
+completed
+
+pdfinfo report.pdf
+Pages: 2
+```
+
 ## Current Answer Behavior to Preserve
 
 Saved eval output now shows these unsupported-feature answers cite
@@ -171,8 +189,8 @@ Read these before changing code:
 ## Recommended Session Order Under the Extension
 
 1. **Source-label evaluation**
-   Continue `feature/source-label-eval`. Add meaningful retrieval evidence labels or
-   anchor-style matching so Hit@5 is no longer vacuous. Add MRR if feasible.
+   Finish or merge `feature/source-label-eval`; optionally expand labels and rerun
+   dense-only/no-rerank ablations with source-labeled metrics.
 
 2. **TX-power extractor**
    Create `feature/tx-power-extractor`. Fix the max RF output power / standard-mode TX-power
@@ -207,7 +225,7 @@ Branch policy:
 Current state:
 - Sessions A-E are complete and merged to main.
 - Current pushed main has current post-Session E handoff docs.
-- feature/source-label-eval is aligned with main.
+- feature/source-label-eval started aligned with main and now contains source-label eval changes.
 - The workspace should be clean, but inspect git status first.
 - Merged Session E changes:
   - Unsupported connectivity/support questions now anchor datasheet_hier_chunk_0000.
@@ -215,8 +233,10 @@ Current state:
   - LTE/cellular combined wording now says "LTE or cellular connectivity."
 - eval/eval_results.json, report.md, and report.pdf were refreshed.
 - SYSTEM_DESIGN_NOTES.md was added as an internal architecture/tradeoff note covering current design, industry alignment, and modern alternatives beyond FAISS/Chroma.
-- Latest verified metrics on `main`:
-  - Hit@5 = 1.000 (50/50)
+- Latest verified branch metrics:
+  - Legacy Hit@5 = 1.000 (50/50)
+  - Source-labeled Hit@5 = 1.000 (14 labeled)
+  - Source-labeled MRR@5 = 0.964
   - Answerable@Context = 0.560 (28/50)
   - report.pdf is 2 pages.
 
@@ -239,7 +259,7 @@ First read:
 
 Task:
 1. Inspect git status and confirm the current branch/commit.
-2. Continue feature/source-label-eval. Goal: make Hit@5 meaningful by adding source labels or anchor-style source matching, preferably with MRR. Do not change the gold Q/A content unless explicitly necessary and documented.
+2. Continue feature/source-label-eval only to review, merge, expand labels, or rerun ablations. The first source-labeled Hit@5/MRR implementation is in place. Do not change the gold Q/A content unless explicitly necessary and documented.
 3. If present locally, use docs/superpowers/plans/2026-05-26-source-label-eval.md as the detailed implementation plan for source-label evaluation; otherwise follow WORK_PLAN.md Session F.
 4. Add focused tests for source-labeled Hit@k/MRR behavior before implementation.
 5. Run targeted tests and python eval/run_eval.py.
@@ -251,7 +271,7 @@ Constraints:
 - Do not add competitor datasheets except on exp/competitor-datasheets.
 - Do not rebuild indexes unless on an experimental corpus/index branch.
 - Do not do broad retrieval/corpus refactors.
-- Do not start feature/tx-power-extractor until source-label evaluation is handled or intentionally deferred.
+- Do not start feature/tx-power-extractor until source-label evaluation is reviewed/merged or intentionally deferred.
 - Do not treat FAISS/Chroma as the full design space; SYSTEM_DESIGN_NOTES.md lists stronger modern options. Still, no backend migration should happen before measurable source-label eval.
 - If full pytest stalls in model-heavy tests, stop it and report the attempt; do not claim full-suite pass.
 ```

@@ -10,9 +10,11 @@ Critical path: `report.pdf` is complete; the extension should be used for contro
 Post-freeze update: Sessions B-D are complete and merged to `main`. Session D fixed the
 Answerable@Context hyphen/spacing normalization false negative and was merged to `main`
 at commit `48dbd30`. Session E was verified and merged at `ab8b70c`, and handoff docs
-are current on `main`; Session E improves unsupported connectivity answers without changing headline metrics. The latest
-eval is Hit@5 = 1.000 and Answerable@Context = 0.560 (28/50). `report.pdf`
-remains 2 pages.
+are current on `main`; Session E improves unsupported connectivity answers without changing headline metrics. The
+`feature/source-label-eval` branch now adds a 14-question source-labeled subset. The latest
+branch eval is legacy Hit@5 = 1.000, source-labeled Hit@5 = 1.000 over 14 labels,
+source-labeled MRR@5 = 0.964, and Answerable@Context = 0.560 (28/50).
+`report.pdf` remains within the page limit after regeneration.
 
 ## Assignment Requirements To Cover
 
@@ -103,18 +105,21 @@ Prompt/generation design:
 
 ## Current Evaluation Metrics
 
-Source: `eval/eval_results.json` after Session E was merged to `main` on 2026-05-26.
+Source: `eval/eval_results.json` refreshed on `feature/source-label-eval` on 2026-05-26.
 
 | Metric | Value | Count | Notes |
 |---|---:|---:|---|
 | Gold-set size | 50 | 50 | 10 questions each across factual, numerical, negation, comparison, debugging. |
 | k | 5 | - | Eval output uses `k=5`. |
-| Hit@5 | 1.000 | 50/50 | Caveat: every gold entry currently has empty `must_cite_chunk_ids`, so this metric is vacuous. |
+| Legacy Hit@5 | 1.000 | 50/50 | Kept for continuity; unlabeled entries still count as hits. |
+| Source-labeled Hit@5 | 1.000 | 14/14 | Computed only on entries with non-empty `must_cite_chunk_ids`. |
+| Source-labeled MRR@5 | 0.964 | 14 labeled | Rank-sensitive source metric; Bluetooth Classic has the anchor at rank 2. |
 | Answerable@Context | 0.560 | 28/50 | Checks whether reference key technical terms appear in final retrieved context. This is not answer accuracy. |
 
 Metric caveats to state honestly in the report:
 
-- `eval/gold_set.jsonl` has 0/50 non-empty `must_cite_chunk_ids`. Therefore Hit@5=1.000 only proves the eval harness ran; it does not prove the retriever found a labeled relevant chunk.
+- `eval/gold_set.jsonl` now has 14/50 non-empty `must_cite_chunk_ids`, all for obvious `datasheet_hier_chunk_0000` facts/absence answers. Legacy Hit@5 still includes unlabeled entries, so cite source-labeled Hit@5/MRR when discussing retrieval evidence.
+- The remaining 36/50 unlabeled entries are excluded from source-labeled Hit@5/MRR until defensible source labels are added.
 - Answerable@Context now normalizes spaces and hyphens for key-term matching. This fixed the voltage case where the answer/reference contains `1.8V` and `3.8V`, while the corpus writes `1.8-V` and `3.8-V`.
 - Answerable@Context can also be misleading when the gold answer is wrong or outside the indexed corpus.
 - Known gold-set problems: SRAM reference says 256 KB but CC2652R7 datasheet chunk says 144 KB; temperature reference says +85 deg C but current project evidence says operating ambient is -40 to +105 deg C.
@@ -144,17 +149,17 @@ The first sandboxed attempt failed because `SentenceTransformer` tried to resolv
 
 | Experiment | Command | Reported metric | Result | Interpretation |
 |---|---|---:|---:|---|
-| Full current pipeline | `python eval/run_eval.py` / existing `eval/eval_results.json` | Hit@5 / Answerable@Context | 1.000 / 0.560 | Current headline numbers, but Hit@5 is vacuous because cite labels are empty. |
-| Dense-only retrieval | `python eval/run_eval_dense_only.py 5` | Hit@5 | 1.000 | Inconclusive for the same empty-cite-label reason. |
-| Hybrid without rerank | `python eval/run_eval_no_rerank.py 5` | Hit@5 | 1.000 | Inconclusive for the same empty-cite-label reason. |
+| Full current pipeline | `python eval/run_eval.py` / existing `eval/eval_results.json` | Legacy Hit@5 / Answerable@Context / source MRR@5 | 1.000 / 0.560 / 0.964 | Current headline numbers; source metrics are on 14 labeled entries. |
+| Dense-only retrieval | `python eval/run_eval_dense_only.py 5` | Hit@5 | 1.000 | Legacy pre-label run; rerun with source-labeled metrics before drawing conclusions. |
+| Hybrid without rerank | `python eval/run_eval_no_rerank.py 5` | Hit@5 | 1.000 | Legacy pre-label run; rerun with source-labeled metrics before drawing conclusions. |
 
 How to present this in the 4-page report:
 
 - Include the ablation table because the assignment requires ablations.
 - Label the current ablation as retrieval-hit ablation, not answer-quality ablation.
-- Add a caveat sentence: "Because the current gold set does not yet contain labeled required chunks, the ablation hit rates are not discriminative; the more informative current metric is Answerable@Context plus manual inspection."
+- Add a caveat sentence: "Because only a focused subset currently has labeled required chunks, the source-labeled metrics are more informative than legacy Hit@5 but still incomplete; rerun ablations with source-labeled Hit@5/MRR before drawing retrieval conclusions."
 
-If time remains after `report.pdf`, the smallest eval-quality improvement is to fill `must_cite_chunk_ids` for a focused subset or add a separate exact-source retrieval metric. Do not do this before the report unless the report is already safe.
+If time remains after `report.pdf`, the next eval-quality improvement is to expand `must_cite_chunk_ids` beyond the 14 obvious datasheet-anchor rows and rerun retrieval ablations with source-labeled Hit@5/MRR.
 
 Extension update: this is now the highest-value next improvement. The comparison `insurance-rag` repo used an anchor/MRR-style retrieval evaluation; borrow the concept, not the code.
 
@@ -201,12 +206,12 @@ Use these in the report.
 - Symptom: comparison category Answerable@Context is 0.200.
 - Improvement: either add competitor datasheets or rewrite comparison questions to compare facts present in the corpus.
 
-3. Metric gap: empty retrieval labels
+3. Metric gap: incomplete retrieval labels
 
-- `eval/gold_set.jsonl` has 50 entries and 0 non-empty `must_cite_chunk_ids`.
-- Cause: retrieval metric treats entries without required chunk ids as automatic hit.
-- Symptom: full, dense-only, and no-rerank all report Hit@5=1.000.
-- Improvement: label required chunk ids for at least the core gold questions.
+- `eval/gold_set.jsonl` has 50 entries and 14 non-empty `must_cite_chunk_ids`.
+- Cause: source labels have only been added for obvious datasheet-anchor facts/absence answers.
+- Symptom: legacy full, dense-only, and no-rerank runs can still report Hit@5=1.000 on unlabeled entries.
+- Improvement: expand required chunk labels and rerun dense-only/no-rerank ablations with source-labeled Hit@5/MRR.
 
 4. Metric bug: hyphen/unit normalization
 
@@ -238,7 +243,7 @@ Use these in the report.
 Report-first priority order:
 
 1. Keep `main` frozen as the stable submission branch unless a branch passes verification.
-2. Continue `feature/source-label-eval`; fill `must_cite_chunk_ids` for a defensible subset or add anchor-style matching so Hit@5 becomes meaningful, preferably with MRR.
+2. Continue `feature/source-label-eval` only if expanding source labels or rerunning source-labeled ablations; the first 14-label Hit@5/MRR implementation is in place.
 3. Next small answer-quality branch: `feature/tx-power-extractor`.
 4. Run a final submission audit after any merge.
 5. Larger branches: `exp/rf-driver-api-corpus` and `exp/competitor-datasheets`; rebuild indexes and rerun eval before considering merge.
