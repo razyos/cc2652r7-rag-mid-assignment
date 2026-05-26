@@ -25,7 +25,7 @@ Deadline status:
 Branching policy:
 - `main` is the stable submission branch. Keep it runnable and submission-ready.
 - Session D (`fix/answerability-normalization`) was merged to `main` at commit `48dbd30`.
-- Session E (`feature/negation-handling`) is complete locally as of 2026-05-24 but must be reviewed, committed, and verified before any merge to `main`.
+- Session E (`feature/negation-handling`) is committed locally at `93789fb` but has not been merged to `main`; ask before merging.
 - Use short-lived branches for optional work, such as `feature/negation-handling`, `feature/source-label-eval`, or `feature/tx-power-extractor`.
 - Use experimental branches for major work, such as `exp/rf-driver-api-corpus` or `exp/competitor-datasheets`.
 - Do not make risky changes directly on `main`.
@@ -124,11 +124,11 @@ and Bluetooth Classic absence answers now cite `datasheet_hier_chunk_0000`.
 
 ### High Priority
 
-**1. Review and merge Session E if desired**
-`feature/negation-handling` is complete locally. It extends Stage 5b anchor injection to
+**1. Merge or park Session E**
+`feature/negation-handling` is committed locally at `93789fb`. It extends Stage 5b anchor injection to
 unsupported connectivity/support terms and preserves the existing deterministic yes/no answer
 path. Before merge, rerun targeted tests, `python eval/run_eval.py`, `python scripts/render_report.py`,
-and `pdfinfo report.pdf`.
+and `pdfinfo report.pdf`, then ask the user for merge approval.
 
 **2. Source-label evaluation**
 Hit@5 is not meaningful because `must_cite_chunk_ids` is empty for all current gold entries.

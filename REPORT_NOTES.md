@@ -9,8 +9,9 @@ Critical path: `report.pdf` is complete; the extension should be used for contro
 
 Post-freeze update: Sessions B-D are complete and merged to `main`. Session D fixed the
 Answerable@Context hyphen/spacing normalization false negative and was merged to `main`
-at commit `48dbd30`. Session E is complete locally on `feature/negation-handling`; it
-improves unsupported connectivity answers without changing headline metrics. The latest
+at commit `48dbd30`. Session E is committed locally on `feature/negation-handling`
+at `93789fb` but has not been merged to `main`; it improves unsupported connectivity
+answers without changing headline metrics. The latest
 branch eval is Hit@5 = 1.000 and Answerable@Context = 0.560 (28/50). `report.pdf`
 remains 2 pages.
 
@@ -156,7 +157,7 @@ How to present this in the 4-page report:
 
 If time remains after `report.pdf`, the smallest eval-quality improvement is to fill `must_cite_chunk_ids` for a focused subset or add a separate exact-source retrieval metric. Do not do this before the report unless the report is already safe.
 
-Extension update: this is now the highest-value next improvement after Session E is committed/merged. The comparison `insurance-rag` repo used an anchor/MRR-style retrieval evaluation; borrow the concept, not the code.
+Extension update: this is now the highest-value next improvement after Session E is merged or explicitly parked. The comparison `insurance-rag` repo used an anchor/MRR-style retrieval evaluation; borrow the concept, not the code.
 
 ## 10+ Answer Manual Inspection
 
@@ -238,7 +239,7 @@ Use these in the report.
 Report-first priority order:
 
 1. Keep `main` frozen as the stable submission branch unless a branch passes verification.
-2. Review, commit, and optionally merge `feature/negation-handling`; it is complete locally and does not require corpus or index changes.
+2. Decide whether to merge `feature/negation-handling`; it is committed locally at `93789fb` and does not require corpus or index changes.
 3. Next eval-quality branch: `feature/source-label-eval`; fill `must_cite_chunk_ids` for a defensible subset or add anchor-style matching so Hit@5 becomes meaningful, preferably with MRR.
 4. Next small answer-quality branch: `feature/tx-power-extractor`.
 5. Run a final submission audit after any merge.
@@ -250,5 +251,5 @@ Do not merge RF Driver API corpus expansion, competitor corpus expansion, gold-s
 
 `report.md` and `report.pdf` are complete and submission-safe. Session E refreshed both
 after the unsupported-connectivity branch change, and `pdfinfo report.pdf` still reports
-2 pages. The next session should focus on branch review/commit/merge decision and final
-submission audit, not new risky corpus work.
+2 pages. The next session should focus on the merge-or-park decision for
+`feature/negation-handling`, then source-label evaluation, not risky corpus work.

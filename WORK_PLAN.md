@@ -9,7 +9,7 @@
 
 **Status update, 2026-05-24:** Session E is complete on `feature/negation-handling` and is not merged to `main` yet. The branch improves unsupported connectivity answers for Wi-Fi, USB, LTE/cellular, Ethernet, and Bluetooth Classic by anchoring `datasheet_hier_chunk_0000` and keeping answers grounded in the CC2652R7 feature/protocol list. Branch eval remains Hit@5 = 1.000 and Answerable@Context = 0.560. `report.md` and `report.pdf` were refreshed; `pdfinfo report.pdf` reports 2 pages.
 
-**Status update, 2026-05-26:** The deadline extension makes source-label evaluation the highest-value next improvement after Session E is committed/merged. A comparison repo (`insurance-rag`) showed a stronger anchor/MRR-style retrieval evaluation pattern. Borrow the concept only; do not copy code or switch this project from FAISS to Chroma.
+**Status update, 2026-05-26:** Session E was committed locally on `feature/negation-handling` at `93789fb` after fresh targeted tests, eval, report rendering, and PDF page-count verification. It has not been merged to `main`; ask before merging. The deadline extension makes source-label evaluation the highest-value next improvement after Session E is merged or explicitly parked. A comparison repo (`insurance-rag`) showed a stronger anchor/MRR-style retrieval evaluation pattern. Borrow the concept only; do not copy code or switch this project from FAISS to Chroma.
 
 **Design note, 2026-05-26:** `SYSTEM_DESIGN_NOTES.md` was added as an internal architecture and tradeoff reference. It explains each pipeline stage, why the current design fits the assignment, where it aligns with industry practice, and when more advanced options such as RRF, Qdrant, Weaviate, Milvus, pgvector, sparse+dense retrieval, BGE-M3, ColBERT-style late interaction, or GraphRAG would be worth testing. Use it before proposing retrieval modernization.
 
@@ -22,7 +22,7 @@ Standalone repository:
 - Default branch: `main`
 - Current stable branch: `main`
 - Session D branch: `fix/answerability-normalization` was merged and pushed to `main` at commit `48dbd30`.
-- Session E branch: `feature/negation-handling` is complete locally and should be reviewed, committed, and verified before any merge to `main`.
+- Session E branch: `feature/negation-handling` is committed locally at `93789fb` and should be merged only after user approval.
 
 DevOps policy:
 
@@ -96,7 +96,7 @@ Steps 1-4 are complete. Avoid merging corpus expansion or broad comparison suppo
 Recommended remaining order:
 
 1. Keep `main` frozen and submission-safe unless a clearly verified improvement is ready.
-2. Review, commit, and optionally merge `feature/negation-handling` only after repeating the targeted tests, eval, report regeneration, and `pdfinfo report.pdf`.
+2. Decide whether to merge `feature/negation-handling` only after confirming the latest targeted tests, eval, report regeneration, and `pdfinfo report.pdf` remain valid.
 3. Start `feature/source-label-eval` to replace the vacuous Hit@5 with real source labels or an anchor-style retrieval metric, preferably adding MRR.
 4. Use `feature/tx-power-extractor` for the next narrow answer-quality improvement.
 5. Run a final submission audit after each merge that changes code, metrics, report text, or PDF artifacts.
@@ -324,7 +324,7 @@ If the metric changes, update report.md, regenerate report.pdf with python scrip
 
 **Dependencies:** Session B draft exists; preferably after Session D
 
-**Priority:** Completed locally on `feature/negation-handling`; review and commit before merge.
+**Priority:** Completed and committed locally on `feature/negation-handling` at `93789fb`; ask before merging to `main`.
 
 **Important context:**
 
@@ -382,7 +382,7 @@ If all checks pass, commit the branch; merge to main only with user approval.
 
 **Time estimate:** 3-6 hours
 
-**Dependencies:** Session E should be committed/merged or explicitly parked first.
+**Dependencies:** Session E should be merged or explicitly parked first.
 
 **Priority:** Highest academic improvement after Session E. This directly addresses the current report's biggest evaluation caveat: all `must_cite_chunk_ids` are empty, so Hit@5 is not discriminative.
 
@@ -404,7 +404,7 @@ If all checks pass, commit the branch; merge to main only with user approval.
 **Copy-paste prompt:**
 
 ```text
-Start feature/source-label-eval after Session E is committed/merged or explicitly parked.
+Start feature/source-label-eval after Session E is merged or explicitly parked.
 Read NEW_SESSION_BRIEF.md, WORK_PLAN.md, PROJECT_STATUS.md, FOR_AI_MODELS.md, REPORT_NOTES.md, eval/gold_set.jsonl, eval/run_eval.py, data/processed/chunks.json, and report.md.
 Goal: make Hit@5 meaningful. Add source labels or an anchor-style source-hit metric without rewriting the gold Q/A content.
 Start with a focused, defensible labeled subset if full labeling is too slow. Prefer obvious labels such as datasheet_hier_chunk_0000 for flash/SRAM/protocol/voltage/GPIO/package/unsupported-connectivity questions.
@@ -544,7 +544,7 @@ Keep this separate from the CC2652R7 report unless there is time after report.pd
 
 **May 25-26**
 
-- Review, commit, and decide whether to merge `feature/negation-handling`.
+- Decide whether to merge `feature/negation-handling` or keep it parked.
 - If merged, rerun targeted tests, eval, report rendering, and `pdfinfo report.pdf`.
 
 **May 27-28**
@@ -569,7 +569,7 @@ Keep this separate from the CC2652R7 report unless there is time after report.pd
 
 ## Decision Rules for Future Sessions
 
-- If `feature/negation-handling` is still uncommitted, review and commit it before starting new work.
+- If `feature/negation-handling` is still unmerged, ask whether to merge it or explicitly park it before starting new feature work.
 - If `feature/negation-handling` is merged, run Session C-style final audit before optional code work.
 - If less than 24 hours remain before the deadline, do not start corpus expansion.
 - If an optional fix changes metrics, rerun eval and update the report source before regenerating `report.pdf`.

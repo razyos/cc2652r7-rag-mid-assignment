@@ -7,7 +7,7 @@ built as a university mid-assignment. The system demonstrates that bare Llama 3.
 hallucinates on device-specific questions while RAG grounds answers in TI documentation.
 
 **Assignment:** Build, evaluate, and report on a RAG system.
-**Submission state:** `main` is submission-safe as of 2026-05-23. `report.md` and a 2-page `report.pdf` exist and reflect the latest Session D eval. As of 2026-05-24, `feature/negation-handling` contains a completed Session E branch with refreshed eval/report artifacts, but it has not been merged to `main` yet.
+**Submission state:** `main` is submission-safe as of 2026-05-23. `report.md` and a 2-page `report.pdf` exist and reflect the latest Session D eval. As of 2026-05-26, `feature/negation-handling` contains committed Session E work at `93789fb` with refreshed eval/report artifacts, but it has not been merged to `main` yet.
 **Deadline:** Original deadline was 2026-05-26 at 12:00 noon Asia/Jerusalem. A one-week extension was granted; treat the working deadline as 2026-06-02, exact time TBD, assuming noon until clarified.
 **Internal design note:** `SYSTEM_DESIGN_NOTES.md` explains the architecture, design tradeoffs, industry alignment, and modern retrieval/indexing alternatives beyond FAISS/Chroma.
 
@@ -15,7 +15,7 @@ hallucinates on device-specific questions while RAG grounds answers in TI docume
 
 - `main` is the stable submission branch. Keep it runnable and do not force-push it.
 - Session D (`fix/answerability-normalization`) was merged to `main` at commit `48dbd30`.
-- Session E (`feature/negation-handling`) is complete locally and should be reviewed, committed, and verified before any merge to `main`.
+- Session E (`feature/negation-handling`) is committed locally at `93789fb`; ask before merging it to `main`.
 - Use short-lived branches for narrow optional improvements, for example `feature/negation-handling`, `feature/source-label-eval`, or `feature/tx-power-extractor`.
 - Use experimental branches for major work, for example `exp/rf-driver-api-corpus` or `exp/competitor-datasheets`.
 - Do not merge corpus expansion, gold-set rewrites, retrieval changes, or answer-generation behavior changes into `main` unless tests, `python eval/run_eval.py`, report updates, PDF regeneration, and `pdfinfo report.pdf` all pass.
@@ -187,7 +187,7 @@ Session E verification on `feature/negation-handling`:
 
 The one-week extension should be used for controlled, reportable improvements:
 
-1. Review, commit, and optionally merge `feature/negation-handling`.
+1. Decide whether to merge `feature/negation-handling` into `main` or keep it parked.
 2. Create `feature/source-label-eval` to add meaningful source labels or anchor-style source-hit evaluation, preferably with MRR. This addresses the biggest current evaluation weakness: Hit@5 is vacuous because `must_cite_chunk_ids` is empty.
 3. Create `feature/tx-power-extractor` for the narrow max RF output power / standard-mode TX-power answer failure.
 4. Refresh `report.md` and `report.pdf` after metric or claim changes.
