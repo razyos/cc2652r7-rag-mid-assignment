@@ -17,6 +17,17 @@ SAMPLE_CHUNKS = [
      "metadata": {"source": "Users_Guide.html", "section": "RF Driver"}, "rerank_score": 0.7},
 ]
 
+DATASHEET_FEATURE_CHUNK = {
+    "chunk_id": "datasheet_hier_chunk_0000",
+    "text": (
+        "Wireless protocol support Thread, Zigbee, Matter. "
+        "Bluetooth 5.2 Low Energy. SimpleLink TI 15.4-stack. "
+        "6LoWPAN. Proprietary systems. MCU peripherals include "
+        "Two UART, two SSI, I2C, I2S, 31 GPIOs."
+    ),
+    "metadata": {"source": "cc2652r7.pdf", "page": 1},
+}
+
 def test_format_context_includes_chunk_id_and_source():
     context = format_context(SAMPLE_CHUNKS)
     assert "trm_chunk_0003" in context
@@ -126,3 +137,14 @@ def test_check_answerability_matches_voltage_terms_with_spaces_and_hyphens():
 
     assert result["answerable"] is True
     assert result["missing_terms"] == []
+
+
+def test_generate_answer_names_lte_or_cellular_as_combined_unsupported_feature():
+    answer = generate_answer(
+        "Does the CC2652R7 support LTE or cellular connectivity?",
+        [DATASHEET_FEATURE_CHUNK],
+    )
+
+    assert "ANSWER: No" in answer
+    assert "LTE or cellular connectivity" in answer
+    assert "SOURCE: datasheet_hier_chunk_0000" in answer

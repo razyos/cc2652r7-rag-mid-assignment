@@ -67,12 +67,15 @@ class RAGSystem:
         # Stage 5: Rerank
         reranked_results = rerank(question, hybrid_results, k=self.k)
 
-        # Stage 5b: Inject datasheet anchor chunks for spec questions.
+        # Stage 5b: Inject datasheet anchor chunks for spec and support questions.
         # The cross-encoder demotes the features-list chunk (chunk_0000) for specific
-        # peripheral queries, but it is the authoritative source for counts/voltage/GPIO.
+        # peripheral queries, but it is the authoritative source for counts/support facts.
         _SPEC_TERMS = ("uart", "spi", "ssi", "i2c", "voltage", "supply", "gpio", "i/o",
                        "clock", "frequency", "timer", "package", "temperature",
-                       "flash", "sram", "ram", "wireless protocol", "protocols")
+                       "flash", "sram", "ram", "wireless protocol", "protocols",
+                       "wi-fi", "wifi", "wireless lan", "lte", "lte-m", "cellular",
+                       "ethernet", "usb", "bluetooth classic", "classic bluetooth",
+                       "br/edr", "wi-sun", "wisun")
         qn_lower = question.lower()
         if any(term in qn_lower for term in _SPEC_TERMS):
             anchor_ids = {"datasheet_hier_chunk_0000"}

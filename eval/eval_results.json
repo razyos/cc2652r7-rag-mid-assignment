@@ -397,8 +397,9 @@
       "question": "Does the CC2652R7 support Wi-Fi?",
       "category": "negation",
       "reference_answer": "No, the CC2652R7 does not support Wi-Fi. It supports BLE, Zigbee, Thread, and proprietary protocols.",
-      "system_answer": "QUOTE: Personal electronics -Home theater & entertainment - smart speakers , smart display , set-top box -Wearables (non-medical) - smart trackers , smart clothing 3 Description The SimpleLink CC2652R7 device is a multiprotocol 2.4-GHz wireless microcontroller (MCU) supporting Thread , Zigbee, Matter, Bluetooth 5.2 Low Energy , IEEE 802.15.4g, IPv6-enabled smart objects (6LoWPAN), TI 15.4-Stack (2.4 GHz), and concurrent...\nANSWER: No, the provided CC2652R7 support list does not include Wi-Fi.\nSOURCE: datasheet_hier_chunk_0001_sub0",
+      "system_answer": "QUOTE: Wireless protocol support \u2022Thread , Zigbee , Matter \u2022Bluetooth 5.2 Low Energy \u2022SimpleLink TI 15.4-stack \u20226LoWPAN \u2022Proprietary systems High performance radio\nANSWER: No, the provided CC2652R7 support list does not include Wi-Fi.\nSOURCE: datasheet_hier_chunk_0000",
       "sources": [
+        "datasheet_hier_chunk_0000",
         "datasheet_hier_chunk_0001_sub0",
         "datasheet_hier_chunk_0035",
         "datasheet_hier_chunk_0047",
@@ -436,13 +437,13 @@
       "question": "Does the CC2652R7 support LTE or cellular connectivity?",
       "category": "negation",
       "reference_answer": "No, the CC2652R7 does not support LTE or cellular. It is a short-range wireless MCU.",
-      "system_answer": "QUOTE: Personal electronics -Home theater & entertainment - smart speakers , smart display , set-top box -Wearables (non-medical) - smart trackers , smart clothing 3 Description The SimpleLink CC2652R7 device is a multiprotocol 2.4-GHz wireless microcontroller (MCU) supporting Thread , Zigbee, Matter, Bluetooth 5.2 Low Energy , IEEE 802.15.4g, IPv6-enabled smart objects (6LoWPAN), TI 15.4-Stack (2.4 GHz), and concurrent...\nANSWER: No, the provided CC2652R7 support list does not include LTE.\nSOURCE: datasheet_hier_chunk_0001_sub0",
+      "system_answer": "QUOTE: Wireless protocol support \u2022Thread , Zigbee , Matter \u2022Bluetooth 5.2 Low Energy \u2022SimpleLink TI 15.4-stack \u20226LoWPAN \u2022Proprietary systems High performance radio\nANSWER: No, the provided CC2652R7 support list does not include LTE or cellular connectivity.\nSOURCE: datasheet_hier_chunk_0000",
       "sources": [
+        "datasheet_hier_chunk_0000",
         "datasheet_hier_chunk_0001_sub0",
         "datasheet_hier_chunk_0002_sub1",
         "datasheet_hier_chunk_0035",
-        "datasheet_hier_chunk_0039",
-        "datasheet_hier_chunk_0046"
+        "datasheet_hier_chunk_0039"
       ],
       "hit_at_k": 1.0,
       "answerable": false,
@@ -515,17 +516,18 @@
         "CC2652R7"
       ],
       "answerability_missing": [
-        "5V",
         "3.8V",
-        "1.8V"
+        "1.8V",
+        "5V"
       ]
     },
     {
       "question": "Does the CC2652R7 support USB?",
       "category": "negation",
       "reference_answer": "No, the CC2652R7 does not have a native USB peripheral.",
-      "system_answer": "QUOTE: Personal electronics -Home theater & entertainment - smart speakers , smart display , set-top box -Wearables (non-medical) - smart trackers , smart clothing 3 Description The SimpleLink CC2652R7 device is a multiprotocol 2.4-GHz wireless microcontroller (MCU) supporting Thread , Zigbee, Matter, Bluetooth 5.2 Low Energy , IEEE 802.15.4g, IPv6-enabled smart objects (6LoWPAN), TI 15.4-Stack (2.4 GHz), and concurrent...\nANSWER: No, the provided CC2652R7 support list does not include USB.\nSOURCE: datasheet_hier_chunk_0001_sub0",
+      "system_answer": "QUOTE: Wireless protocol support \u2022Thread , Zigbee , Matter \u2022Bluetooth 5.2 Low Energy \u2022SimpleLink TI 15.4-stack \u20226LoWPAN \u2022Proprietary systems High performance radio\nANSWER: No, the provided CC2652R7 support list does not include USB.\nSOURCE: datasheet_hier_chunk_0000",
       "sources": [
+        "datasheet_hier_chunk_0000",
         "datasheet_hier_chunk_0001_sub0",
         "datasheet_hier_chunk_0039",
         "datasheet_hier_chunk_0035",
@@ -587,12 +589,12 @@
       "question": "Does the CC2652R7 have an Ethernet interface?",
       "category": "negation",
       "reference_answer": "No, the CC2652R7 does not have an Ethernet interface.",
-      "system_answer": "QUOTE: Personal electronics -Home theater & entertainment - smart speakers , smart display , set-top box -Wearables (non-medical) - smart trackers , smart clothing 3 Description The SimpleLink CC2652R7 device is a multiprotocol 2.4-GHz wireless microcontroller (MCU) supporting Thread , Zigbee, Matter, Bluetooth 5.2 Low Energy , IEEE 802.15.4g, IPv6-enabled smart objects (6LoWPAN), TI 15.4-Stack (2.4 GHz), and concurrent...\nANSWER: No, the provided CC2652R7 support list does not include Ethernet.\nSOURCE: datasheet_hier_chunk_0001_sub0",
+      "system_answer": "QUOTE: Wireless protocol support \u2022Thread , Zigbee , Matter \u2022Bluetooth 5.2 Low Energy \u2022SimpleLink TI 15.4-stack \u20226LoWPAN \u2022Proprietary systems High performance radio\nANSWER: No, the provided CC2652R7 support list does not include Ethernet.\nSOURCE: datasheet_hier_chunk_0000",
       "sources": [
+        "datasheet_hier_chunk_0000",
         "datasheet_hier_chunk_0035",
         "datasheet_hier_chunk_0001_sub0",
-        "datasheet_hier_chunk_0039",
-        "datasheet_hier_chunk_0041"
+        "datasheet_hier_chunk_0039"
       ],
       "hit_at_k": 1.0,
       "answerable": true,
@@ -743,9 +745,9 @@
         "SRAM"
       ],
       "answerability_missing": [
-        "CC2652R1",
         "80 KB",
-        "256 KB"
+        "256 KB",
+        "CC2652R1"
       ]
     },
     {
@@ -923,8 +925,8 @@
         "RF_open"
       ],
       "answerability_missing": [
-        "RF_open",
-        "CPE"
+        "CPE",
+        "RF_open"
       ]
     },
     {

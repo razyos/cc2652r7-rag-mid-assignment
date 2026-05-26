@@ -1,10 +1,17 @@
 # CC2652R7 RAG Assignment Work Plan
 
-**Created:** 2026-05-23  
-**Submission deadline:** 2026-05-26 at 12:00 noon, Asia/Jerusalem  
-**Planning decision:** The report was the critical path and is now submission-safe. Code improvements are optional and should remain narrow unless the report is re-audited afterward.
+**Created:** 2026-05-23
+**Original submission deadline:** 2026-05-26 at 12:00 noon, Asia/Jerusalem
+**Extension:** one week from 2026-05-26. Treat the working deadline as 2026-06-02, exact time TBD; assume 12:00 noon Asia/Jerusalem until clarified.
+**Planning decision:** The report was the original critical path and is now submission-safe. With the extension, the best use of time is controlled improvement: stabilize Session E, make retrieval evaluation meaningful, then fix narrow answer-quality failures.
 
 **Status update, 2026-05-23:** Sessions A-D are complete and merged to `main`. `REPORT_NOTES.md`, `report.md`, and `report.pdf` exist; `report.pdf` is 2 A4 pages, which satisfies the assignment's "up to 4 pages" limit. Session C audit verified required files, README commands, manifest fields, and `RAGSystem.answer(question: str) -> dict`. Session D fixed the Answerable@Context hyphen/spacing normalization false negative and refreshed eval/report evidence. `main` is the stable submission branch.
+
+**Status update, 2026-05-24:** Session E is complete on `feature/negation-handling` and is not merged to `main` yet. The branch improves unsupported connectivity answers for Wi-Fi, USB, LTE/cellular, Ethernet, and Bluetooth Classic by anchoring `datasheet_hier_chunk_0000` and keeping answers grounded in the CC2652R7 feature/protocol list. Branch eval remains Hit@5 = 1.000 and Answerable@Context = 0.560. `report.md` and `report.pdf` were refreshed; `pdfinfo report.pdf` reports 2 pages.
+
+**Status update, 2026-05-26:** The deadline extension makes source-label evaluation the highest-value next improvement after Session E is committed/merged. A comparison repo (`insurance-rag`) showed a stronger anchor/MRR-style retrieval evaluation pattern. Borrow the concept only; do not copy code or switch this project from FAISS to Chroma.
+
+**Design note, 2026-05-26:** `SYSTEM_DESIGN_NOTES.md` was added as an internal architecture and tradeoff reference. It explains each pipeline stage, why the current design fits the assignment, where it aligns with industry practice, and when more advanced options such as RRF, Qdrant, Weaviate, Milvus, pgvector, sparse+dense retrieval, BGE-M3, ColBERT-style late interaction, or GraphRAG would be worth testing. Use it before proposing retrieval modernization.
 
 ## Repository and Branching Strategy
 
@@ -15,11 +22,12 @@ Standalone repository:
 - Default branch: `main`
 - Current stable branch: `main`
 - Session D branch: `fix/answerability-normalization` was merged and pushed to `main` at commit `48dbd30`.
+- Session E branch: `feature/negation-handling` is complete locally and should be reviewed, committed, and verified before any merge to `main`.
 
 DevOps policy:
 
 - Treat `main` as the stable submission branch. It should always be runnable and contain a valid `report.pdf`.
-- Do optional work on short-lived branches named by intent, such as `feature/negation-handling`, `feature/tx-power-extractor`, `exp/rf-driver-api-corpus`, or `exp/competitor-datasheets`.
+- Do optional work on short-lived branches named by intent, such as `feature/negation-handling`, `feature/source-label-eval`, `feature/tx-power-extractor`, `exp/rf-driver-api-corpus`, or `exp/competitor-datasheets`.
 - Major or risky work is allowed only away from `main`. Corpus expansion, gold-set rewrites, retrieval changes, or answer-generation behavior changes must stay on separate branches until fully verified.
 - Before merging a branch into `main`, run the smallest relevant tests and record the result in the final session summary.
 - If code changes can affect metrics, run `python eval/run_eval.py`.
@@ -51,6 +59,18 @@ Current verified project status:
 - Stress test passing as of the project status note
 - `demo.py` ready for live demo
 - `report.md` and `report.pdf` are present; `scripts/render_report.py` regenerates the PDF from Markdown
+- `SYSTEM_DESIGN_NOTES.md` is present as the internal engineering rationale/tradeoff document
+
+Current Session E branch status:
+
+- `feature/negation-handling` extends Stage 5b anchor injection for unsupported connectivity/support terms.
+- Unsupported Wi-Fi, USB, LTE/cellular, Ethernet, and Bluetooth Classic answers cite `datasheet_hier_chunk_0000`.
+- Focused tests passed:
+  - `python -m pytest tests/test_generation.py -q` passed 12 tests.
+  - `python -m pytest tests/test_rag_system.py::test_answer_injects_datasheet_anchor_for_unsupported_connectivity_questions -q` passed 5 tests.
+- `python eval/run_eval.py` completed with Hit@5 = 1.000 and Answerable@Context = 0.560.
+- `python scripts/render_report.py` completed, and `pdfinfo report.pdf` reports 2 pages.
+- Full `python -m pytest tests/ -q` was attempted but stopped after model-heavy no-output behavior; do not report a full-suite pass for Session E.
 
 Important constraints:
 
@@ -76,9 +96,11 @@ Steps 1-4 are complete. Avoid merging corpus expansion or broad comparison suppo
 Recommended remaining order:
 
 1. Keep `main` frozen and submission-safe unless a clearly verified improvement is ready.
-2. If time remains, use `feature/negation-handling` for Session E because it is narrow and does not require corpus/index changes.
-3. Use experimental branches for major work: `exp/rf-driver-api-corpus`, `exp/competitor-datasheets`, or similar.
-4. Merge an improvement branch into `main` only after targeted tests, eval, report regeneration if needed, `pdfinfo report.pdf`, and a clean final status.
+2. Review, commit, and optionally merge `feature/negation-handling` only after repeating the targeted tests, eval, report regeneration, and `pdfinfo report.pdf`.
+3. Start `feature/source-label-eval` to replace the vacuous Hit@5 with real source labels or an anchor-style retrieval metric, preferably adding MRR.
+4. Use `feature/tx-power-extractor` for the next narrow answer-quality improvement.
+5. Run a final submission audit after each merge that changes code, metrics, report text, or PDF artifacts.
+6. Use experimental branches for major work: `exp/rf-driver-api-corpus`, `exp/competitor-datasheets`, or similar.
 
 ## Session A - Report Evidence Freeze
 
@@ -281,7 +303,7 @@ Report the old and new Answerable@Context numbers.
 If the metric changes, update report.md, regenerate report.pdf with python scripts/render_report.py, and verify pdfinfo report.pdf is still <= 4 pages.
 ```
 
-## Session E - Negation Quote/Answer Fix, Optional
+## Session E - Negation Quote/Answer Fix, Completed on Branch
 
 **Goal:** Make unsupported-feature questions answer cleanly with the authoritative CC2652R7 feature list.
 
@@ -302,7 +324,7 @@ If the metric changes, update report.md, regenerate report.pdf with python scrip
 
 **Dependencies:** Session B draft exists; preferably after Session D
 
-**Priority:** Optional before deadline, useful only if time remains.
+**Priority:** Completed locally on `feature/negation-handling`; review and commit before merge.
 
 **Important context:**
 
@@ -311,24 +333,128 @@ If the metric changes, update report.md, regenerate report.pdf with python scrip
 - Do not reintroduce the old `_should_refuse_without_extractor()` gate.
 - Do not revisit the anchor injection placement decision.
 
+**Implemented direction:**
+
+- Extend `src/rag_system.py` Stage 5b anchor terms so unsupported connectivity questions prepend `datasheet_hier_chunk_0000`.
+- Keep the existing `src/generation.py` yes/no unsupported-feature path and add precise combined wording for "LTE or cellular connectivity."
+- Return the established `QUOTE`, `ANSWER`, `SOURCE` format from the CC2652R7 support list.
+
+**Verified branch results:**
+
+- `python -m pytest tests/test_generation.py -q` passed 12 tests.
+- `python -m pytest tests/test_rag_system.py::test_answer_injects_datasheet_anchor_for_unsupported_connectivity_questions -q` passed 5 tests.
+- `python eval/run_eval.py` completed with Hit@5 = 1.000 and Answerable@Context = 0.560.
+- `python scripts/render_report.py` completed.
+- `pdfinfo report.pdf` reports 2 pages.
+- Full `python -m pytest tests/ -q` was attempted but stopped after model-heavy no-output behavior.
+
+**Copy-paste prompt if Session E must be resumed:**
+
+```text
+Resume Session E on feature/negation-handling.
+Read NEW_SESSION_BRIEF.md, WORK_PLAN.md, FOR_AI_MODELS.md, PROJECT_STATUS.md, src/generation.py, src/rag_system.py, tests/test_generation.py, tests/test_rag_system.py, eval/eval_results.json, and report.md.
+Review the current branch diff and verify it only contains the narrow unsupported-connectivity improvement.
+Rerun targeted tests, rerun python eval/run_eval.py if feasible, regenerate report.pdf only if report.md or metrics changed, and verify pdfinfo report.pdf is <= 4 pages.
+If all checks pass, commit the branch; merge to main only with user approval.
+```
+
+## Session F - Source-Label Evaluation Upgrade
+
+**Goal:** Make retrieval evaluation meaningful by replacing the current vacuous Hit@5 setup with source labels or an anchor-style evidence metric.
+
+**Inputs:**
+
+- `eval/gold_set.jsonl`
+- `eval/run_eval.py`
+- `eval/eval_results.json`
+- `data/processed/chunks.json`
+- `src/generation.py`
+- `report.md`
+- Comparison-repo idea: anchor/MRR evaluation from `insurance-rag` (concept only, do not copy code)
+
+**Outputs:**
+
+- Either non-empty `must_cite_chunk_ids` for a focused gold-set subset or a separate anchor/source-label file that leaves Q/A content unchanged
+- Updated eval metric reporting real Hit@k and preferably MRR
+- Focused tests for metric behavior
+- Refreshed `eval/eval_results.json`
+- Updated `report.md` and regenerated `report.pdf` if metrics/claims change
+
+**Time estimate:** 3-6 hours
+
+**Dependencies:** Session E should be committed/merged or explicitly parked first.
+
+**Priority:** Highest academic improvement after Session E. This directly addresses the current report's biggest evaluation caveat: all `must_cite_chunk_ids` are empty, so Hit@5 is not discriminative.
+
+**Important context:**
+
+- Do not rewrite the gold questions or reference answers unless absolutely necessary.
+- Prefer adding source evidence labels while preserving existing Q/A content.
+- Avoid index rebuilds and broad retrieval changes.
+- Keep old Answerable@Context for continuity, but add a clearly named source-hit metric.
+- If labels are incomplete, report the labeled subset size honestly.
+
 **Likely implementation direction:**
 
-- Add or refine a small negative-feature extractor for unsupported connectivity features.
-- Prefer grounding in `datasheet_hier_chunk_0000` or the CC2652R7-specific support list.
-- Return the established `QUOTE`, `ANSWER`, `SOURCE` format.
+- Inspect core factual/numerical/negation questions first because many map cleanly to `datasheet_hier_chunk_0000`.
+- Add labels in small batches and test `compute_hit_at_k()`.
+- Consider MRR using retrieved chunk rank when at least one labeled chunk appears.
+- Update report caveats from "Hit@5 is vacuous" to "Hit@5 is measured on N labeled questions" only after verification.
 
 **Copy-paste prompt:**
 
 ```text
-Fix negation handling for unsupported features without revisiting prior failed approaches.
-Read FOR_AI_MODELS.md, PROJECT_STATUS.md, src/generation.py, and src/rag_system.py.
-Reproduce behavior for Wi-Fi, USB, LTE/cellular, Ethernet, Bluetooth Classic, and Wi-SUN questions.
-Add focused tests requiring a clear No answer grounded in the CC2652R7 support/features list, preferably datasheet_hier_chunk_0000.
-Use the smallest change: likely a negative-feature extractor and/or anchor injection for unsupported connectivity terms.
-Run targeted tests, full tests, stress test, and eval if feasible.
+Start feature/source-label-eval after Session E is committed/merged or explicitly parked.
+Read NEW_SESSION_BRIEF.md, WORK_PLAN.md, PROJECT_STATUS.md, FOR_AI_MODELS.md, REPORT_NOTES.md, eval/gold_set.jsonl, eval/run_eval.py, data/processed/chunks.json, and report.md.
+Goal: make Hit@5 meaningful. Add source labels or an anchor-style source-hit metric without rewriting the gold Q/A content.
+Start with a focused, defensible labeled subset if full labeling is too slow. Prefer obvious labels such as datasheet_hier_chunk_0000 for flash/SRAM/protocol/voltage/GPIO/package/unsupported-connectivity questions.
+Add focused tests for Hit@k/MRR behavior. Run targeted tests and python eval/run_eval.py.
+If metrics or report claims change, update report.md, regenerate report.pdf with python scripts/render_report.py, and verify pdfinfo report.pdf is <= 4 pages.
+Do not rebuild indexes, add RF Driver API docs, add competitor datasheets, or do broad retrieval refactors.
 ```
 
-## Session F - RF Driver API Corpus Expansion, Post-Deadline Unless Report Is Done Early
+## Session G - TX-Power Extractor, Narrow Answer-Quality Fix
+
+**Goal:** Improve maximum RF output power and standard-mode TX-power answers without changing corpus or indexes.
+
+**Inputs:**
+
+- `src/generation.py`
+- `src/rag_system.py`
+- `tests/test_generation.py`
+- `eval/eval_results.json`
+- `data/processed/chunks.json`
+
+**Outputs:**
+
+- Focused tests for maximum RF output power and standard-mode TX-power behavior
+- Minimal extractor/ranking fix
+- Refreshed eval/report if metrics or claims change
+
+**Time estimate:** 2-4 hours
+
+**Dependencies:** Prefer after Session F because evaluation credibility is the larger academic gap.
+
+**Priority:** High after source-label evaluation. Keep this branch narrow.
+
+**Important context:**
+
+- The current max RF output power answer selects `+0 dBm` from a transmit-current table instead of the expected max-output-power fact.
+- Do not add RF characterization tables or new corpus on this branch.
+- If the gold "standard mode without PA" answer is not directly supported by current corpus text, answer conservatively and document the limitation.
+
+**Copy-paste prompt:**
+
+```text
+Start feature/tx-power-extractor as a narrow answer-quality branch.
+Read NEW_SESSION_BRIEF.md, WORK_PLAN.md, FOR_AI_MODELS.md, PROJECT_STATUS.md, src/generation.py, src/rag_system.py, tests/test_generation.py, eval/eval_results.json, and data/processed/chunks.json.
+Reproduce current RF TX-power answers. Add focused tests before implementation.
+Fix only the TX-power extractor/anchor behavior needed for maximum RF output power and standard-mode TX-power questions.
+Do not add corpus, rebuild indexes, rewrite gold answers, or touch unrelated retrieval logic.
+Run targeted tests and python eval/run_eval.py. If metrics or report claims change, update report.md, regenerate report.pdf, and verify pdfinfo report.pdf is <= 4 pages.
+```
+
+## Session H - RF Driver API Corpus Expansion, Experimental
 
 **Goal:** Add the missing RF Driver API reference corpus and rebuild indexes.
 
@@ -353,7 +479,7 @@ Run targeted tests, full tests, stress test, and eval if feasible.
 
 **Dependencies:** User provides or approves the exact RF Driver API PDF; `report.pdf` is already safe.
 
-**Priority:** Not before report unless there is unexpected spare time.
+**Priority:** Experimental only. Do not start before Session E is resolved, source-label evaluation is addressed, and the user explicitly accepts index rebuild/report-update risk.
 
 **Important context:**
 
@@ -370,7 +496,7 @@ Add the PDF to data/raw, update loading/indexing as needed, rebuild FAISS and BM
 Document changed chunk counts and category-level eval changes.
 ```
 
-## Session G - Competitor Datasheets, Low Priority
+## Session I - Competitor Datasheets, Low Priority Experimental
 
 **Goal:** Decide whether to support comparison questions by indexing competitor device datasheets.
 
@@ -413,43 +539,53 @@ Keep this separate from the CC2652R7 report unless there is time after report.pd
 
 **May 23-24**
 
-- Complete Session A.
-- Start and preferably complete Session B.
+- Sessions A-D were completed and merged to `main`.
+- Session E was completed locally on `feature/negation-handling`.
 
-**May 25 morning**
+**May 25-26**
 
-- Finish Session B if needed.
-- Run Session C.
-- At this point, `report.pdf` should be submission-ready.
+- Review, commit, and decide whether to merge `feature/negation-handling`.
+- If merged, rerun targeted tests, eval, report rendering, and `pdfinfo report.pdf`.
 
-**May 25 afternoon/evening**
+**May 27-28**
 
-- If the report is safe, run Session D.
-- If Session D is done and there is still time, run Session E.
-- Avoid Session F or G unless the report is already finalized and the user explicitly wants the risk.
+- Run `feature/source-label-eval`.
+- Update report metrics and regenerate PDF if evaluation claims change.
 
-**May 26 morning**
+**May 29-30**
 
-- Final submission audit only.
-- No risky code or corpus changes.
+- Run `feature/tx-power-extractor` if source-label evaluation is complete.
+- Consider `exp/rf-driver-api-corpus` only if the user accepts index rebuild/report-update risk.
+
+**May 31-June 1**
+
+- Freeze feature work.
+- Regenerate final report if needed.
+- Run final submission audit.
+
+**June 2**
+
+- Submission-only work. No risky code or corpus changes.
 
 ## Decision Rules for Future Sessions
 
-- If `report.pdf` does not exist, do Session A or B only.
-- If `report.pdf` exists but has not been audited, do Session C before optional code work.
-- If less than 6 hours remain before the deadline, do not start corpus expansion.
+- If `feature/negation-handling` is still uncommitted, review and commit it before starting new work.
+- If `feature/negation-handling` is merged, run Session C-style final audit before optional code work.
+- If less than 24 hours remain before the deadline, do not start corpus expansion.
 - If an optional fix changes metrics, rerun eval and update the report source before regenerating `report.pdf`.
 - If eval results conflict with `PROJECT_STATUS.md`, use the most recent verified command output and document the command/date.
 - If a result depends on stale files, say so explicitly rather than reporting it as current.
 
 ## Open Questions / User Decisions
 
-1. Should the final report source be Markdown, LaTeX, or another format?
-2. If spare time remains, should optional effort go first to the metric fix or the negation fix?
-3. Should RF Driver API expansion wait until after submission unless the report is already finished early?
+1. Should `feature/negation-handling` be merged to `main` before submission?
+2. After Session E is resolved, should the next branch be `feature/source-label-eval`?
+3. Should `feature/tx-power-extractor` wait until after source-label evaluation?
+4. Should RF Driver API expansion stay experimental?
 
 Recommended answers:
 
-1. Use whichever format can reliably produce a clean <=4-page PDF fastest on this machine.
-2. Do the metric fix first; it is smaller and improves reported evaluation honesty.
-3. Yes, wait on RF Driver API expansion unless the report is finished and audited early.
+1. Yes, but only after repeated targeted tests, eval, report regeneration, and `pdfinfo report.pdf`.
+2. Yes. It is the highest-value academic improvement because current Hit@5 is vacuous without source labels.
+3. Yes. TX power is useful but narrower; do it only after the evaluation metric is defensible.
+4. Yes. RF Driver API corpus expansion is major corpus/index work and should not merge without a full rebuild, eval, report refresh, PDF verification, and user approval.

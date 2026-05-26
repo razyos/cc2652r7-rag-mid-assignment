@@ -49,7 +49,7 @@ Retrieval combines semantic and lexical evidence. Dense retrieval handles paraph
 
 ## 5. Prompt and Generation Design
 
-Generation is extractor-first. Before calling the LLM, the system removes table-of-contents chunks and tries deterministic extractors for common device facts: memory sizes, protocols, CPU, clock, voltage, package, temperature, RF core, BLE sensitivity, GPIO count, ADC, serial interfaces, timers, TX power, and RF command chaining. These extractors return a strict cited format:
+Generation is extractor-first. Before calling the LLM, the system removes table-of-contents chunks and tries deterministic extractors for common device facts: memory sizes, protocols, unsupported connectivity, CPU, clock, voltage, package, temperature, RF core, BLE sensitivity, GPIO count, ADC, serial interfaces, timers, TX power, and RF command chaining. These extractors return a strict cited format:
 
 ```text
 QUOTE: ...
@@ -96,6 +96,6 @@ The ablation table satisfies the requirement to compare retrieval variants, but 
 
 The main failures are data and evaluation limitations rather than only model mistakes. RF API questions about `RF_open`, `RF_close`, `RFCCpePatchFxp`, `RF_EventLastCmdDone`, and CPE patch order are expected to fail because the RF Driver API Reference is absent. The system often refuses these safely, but the gold set expects facts outside the indexed corpus. Comparison questions also underperform because competitor device facts are absent.
 
-There are also system-level errors. The TX-power extractor/retrieval path selects a nearby current table instead of the maximum-output-power specification. Some debugging answers retrieve generic TRM exception text that is not specific to RF initialization. Negation handling is conservative but incomplete; unsupported-feature questions should be answered from an authoritative support list rather than by asking a small LLM to infer absence.
+There are also system-level errors. The TX-power extractor/retrieval path selects a nearby current table instead of the maximum-output-power specification. Some debugging answers retrieve generic TRM exception text that is not specific to RF initialization. Unsupported connectivity questions now use the datasheet feature/protocol list for Wi-Fi, LTE/cellular, USB, Ethernet, and Bluetooth Classic absence answers, but broader absence coverage still depends on explicit corpus evidence.
 
 Next improvements are, in priority order: label required source chunks so Hit@5 becomes meaningful; add the RF Driver API Reference; add competitor datasheets or rewrite comparison questions to facts in the corpus; improve TX-power anchoring and extractor ranking; and strengthen strict-format validation for LLM fallback answers.

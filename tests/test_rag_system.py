@@ -2,6 +2,7 @@
 import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from unittest.mock import patch
+import pytest
 import numpy as np
 import faiss
 from sentence_transformers import SentenceTransformer
@@ -76,3 +77,51 @@ def test_answer_includes_validation():
     assert "grounded" in result["validation"]
     assert "ungrounded_literals" in result["validation"]
     assert "warning" in result["validation"]
+
+
+@pytest.mark.parametrize(
+    "question",
+    [
+        "Does the CC2652R7 support Wi-Fi?",
+        "Does the CC2652R7 support USB?",
+        "Does the CC2652R7 support LTE or cellular connectivity?",
+        "Does the CC2652R7 have an Ethernet interface?",
+        "Does the CC2652R7 support Bluetooth Classic (BR/EDR)?",
+    ],
+)
+def test_answer_injects_datasheet_anchor_for_unsupported_connectivity_questions(question):
+    anchor = {
+        "chunk_id": "datasheet_hier_chunk_0000",
+        "doc_id": "datasheet",
+        "text": (
+            "Wireless protocol support Thread, Zigbee, Matter. "
+            "Bluetooth 5.2 Low Energy. SimpleLink TI 15.4-stack. "
+            "6LoWPAN. Proprietary systems."
+        ),
+        "metadata": {"source": "cc2652r7.pdf", "page": 1},
+    }
+    application_chunk = {
+        "chunk_id": "datasheet_hier_chunk_0001_sub0",
+        "doc_id": "datasheet",
+        "text": "Communication equipment includes wireless LAN or Wi-Fi access points.",
+        "metadata": {"source": "cc2652r7.pdf", "page": 2},
+    }
+    hybrid_chunk = dict(application_chunk)
+    hybrid_chunk["score"] = 0.7
+    reranked_chunk = dict(application_chunk)
+    reranked_chunk["rerank_score"] = 0.6
+    system = RAGSystem(index=None, chunks=[anchor, application_chunk], model=None, bm25=None)
+
+    with patch("src.rag_system.retrieve_dense", return_value=[]), \
+         patch("src.rag_system.retrieve_bm25", return_value=[]), \
+         patch("src.rag_system.hybrid_retrieve", return_value=[hybrid_chunk]), \
+         patch("src.rag_system.rerank", return_value=[reranked_chunk]), \
+         patch("src.rag_system.generate_answer", return_value="ANSWER: No") as mock_generate, \
+         patch(
+             "src.rag_system.validate_answer",
+             return_value={"grounded": True, "ungrounded_literals": [], "warning": None},
+         ):
+        system.answer(question)
+
+    final_chunks = mock_generate.call_args.args[1]
+    assert final_chunks[0]["chunk_id"] == "datasheet_hier_chunk_0000"

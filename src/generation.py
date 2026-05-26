@@ -331,17 +331,7 @@ def _try_yes_no_answer(question: str, chunks: list[dict]) -> str | None:
     support = _protocol_support_evidence(chunks)
     if feature in {"wi-fi", "wifi", "lte", "cellular", "ethernet", "usb", "bluetooth classic", "br/edr", "wi-sun"}:
         if support:
-            label = {
-                "wi-fi": "Wi-Fi",
-                "wifi": "Wi-Fi",
-                "lte": "LTE",
-                "cellular": "cellular connectivity",
-                "ethernet": "Ethernet",
-                "usb": "USB",
-                "bluetooth classic": "Bluetooth Classic (BR/EDR)",
-                "br/edr": "Bluetooth Classic (BR/EDR)",
-                "wi-sun": "Wi-SUN",
-            }[feature]
+            label = _unsupported_feature_label(feature, qn)
             return _format_answer(
                 support.quote,
                 f"No, the provided CC2652R7 support list does not include {label}.",
@@ -711,6 +701,23 @@ def _feature_is_in_protocol_support(feature: str, quote: str) -> bool:
     if feature in {"ieee 802.15.4", "802.15.4", "ti 15.4"}:
         return "15.4" in norm
     return False
+
+
+def _unsupported_feature_label(feature: str, qn: str) -> str:
+    if feature in {"lte", "cellular"} and "lte" in qn and "cellular" in qn:
+        return "LTE or cellular connectivity"
+
+    return {
+        "wi-fi": "Wi-Fi",
+        "wifi": "Wi-Fi",
+        "lte": "LTE",
+        "cellular": "cellular connectivity",
+        "ethernet": "Ethernet",
+        "usb": "USB",
+        "bluetooth classic": "Bluetooth Classic (BR/EDR)",
+        "br/edr": "Bluetooth Classic (BR/EDR)",
+        "wi-sun": "Wi-SUN",
+    }[feature]
 
 
 def _requested_feature(qn: str) -> str | None:

@@ -2,6 +2,14 @@
 
 A complete Retrieval-Augmented Generation (RAG) pipeline over TI CC2652R7 documentation for firmware debugging.
 
+## Current Planning Status
+
+- Original deadline: Tuesday, May 26, 2026 at 12:00 noon Asia/Jerusalem.
+- Extension: one week from May 26, 2026. Treat the working deadline as Tuesday, June 2, 2026, with the exact time still to confirm.
+- `main` is the stable submission branch.
+- Current local work branch: `feature/negation-handling`, completed locally but not yet merged.
+- Recommended next order: review/commit/merge `feature/negation-handling`, then improve source-label evaluation, then address TX-power extraction.
+
 ## Repository
 
 GitHub: https://github.com/razyos/cc2652r7-rag-mid-assignment
@@ -9,8 +17,8 @@ GitHub: https://github.com/razyos/cc2652r7-rag-mid-assignment
 Branch strategy:
 
 - `main` is the stable submission branch. It should always contain a runnable, audited assignment state.
-- Feature or fix work happens on short-lived branches, for example `fix/answerability-normalization`.
-- Major or risky work must happen on separate experimental branches, for example `feature/negation-handling`, `feature/tx-power-extractor`, `exp/rf-driver-api-corpus`, or `exp/competitor-datasheets`.
+- Feature or fix work happens on short-lived branches, for example `feature/negation-handling`, `feature/source-label-eval`, or `feature/tx-power-extractor`.
+- Major or risky work must happen on separate experimental branches, for example `exp/rf-driver-api-corpus` or `exp/competitor-datasheets`.
 - Merge into `main` only after targeted tests, `python eval/run_eval.py` when relevant, and report regeneration if metrics or claims change.
 - Corpus expansion, gold-set rewrites, retrieval changes, or answer-generation behavior changes require a full report/eval audit before they can merge into `main`.
 - Do not force-push `main`. Prefer a pull request or a fast-forward/merge commit with a clear summary.
@@ -51,6 +59,12 @@ print(result["answer"])
 print(result["sources"])
 ```
 
+## Internal Design Notes
+
+For a deeper explanation of the architecture, design tradeoffs, industry alignment,
+and modern alternatives beyond FAISS/Chroma, see
+`SYSTEM_DESIGN_NOTES.md`.
+
 ## Project Structure
 
 ```
@@ -71,6 +85,7 @@ mid_ass/
 ├── demo.py               # Live CC2652R7 demo with UART capture
 ├── report.md             # Editable final report source
 ├── report.pdf            # Final assignment report
+├── SYSTEM_DESIGN_NOTES.md # Internal architecture and tradeoff notes
 ├── requirements.txt
 └── README.md
 ```

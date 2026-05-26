@@ -2,6 +2,8 @@
 
 This file is a self-contained briefing for any AI model (ChatGPT, Gemini, Codex, Claude, etc.)
 asked to help with this project. Read this file first before touching any code.
+For deeper architecture rationale and modern retrieval/indexing alternatives, also read
+`SYSTEM_DESIGN_NOTES.md` before proposing design changes.
 
 ---
 
@@ -16,10 +18,15 @@ Language: Python 3.12. No web framework. Local inference via Ollama (Llama 3.2 3
 
 Repository: https://github.com/razyos/cc2652r7-rag-mid-assignment
 
+Deadline status:
+- Original deadline: 2026-05-26 at 12:00 noon Asia/Jerusalem.
+- Extension: one week from 2026-05-26. Treat the working deadline as 2026-06-02, exact time TBD, assuming noon until clarified.
+
 Branching policy:
 - `main` is the stable submission branch. Keep it runnable and submission-ready.
 - Session D (`fix/answerability-normalization`) was merged to `main` at commit `48dbd30`.
-- Use short-lived branches for optional work, such as `feature/negation-handling` or `feature/tx-power-extractor`.
+- Session E (`feature/negation-handling`) is complete locally as of 2026-05-24 but must be reviewed, committed, and verified before any merge to `main`.
+- Use short-lived branches for optional work, such as `feature/negation-handling`, `feature/source-label-eval`, or `feature/tx-power-extractor`.
 - Use experimental branches for major work, such as `exp/rf-driver-api-corpus` or `exp/competitor-datasheets`.
 - Do not make risky changes directly on `main`.
 - Before merging to `main`, run relevant tests; run `python eval/run_eval.py` for metric-affecting changes.
@@ -38,7 +45,7 @@ Question
  → [3] Hybrid merge: max-score dedup, top 20
  → [4] Identifier detection: firmware symbols, hex addresses
  → [5] Cross-encoder rerank: ms-marco-MiniLM-L-6-v2, +3.0 boost for identifier matches, k=5
- → [5b] Anchor injection: PREPEND datasheet_hier_chunk_0000 for spec-term questions
+ → [5b] Anchor injection: PREPEND datasheet_hier_chunk_0000 for spec/support questions
  → [6] Token budget: deduplicate by chunk_id, max 2000 words
  → [7] Generation:
          TOC filter → 15 deterministic extractors → LLM fallback (Llama 3.2 3B)
@@ -66,8 +73,9 @@ mid_ass/
 ├── data/
 │   ├── raw/                # Source PDFs + HTML (cc2652r7.pdf, swcu192.pdf, Users_Guide.html)
 │   └── processed/          # faiss.index, chunks.json (2361 chunks), bm25.pkl
-├── tests/                  # pytest suite (37 tests, all passing)
+├── tests/                  # pytest suite; use targeted tests for model-heavy paths
 ├── demo.py                 # Two-demo comparison: bare LLM vs RAG
+├── SYSTEM_DESIGN_NOTES.md  # Internal architecture/tradeoff notes
 ├── PROJECT_STATUS.md       # Full project status, results, known issues
 └── FOR_AI_MODELS.md        # This file
 ```
@@ -76,7 +84,7 @@ mid_ass/
 
 ## Corpus Facts
 
-- **2361 total chunks:** 2237 TRM, 64 datasheet, 60 SDK guide
+- **2361 total chunks:** 2237 TRM, 60 datasheet, 64 SDK guide
 - **Key chunk:** `datasheet_hier_chunk_0000` — the CC2652R7 features list.
   Contains: 704KB flash, 144KB SRAM, 48 MHz Cortex-M4F, 31 GPIO, 1.8-V to 3.8-V supply, etc.
 - **Corpus gap:** RF Driver API (RF_open, RFCCpePatchFxp, RF_EventLastCmdDone) is in
@@ -106,28 +114,30 @@ Answerable@Context checks if reference answer key terms appear in retrieved cont
 Session D fixed the known voltage metric bug by normalizing spaces and hyphens in
 `check_answerability()` so "1.8V" and "3.8V" match corpus text such as "1.8-V" and "3.8-V".
 
+Session E on `feature/negation-handling` did not change headline metrics, but it improved
+answer grounding for unsupported connectivity questions. Wi-Fi, USB, LTE/cellular, Ethernet,
+and Bluetooth Classic absence answers now cite `datasheet_hier_chunk_0000`.
+
 ---
 
 ## Known Issues and What to Improve
 
 ### High Priority
 
-**1. Negation questions — LLM quotes irrelevant context instead of saying "No"**
-Questions like "Does CC2652R7 support Wi-Fi/USB/LTE/Ethernet?" retrieve a product-applications
-list chunk ("smart speakers, wearables...") and the 3B LLM quotes it instead of saying No.
-- Location: `src/generation.py` — `_refuse_unanswerable_question()` and/or a new extractor
-- Fix: Add `_try_negative_feature_answer()` mapping {"wifi", "wi-fi", "usb", "lte", "ethernet",
-  "cellular", "bt classic", "br/edr"} → "No, the CC2652R7 does not support {feature}."
-  Evidence: check that the feature word does NOT appear in the features list of chunk_0000.
+**1. Review and merge Session E if desired**
+`feature/negation-handling` is complete locally. It extends Stage 5b anchor injection to
+unsupported connectivity/support terms and preserves the existing deterministic yes/no answer
+path. Before merge, rerun targeted tests, `python eval/run_eval.py`, `python scripts/render_report.py`,
+and `pdfinfo report.pdf`.
 
-**2. TX-power extractor / anchoring**
+**2. Source-label evaluation**
+Hit@5 is not meaningful because `must_cite_chunk_ids` is empty for all current gold entries.
+Use `feature/source-label-eval` to add real source labels or a separate anchor-style source-hit
+metric, preferably with MRR. Preserve gold Q/A content unless a correction is explicitly documented.
+
+**3. TX-power extractor / anchoring**
 The maximum RF output power question currently answers `+0 dBm` from a transmit-current table
 instead of the expected `+20 dBm`. Keep this as a narrow `feature/tx-power-extractor` branch.
-
-**3. Source-label evaluation**
-Hit@5 is not meaningful because `must_cite_chunk_ids` is empty for all current gold entries.
-Any gold-set relabeling or metric redesign belongs on a separate branch and must be re-audited
-before merging to `main`.
 
 ### Medium Priority
 
@@ -205,4 +215,4 @@ python demo.py
 | src/rag_system.py | ~150 | Orchestrator |
 | src/build_index.py | ~80 | Run once |
 | eval/run_eval.py | ~92 | Eval harness |
-| tests/ | 37 tests | All passing |
+| tests/ | ~43 tests | Targeted Session E tests pass; latest full-suite attempt was stopped in model-heavy paths |

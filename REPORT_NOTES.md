@@ -2,13 +2,16 @@
 
 Session A evidence freeze for the CC2652R7 RAG mid-assignment.
 
-Date: 2026-05-23  
-Deadline: 2026-05-26 12:00 noon Asia/Jerusalem  
-Critical path: write `report.pdf`; no code changes were made in this session.
+Date: 2026-05-23
+Original deadline: 2026-05-26 12:00 noon Asia/Jerusalem
+Extension: one week from 2026-05-26. Treat the working deadline as 2026-06-02, exact time TBD; assume noon until clarified.
+Critical path: `report.pdf` is complete; the extension should be used for controlled evaluation and answer-quality improvements.
 
-Post-freeze update: Sessions B-D are now complete. Session D fixed the Answerable@Context
-hyphen/spacing normalization false negative and was merged to `main` at commit `48dbd30`.
-The latest eval is Hit@5 = 1.000 and Answerable@Context = 0.560 (28/50). `report.pdf`
+Post-freeze update: Sessions B-D are complete and merged to `main`. Session D fixed the
+Answerable@Context hyphen/spacing normalization false negative and was merged to `main`
+at commit `48dbd30`. Session E is complete locally on `feature/negation-handling`; it
+improves unsupported connectivity answers without changing headline metrics. The latest
+branch eval is Hit@5 = 1.000 and Answerable@Context = 0.560 (28/50). `report.pdf`
 remains 2 pages.
 
 ## Assignment Requirements To Cover
@@ -41,7 +44,7 @@ Indexed documents:
 | `data/raw/Users_Guide.html` | SimpleLink SDK User's Guide | 64 |
 | Total | 3 documents | 2361 |
 
-Source of truth for chunk counts: `data/processed/chunks.json` as of 2026-05-23 15:52. Note: `PROJECT_STATUS.md` and `FOR_AI_MODELS.md` list the same total but have the datasheet/SDK counts swapped in one place; use the processed index counts above in the report.
+Source of truth for chunk counts: `data/processed/chunks.json` as of 2026-05-23 15:52. These counts were aligned across the handoff documents on 2026-05-26.
 
 Other corpus evidence:
 
@@ -82,7 +85,7 @@ Current pipeline in `src/rag_system.py`, `src/retrieval.py`, and `src/generation
 3. Hybrid merge by chunk id, using max score for duplicates, top 20.
 4. Identifier detection for firmware symbols, hex addresses, register-like names, and all-caps identifiers.
 5. Cross-encoder reranking with `cross-encoder/ms-marco-MiniLM-L-6-v2`, plus a +3.0 boost when identifier tokens appear exactly in a chunk.
-6. Datasheet anchor injection for spec-term questions: prepend `datasheet_hier_chunk_0000` after reranking, before budgeting.
+6. Datasheet anchor injection for spec/support questions: prepend `datasheet_hier_chunk_0000` after reranking, before budgeting.
 7. Deduplicate by `chunk_id` and enforce about a 2000-word context budget.
 8. Generation: filter table-of-contents chunks, run deterministic extractors first, then fall back to local Ollama `llama3.2` with `temperature=0`, `top_p=0.1`, `num_predict=180`.
 
@@ -95,12 +98,12 @@ Prompt/generation design:
 
 - Required answer format: `QUOTE`, `ANSWER`, `SOURCE`, or a strict not-found answer.
 - Prompt rules prohibit outside knowledge, unsupported symbols, Wi-Fi/Wi-SUN conflation, and guesses.
-- Deterministic extractors currently handle memory, protocols, CPU, clock, voltage, package, temperature, RF core, BLE sensitivity, GPIO, ADC, serial interfaces, timers, TX power, and RF command chaining.
+- Deterministic generation currently handles memory, protocols, unsupported connectivity, CPU, clock, voltage, package, temperature, RF core, BLE sensitivity, GPIO, ADC, serial interfaces, timers, TX power, and RF command chaining.
 - Validation checks technical literals in answers against retrieved chunks.
 
 ## Current Evaluation Metrics
 
-Source: `eval/eval_results.json` after Session D on 2026-05-23.
+Source: `eval/eval_results.json` after Session E on `feature/negation-handling` on 2026-05-24.
 
 | Metric | Value | Count | Notes |
 |---|---:|---:|---|
@@ -124,7 +127,7 @@ Source: `eval/eval_results.json`.
 |---|---:|---:|---:|---:|---|
 | numerical | 10 | 1.000 | 0.900 | 9/10 | Strongest category; one TX-power-standard-mode miss. |
 | factual | 10 | 1.000 | 0.700 | 7/10 | Voltage normalization fixed; remaining misses include RF API corpus gap, max TX-power error, and gold issues. |
-| negation | 10 | 1.000 | 0.600 | 6/10 | Several current answers say "No" correctly, but Answerable misses LTE/USB/5V/RF_open terms. |
+| negation | 10 | 1.000 | 0.600 | 6/10 | Unsupported connectivity answers are now grounded in `datasheet_hier_chunk_0000`; Answerable still misses LTE/USB/5V/RF_open terms. |
 | debugging | 10 | 1.000 | 0.400 | 4/10 | RF Driver API gap dominates; some generic TRM answers are not question-specific. |
 | comparison | 10 | 1.000 | 0.200 | 2/10 | Most require competitor-device facts not indexed. |
 
@@ -152,6 +155,8 @@ How to present this in the 4-page report:
 - Add a caveat sentence: "Because the current gold set does not yet contain labeled required chunks, the ablation hit rates are not discriminative; the more informative current metric is Answerable@Context plus manual inspection."
 
 If time remains after `report.pdf`, the smallest eval-quality improvement is to fill `must_cite_chunk_ids` for a focused subset or add a separate exact-source retrieval metric. Do not do this before the report unless the report is already safe.
+
+Extension update: this is now the highest-value next improvement after Session E is committed/merged. The comparison `insurance-rag` repo used an anchor/MRR-style retrieval evaluation; borrow the concept, not the code.
 
 ## 10+ Answer Manual Inspection
 
@@ -233,15 +238,17 @@ Use these in the report.
 Report-first priority order:
 
 1. Keep `main` frozen as the stable submission branch unless a branch passes verification.
-2. Preferred narrow branch: `feature/negation-handling`, because it does not require corpus or index changes.
-3. Next small answer-quality branch: `feature/tx-power-extractor`.
-4. Next eval-quality branch: fill `must_cite_chunk_ids` so Hit@5 becomes meaningful.
-5. Larger post-report branches: `exp/rf-driver-api-corpus` and `exp/competitor-datasheets`; rebuild indexes and rerun eval before considering merge.
+2. Review, commit, and optionally merge `feature/negation-handling`; it is complete locally and does not require corpus or index changes.
+3. Next eval-quality branch: `feature/source-label-eval`; fill `must_cite_chunk_ids` for a defensible subset or add anchor-style matching so Hit@5 becomes meaningful, preferably with MRR.
+4. Next small answer-quality branch: `feature/tx-power-extractor`.
+5. Run a final submission audit after any merge.
+6. Larger branches: `exp/rf-driver-api-corpus` and `exp/competitor-datasheets`; rebuild indexes and rerun eval before considering merge.
 
 Do not merge RF Driver API corpus expansion, competitor corpus expansion, gold-set rewrites, or broad refactors into `main` before a full eval/report/PDF audit passes.
 
 ## Report Recommendation
 
-Proceed directly to Session B: write `report.pdf`.
-
-Reason: `report.pdf` does not exist yet, and it is the critical missing deliverable. The current system has enough evidence for a technically honest 4-page report. Optional improvements should wait until after the report source and PDF are submission-safe.
+`report.md` and `report.pdf` are complete and submission-safe. Session E refreshed both
+after the unsupported-connectivity branch change, and `pdfinfo report.pdf` still reports
+2 pages. The next session should focus on branch review/commit/merge decision and final
+submission audit, not new risky corpus work.

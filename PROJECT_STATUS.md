@@ -7,13 +7,16 @@ built as a university mid-assignment. The system demonstrates that bare Llama 3.
 hallucinates on device-specific questions while RAG grounds answers in TI documentation.
 
 **Assignment:** Build, evaluate, and report on a RAG system.
-**Submission state:** `main` is submission-safe as of 2026-05-23. `report.md` and a 2-page `report.pdf` exist and reflect the latest Session D eval.
+**Submission state:** `main` is submission-safe as of 2026-05-23. `report.md` and a 2-page `report.pdf` exist and reflect the latest Session D eval. As of 2026-05-24, `feature/negation-handling` contains a completed Session E branch with refreshed eval/report artifacts, but it has not been merged to `main` yet.
+**Deadline:** Original deadline was 2026-05-26 at 12:00 noon Asia/Jerusalem. A one-week extension was granted; treat the working deadline as 2026-06-02, exact time TBD, assuming noon until clarified.
+**Internal design note:** `SYSTEM_DESIGN_NOTES.md` explains the architecture, design tradeoffs, industry alignment, and modern retrieval/indexing alternatives beyond FAISS/Chroma.
 
 ## Branching and Change Policy
 
 - `main` is the stable submission branch. Keep it runnable and do not force-push it.
 - Session D (`fix/answerability-normalization`) was merged to `main` at commit `48dbd30`.
-- Use short-lived branches for narrow optional improvements, for example `feature/negation-handling` or `feature/tx-power-extractor`.
+- Session E (`feature/negation-handling`) is complete locally and should be reviewed, committed, and verified before any merge to `main`.
+- Use short-lived branches for narrow optional improvements, for example `feature/negation-handling`, `feature/source-label-eval`, or `feature/tx-power-extractor`.
 - Use experimental branches for major work, for example `exp/rf-driver-api-corpus` or `exp/competitor-datasheets`.
 - Do not merge corpus expansion, gold-set rewrites, retrieval changes, or answer-generation behavior changes into `main` unless tests, `python eval/run_eval.py`, report updates, PDF regeneration, and `pdfinfo report.pdf` all pass.
 
@@ -25,9 +28,9 @@ Three TI documents, all indexed together:
 
 | Document | File | Chunks | Notes |
 |----------|------|--------|-------|
-| CC2652R7 Datasheet | `data/raw/cc2652r7.pdf` | 64 | Features list in `datasheet_hier_chunk_0000` |
+| CC2652R7 Datasheet | `data/raw/cc2652r7.pdf` | 60 | Features list in `datasheet_hier_chunk_0000` |
 | TI TRM (Technical Reference Manual) | `data/raw/swcu192.pdf` | 2237 | Bulk of corpus |
-| SimpleLink SDK User's Guide | `data/raw/Users_Guide.html` | 60 | SDK-level docs |
+| SimpleLink SDK User's Guide | `data/raw/Users_Guide.html` | 64 | SDK-level docs |
 | **Total** | | **2361 chunks** | |
 
 **Critical corpus gap:** RF driver API (RF_open, RF_close, RFCCpePatchFxp,
@@ -46,7 +49,7 @@ Question
     ├── Stage 3: Hybrid merge (max-score dedup → top 20)
     ├── Stage 4: Identifier pin detection (firmware symbols, hex addresses)
     ├── Stage 5: Cross-encoder rerank (ms-marco-MiniLM-L-6-v2, +3.0 identifier boost)
-    ├── Stage 5b: Anchor chunk injection (prepend datasheet_hier_chunk_0000 for spec Qs)
+    ├── Stage 5b: Anchor chunk injection (prepend datasheet_hier_chunk_0000 for spec/support Qs)
     ├── Stage 6: Deduplicate + token budget (max 2000 words)
     └── Stage 7: Generation
                 ├── TOC filter (remove table-of-contents chunks)
@@ -81,7 +84,7 @@ All retrieval logic.
 | Function | Purpose |
 |----------|---------|
 | `generate_answer(question, chunks)` | Main entry. Runs TOC filter → extractors → LLM fallback |
-| `_answer_from_context(qn, chunks)` | Runs refusal check, yes/no, then all 15 extractors |
+| `_answer_from_context(qn, chunks)` | Runs refusal check, yes/no support logic, then all 15 extractors |
 | `_refuse_unanswerable_question()` | Returns "not found" for RF API, price, cross-device comparisons |
 | `deduplicate_and_budget(chunks, max_words=2000)` | Dedup by chunk_id, enforce word budget |
 | `filter_toc_chunks(chunks)` | Removes table-of-contents chunks (≥4 dot-leader occurrences) |
@@ -118,7 +121,8 @@ Orchestrates the full pipeline. `RAGSystem.answer(question)` runs all 7 stages a
 returns `{"answer", "sources", "retrieved_chunks", "trace", "validation"}`.
 
 **Stage 5b anchor injection** (key design decision):
-For spec-term questions (uart, spi, clock, voltage, flash, sram, gpio, etc.),
+For spec-term and unsupported-connectivity questions (uart, spi, clock, voltage,
+flash, sram, gpio, Wi-Fi, USB, LTE/cellular, Ethernet, Bluetooth Classic, etc.),
 `datasheet_hier_chunk_0000` (features list) is **prepended** to reranked results before
 the token budget is applied. This guarantees it survives `deduplicate_and_budget`.
 **Important:** injection happens AFTER reranking — the cross-encoder demotes chunk_0000
@@ -145,7 +149,7 @@ Each entry: `{"question", "reference_answer", "must_cite_chunk_ids", "category"}
 
 ---
 
-## Evaluation Results (as of 2026-05-23)
+## Evaluation Results (as of 2026-05-24 on `feature/negation-handling`)
 
 | Metric | Score | Detail |
 |--------|-------|--------|
@@ -166,6 +170,28 @@ Each entry: `{"question", "reference_answer", "must_cite_chunk_ids", "category"}
 `check_answerability()` now normalizes spaces and hyphens so "1.8V" / "3.8V" match
 corpus text such as "1.8-V" / "3.8-V". The metric still checks reference key-term
 presence, not full answer correctness.
+
+Session E did not change headline metrics, but it improved unsupported-connectivity answer
+grounding. The saved eval answers for Wi-Fi, USB, LTE/cellular, Ethernet, and Bluetooth
+Classic now answer from `datasheet_hier_chunk_0000` instead of nearby application text.
+
+Session E verification on `feature/negation-handling`:
+
+- `python -m pytest tests/test_generation.py -q` passed 12 tests.
+- `python -m pytest tests/test_rag_system.py::test_answer_injects_datasheet_anchor_for_unsupported_connectivity_questions -q` passed 5 tests.
+- `python eval/run_eval.py` completed with Hit@5 = 1.000 and Answerable@Context = 0.560.
+- `python scripts/render_report.py` completed, and `pdfinfo report.pdf` reports 2 pages.
+- Full `python -m pytest tests/ -q` was attempted but stopped after model-heavy no-output behavior.
+
+## Extension Plan
+
+The one-week extension should be used for controlled, reportable improvements:
+
+1. Review, commit, and optionally merge `feature/negation-handling`.
+2. Create `feature/source-label-eval` to add meaningful source labels or anchor-style source-hit evaluation, preferably with MRR. This addresses the biggest current evaluation weakness: Hit@5 is vacuous because `must_cite_chunk_ids` is empty.
+3. Create `feature/tx-power-extractor` for the narrow max RF output power / standard-mode TX-power answer failure.
+4. Refresh `report.md` and `report.pdf` after metric or claim changes.
+5. Treat RF Driver API corpus expansion as experimental only (`exp/rf-driver-api-corpus`), because it requires source approval, index rebuild, manifest/report updates, and a full audit.
 
 ---
 
@@ -188,20 +214,26 @@ be self-referential (CC2652R7 properties only).
 **Status:** Fixed in `main` at commit `48dbd30`. The latest eval improved from 0.540 (27/50)
 to 0.560 (28/50).
 
-### 4. LLM Negation Failures — Wi-Fi / USB / LTE / Ethernet (Impact: 4 negation questions)
-**Problem:** For "Does CC2652R7 support Wi-Fi?", LLM retrieves a product-applications
-list chunk and quotes it instead of saying "No." The 3B model cannot reason about absence.
-**Fix options:**
-  - Add explicit "not supported" facts to `_refuse_unanswerable_question()` for Wi-Fi, USB, LTE, Ethernet
-  - Add a `_try_negative_feature_answer()` extractor that maps unsupported features to "No" answers
-  - Current `PROMPT_TEMPLATE` rule about Wi-Fi/Wi-SUN is insufficient for the 3B model
+### 4. Unsupported Connectivity Negation — Improved on Session E Branch
+**Problem:** For "Does CC2652R7 support Wi-Fi?", the system previously retrieved or quoted
+nearby product-application text rather than the authoritative support list.
+**Status:** Improved on `feature/negation-handling`. Unsupported Wi-Fi, USB, LTE/cellular,
+Ethernet, and Bluetooth Classic answers now cite `datasheet_hier_chunk_0000`. This has not
+changed Answerable@Context because the metric checks gold reference key terms, not answer
+quality or citation quality.
 
 ### 5. RF TX Power — "5 dBm Standard Mode" Not in Corpus
 **Problem:** Gold answer says "5 dBm standard mode" but corpus only has "0 dBm" and
 "+5 dBm output power setting" without the label "standard mode without PA."
 **Fix:** Either correct the gold answer or add the RF characterization table text to corpus.
 
-### 6. Report Status
+### 6. Evaluation Metric Weakness — Source Labels Missing
+**Problem:** `must_cite_chunk_ids` is empty for all current gold entries, making Hit@5
+non-discriminative.
+**Fix:** Use `feature/source-label-eval` to add source labels or a separate anchor-style
+metric. Preserve Q/A content unless a specific gold error must be documented.
+
+### 7. Report Status
 `report.md` and `report.pdf` are complete. `report.pdf` is 2 A4 pages, within the
 assignment's 4-page limit. If future branches change metrics, corpus, or claims, update
 `report.md`, regenerate with `python scripts/render_report.py`, and verify
