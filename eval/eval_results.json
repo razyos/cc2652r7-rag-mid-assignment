@@ -517,8 +517,8 @@
       ],
       "answerability_missing": [
         "3.8V",
-        "1.8V",
-        "5V"
+        "5V",
+        "1.8V"
       ]
     },
     {
@@ -624,8 +624,8 @@
         "CC2652R7"
       ],
       "answerability_missing": [
-        "CC2652R1",
-        "20 dBm"
+        "20 dBm",
+        "CC2652R1"
       ]
     },
     {
@@ -671,8 +671,8 @@
         "CC2652R7"
       ],
       "answerability_missing": [
-        "CC2652R1",
-        "352 KB"
+        "352 KB",
+        "CC2652R1"
       ]
     },
     {
@@ -745,9 +745,9 @@
         "SRAM"
       ],
       "answerability_missing": [
-        "80 KB",
         "256 KB",
-        "CC2652R1"
+        "CC2652R1",
+        "80 KB"
       ]
     },
     {
@@ -826,8 +826,8 @@
         "CC2652RB"
       ],
       "answerability_missing": [
-        "BAW",
-        "CC2652RB"
+        "CC2652RB",
+        "BAW"
       ]
     },
     {
@@ -986,8 +986,8 @@
         "RF_open"
       ],
       "answerability_missing": [
-        "RF_EventLastCmdDone",
-        "RF_open"
+        "RF_open",
+        "RF_EventLastCmdDone"
       ]
     },
     {
