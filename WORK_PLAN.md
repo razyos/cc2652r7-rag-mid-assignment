@@ -15,8 +15,7 @@
 focused metric tests, source-labeled Hit@5/MRR reporting, and 14 obvious
 `datasheet_hier_chunk_0000` labels without changing gold Q/A text. Latest branch eval:
 legacy Hit@5 = 1.000, source-labeled Hit@5 = 1.000 over 14 labels,
-source-labeled MRR@5 = 0.964, and Answerable@Context = 0.560. Local HEAD is `d7ce7d9`
-(`Add source-labeled retrieval metrics`).
+source-labeled MRR@5 = 0.964, and Answerable@Context = 0.560.
 
 **Status update, 2026-05-26, full-test audit:** Full `python -m pytest tests/ -q`
 was attempted after the source-label commit and crashed with a Python segmentation fault
@@ -24,8 +23,18 @@ inside `torch/nn/functional.py` after a long silent startup. The non-model subse
 `python -m pytest tests/test_eval_metrics.py tests/test_generation.py tests/test_utils.py -q`
 passed 27 tests. Isolated `tests/test_build_index.py`, `tests/test_retrieval.py`, and
 `tests/test_rag_system.py` stalled silently because they instantiate real
-`SentenceTransformer` / torch models. Next recommended work is test-infrastructure
-stabilization with fake embeddings/fake model injection.
+`SentenceTransformer` / torch models. This blocker was resolved by the following
+test-stabilization commit.
+
+**Status update, 2026-05-26, test stabilization:** Commit `60d40f1`
+(`Stabilize model-heavy unit tests`) refactored the model-heavy unit tests to avoid real
+`SentenceTransformer` / torch startup. `tests/fakes.py` now provides deterministic
+`FakeEmbeddingModel` and `FakeCrossEncoder`; `tests/test_build_index.py`,
+`tests/test_retrieval.py`, and `tests/test_rag_system.py` use those fakes. `src/build_index.py`
+has a tiny optional `model` injection seam while preserving production behavior when no
+model is supplied. Fresh verification: `python -m pytest tests/ -q` passed 50 tests,
+`python eval/run_eval.py` preserved the same metrics, and `pdfinfo report.pdf` reported
+2 pages. Latest implementation commit is `60d40f1`.
 
 **Design note, 2026-05-26:** `SYSTEM_DESIGN_NOTES.md` was added as an internal architecture and tradeoff reference. It explains each pipeline stage, why the current design fits the assignment, where it aligns with industry practice, and when more advanced options such as RRF, Qdrant, Weaviate, Milvus, pgvector, sparse+dense retrieval, BGE-M3, ColBERT-style late interaction, or GraphRAG would be worth testing. Use it before proposing retrieval modernization.
 
@@ -40,7 +49,7 @@ Standalone repository:
 - Session D branch: `fix/answerability-normalization` was merged and pushed to `main` at commit `48dbd30`.
 - Session E branch: `feature/negation-handling` was merged at commit `ab8b70c`.
 - Current pushed `main`: post-Session E handoff docs are current.
-- Current work branch: `feature/source-label-eval` at local commit `d7ce7d9`, one commit ahead of `main`.
+- Current work branch: `feature/source-label-eval`; latest implementation commit is `60d40f1`, followed by any documentation-only handoff commit.
 
 DevOps policy:
 
@@ -73,7 +82,7 @@ Current verified project status:
 - Hit@5 = 1.000
 - Answerable@Context = 0.560
 - Focused verification after Session D merge to `main`: `python -m pytest tests/test_generation.py tests/test_utils.py -q` passed 21 tests; `python eval/run_eval.py` completed with Hit@5 = 1.000 and Answerable@Context = 0.560; `pdfinfo report.pdf` reports 2 pages.
-- Full 37-test suite was previously passing as of older `PROJECT_STATUS.md`, but the latest full-suite audit attempt after source-label work crashed inside torch. Do not report a full-suite pass until model-heavy tests are refactored or otherwise stabilized.
+- Full `python -m pytest tests/ -q` now passes 50 tests on `feature/source-label-eval` after model-heavy unit tests were refactored to use deterministic fakes.
 - Stress test passing as of the project status note
 - `demo.py` ready for live demo
 - `report.md` and `report.pdf` are present; `scripts/render_report.py` regenerates the PDF from Markdown
@@ -114,11 +123,11 @@ Steps 1-4 are complete. Avoid merging corpus expansion or broad comparison suppo
 Recommended remaining order:
 
 1. Keep `main` frozen and submission-safe unless a clearly verified improvement is ready.
-2. Stabilize model-heavy tests by replacing real `SentenceTransformer` / torch startup in unit tests with fake embeddings or injected fake models, then rerun full pytest.
-3. Finish or merge `feature/source-label-eval`; the first 14-label source-hit/MRR implementation is in place, and further work can expand labels or rerun ablations with source metrics.
+2. Finish, review, or merge `feature/source-label-eval`; the first 14-label source-hit/MRR implementation is in place and full pytest is reliable.
+3. Optional before merge: expand labels or rerun ablations with source metrics if there is time.
 4. Use `feature/tx-power-extractor` for the next narrow answer-quality improvement after source-label evaluation is handled.
-4. Run a final submission audit after each merge that changes code, metrics, report text, or PDF artifacts.
-5. Use experimental branches for major work: `exp/rf-driver-api-corpus`, `exp/competitor-datasheets`, or similar.
+5. Run a final submission audit after each merge that changes code, metrics, report text, or PDF artifacts.
+6. Use experimental branches for major work: `exp/rf-driver-api-corpus`, `exp/competitor-datasheets`, or similar.
 
 ## Session A - Report Evidence Freeze
 
@@ -564,11 +573,11 @@ Keep this separate from the CC2652R7 report unless there is time after report.pd
 
 - Session E was verified and merged at `ab8b70c`.
 - Post-Session E handoff docs are current on `main`.
-- `feature/source-label-eval` is aligned with updated `main`.
+- `feature/source-label-eval` added source-labeled metrics and stabilized full pytest at `60d40f1`.
 
 **May 27-28**
 
-- Finish/merge `feature/source-label-eval`, or expand labels if there is time.
+- Review/merge `feature/source-label-eval`, or expand labels first if there is time.
 - Update report metrics and regenerate PDF if evaluation claims change.
 
 **May 29-30**
@@ -588,7 +597,7 @@ Keep this separate from the CC2652R7 report unless there is time after report.pd
 
 ## Decision Rules for Future Sessions
 
-- Session E is merged. Start optional work from `feature/source-label-eval`, and run a Session C-style final audit before merging any future branch to `main`.
+- Session E is merged. `feature/source-label-eval` is verified locally; run a Session C-style final audit before merging any future branch to `main`.
 - If less than 24 hours remain before the deadline, do not start corpus expansion.
 - If an optional fix changes metrics, rerun eval and update the report source before regenerating `report.pdf`.
 - If eval results conflict with `PROJECT_STATUS.md`, use the most recent verified command output and document the command/date.
@@ -602,6 +611,6 @@ Keep this separate from the CC2652R7 report unless there is time after report.pd
 
 Recommended answers:
 
-1. Yes, if the branch verification remains clean. The first source-label increment makes retrieval evaluation meaningful for 14 labeled rows.
+1. Yes, if the branch verification remains clean. The first source-label increment makes retrieval evaluation meaningful for 14 labeled rows, and full pytest now passes on the branch.
 2. Yes. TX power is useful but narrower; do it only after the evaluation metric is defensible.
 3. Yes. RF Driver API corpus expansion is major corpus/index work and should not merge without a full rebuild, eval, report refresh, PDF verification, and user approval.

@@ -14,7 +14,9 @@ are current on `main`; Session E improves unsupported connectivity answers witho
 `feature/source-label-eval` branch now adds a 14-question source-labeled subset. The latest
 branch eval is legacy Hit@5 = 1.000, source-labeled Hit@5 = 1.000 over 14 labels,
 source-labeled MRR@5 = 0.964, and Answerable@Context = 0.560 (28/50).
-`report.pdf` remains within the page limit after regeneration.
+Commit `60d40f1` also stabilized the formerly model-heavy unit tests with deterministic
+fakes; full `python -m pytest tests/ -q` now passes 50 tests. `report.pdf` remains within
+the page limit after regeneration.
 
 ## Assignment Requirements To Cover
 
@@ -243,10 +245,8 @@ Use these in the report.
 Report-first priority order:
 
 1. Keep `main` frozen as the stable submission branch unless a branch passes verification.
-2. Stabilize model-heavy unit tests with fake embeddings/fake model injection. The latest
-   full `python -m pytest tests/ -q` attempt crashed in torch, while the non-model subset
-   passed 27 tests.
-3. Continue `feature/source-label-eval` only if expanding source labels or rerunning source-labeled ablations; the first 14-label Hit@5/MRR implementation is in place.
+2. Review/merge `feature/source-label-eval`; full pytest now passes and the first 14-label Hit@5/MRR implementation is in place.
+3. Continue `feature/source-label-eval` only if expanding source labels or rerunning source-labeled ablations before merge.
 4. Next small answer-quality branch: `feature/tx-power-extractor`.
 5. Run a final submission audit after any merge.
 6. Larger branches: `exp/rf-driver-api-corpus` and `exp/competitor-datasheets`; rebuild indexes and rerun eval before considering merge.
@@ -258,4 +258,5 @@ Do not merge RF Driver API corpus expansion, competitor corpus expansion, gold-s
 `report.md` and `report.pdf` are complete and submission-safe. Session E refreshed both
 after the unsupported-connectivity branch change, and `pdfinfo report.pdf` still reports
 2 pages. The source-label branch now refreshes both again and keeps the PDF at 2 pages.
-The next session should focus on making full pytest reliable, not risky corpus work.
+The next session should focus on reviewing/merging source-label evaluation or expanding
+labels deliberately, not risky corpus work.

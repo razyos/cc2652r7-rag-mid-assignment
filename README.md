@@ -7,8 +7,9 @@ A complete Retrieval-Augmented Generation (RAG) pipeline over TI CC2652R7 docume
 - Original deadline: Tuesday, May 26, 2026 at 12:00 noon Asia/Jerusalem.
 - Extension: one week from May 26, 2026. Treat the working deadline as Tuesday, June 2, 2026, with the exact time still to confirm.
 - `main` is the stable submission branch and has the post-Session E handoff docs.
-- Current local work branch: `feature/source-label-eval`, currently one commit ahead of `main`.
-- Recommended next order: stabilize model-heavy tests, finish/merge source-label evaluation, then address TX-power extraction.
+- Current local work branch: `feature/source-label-eval`; latest implementation commit is `60d40f1`, followed by any documentation-only handoff commit.
+- Recommended next order: review/merge source-label evaluation, optionally expand labels, then address TX-power extraction.
+- Latest branch verification: `python -m pytest tests/ -q` passes 50 tests; `python eval/run_eval.py` reports legacy Hit@5 = 1.000, source-labeled Hit@5 = 1.000 over 14 labels, source-labeled MRR@5 = 0.964, and Answerable@Context = 0.560.
 
 ## Repository
 

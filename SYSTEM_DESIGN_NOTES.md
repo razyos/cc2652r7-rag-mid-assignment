@@ -646,7 +646,8 @@ Why not now:
 3. Competitor comparison questions are mostly out of corpus.
 4. TX-power extraction selects the wrong table evidence in at least one case.
 5. Some gold answers appear inconsistent with the indexed CC2652R7 datasheet.
-6. Full test suite can stall on model-heavy paths.
+6. Production eval/load still starts real embedding and reranker models, so first-run
+   startup can be slow; unit tests now use deterministic fakes and full pytest passes.
 7. The LLM fallback can still produce generic or weak debugging answers.
 8. Context budgeting is word-based, not tokenizer-based.
 9. Score fusion is simple max-score merging, not calibrated fusion.
@@ -658,7 +659,8 @@ Priority 1: source-label evaluation.
 
 - Branch: `feature/source-label-eval`.
 - First subset is implemented with 14 `datasheet_hier_chunk_0000` labels.
-- Next step is expanding labels and rerunning ablations with source-labeled Hit@k/MRR.
+- Next step is review/merge, or expanding labels and rerunning ablations with
+  source-labeled Hit@k/MRR if there is time before merge.
 - Keep report claims explicit about labeled subset size.
 
 Priority 2: TX-power extractor.

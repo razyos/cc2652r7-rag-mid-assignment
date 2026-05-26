@@ -26,7 +26,7 @@ Branching policy:
 - `main` is the stable submission branch. Keep it runnable and submission-ready.
 - Session D (`fix/answerability-normalization`) was merged to `main` at commit `48dbd30`.
 - Session E (`feature/negation-handling`) was verified and merged at `ab8b70c`; post-Session E handoff docs are current on `main`.
-- Current local branch is `feature/source-label-eval` at commit `d7ce7d9`, one commit ahead of `main`, with the first source-label eval increment.
+- Current local branch is `feature/source-label-eval`; latest implementation commit is `60d40f1`, with the first source-label eval increment and test-infrastructure stabilization, followed by any documentation-only handoff commit.
 - Use short-lived branches for optional work, such as `feature/negation-handling`, `feature/source-label-eval`, or `feature/tx-power-extractor`.
 - Use experimental branches for major work, such as `exp/rf-driver-api-corpus` or `exp/competitor-datasheets`.
 - Do not make risky changes directly on `main`.
@@ -74,7 +74,7 @@ mid_ass/
 ├── data/
 │   ├── raw/                # Source PDFs + HTML (cc2652r7.pdf, swcu192.pdf, Users_Guide.html)
 │   └── processed/          # faiss.index, chunks.json (2361 chunks), bm25.pkl
-├── tests/                  # pytest suite; use targeted tests for model-heavy paths
+├── tests/                  # pytest suite; model-heavy unit paths use deterministic fakes
 ├── demo.py                 # Two-demo comparison: bare LLM vs RAG
 ├── SYSTEM_DESIGN_NOTES.md  # Internal architecture/tradeoff notes
 ├── PROJECT_STATUS.md       # Full project status, results, known issues
@@ -134,9 +134,11 @@ expand labels beyond this subset and rerun dense-only/no-rerank ablations with t
 source-labeled metrics. Preserve gold Q/A content unless a correction is explicitly documented.
 
 **2. Test infrastructure stabilization**
-Full `python -m pytest tests/ -q` currently crashes or stalls in model-heavy tests that
-instantiate real `SentenceTransformer` / torch models. Refactor those unit tests to use
-fake embeddings or injected fake models before relying on full-suite pytest as a merge gate.
+Completed on `feature/source-label-eval` at commit `60d40f1`. Full
+`python -m pytest tests/ -q` now passes 50 tests. The formerly model-heavy unit tests
+use deterministic `FakeEmbeddingModel` / `FakeCrossEncoder` objects from `tests/fakes.py`,
+and `src/build_index.py` has a small optional model injection seam for tests. Production
+evaluation and `load_rag_system()` still use the real models.
 
 **3. TX-power extractor / anchoring**
 The maximum RF output power question currently answers `+0 dBm` from a transmit-current table
@@ -218,4 +220,4 @@ python demo.py
 | src/rag_system.py | ~150 | Orchestrator |
 | src/build_index.py | ~80 | Run once |
 | eval/run_eval.py | ~92 | Eval harness |
-| tests/ | ~43 tests | Source-label/generation/utils subset passed 27 tests; latest full-suite attempt segfaulted in torch model-heavy paths |
+| tests/ | 50 tests | Full suite passes with deterministic fakes for model-heavy unit paths |
