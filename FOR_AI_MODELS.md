@@ -26,7 +26,7 @@ Branching policy:
 - `main` is the stable submission branch. Keep it runnable and submission-ready.
 - Session D (`fix/answerability-normalization`) was merged to `main` at commit `48dbd30`.
 - Session E (`feature/negation-handling`) was verified and merged at `ab8b70c`; post-Session E handoff docs are current on `main`.
-- Current local branch for the next improvement is `feature/source-label-eval`, aligned with `main`.
+- Current local branch is `feature/source-label-eval` at commit `d7ce7d9`, one commit ahead of `main`, with the first source-label eval increment.
 - Use short-lived branches for optional work, such as `feature/negation-handling`, `feature/source-label-eval`, or `feature/tx-power-extractor`.
 - Use experimental branches for major work, such as `exp/rf-driver-api-corpus` or `exp/competitor-datasheets`.
 - Do not make risky changes directly on `main`.
@@ -133,19 +133,24 @@ and Bluetooth Classic absence answers now cite `datasheet_hier_chunk_0000`.
 expand labels beyond this subset and rerun dense-only/no-rerank ablations with the
 source-labeled metrics. Preserve gold Q/A content unless a correction is explicitly documented.
 
-**2. TX-power extractor / anchoring**
+**2. Test infrastructure stabilization**
+Full `python -m pytest tests/ -q` currently crashes or stalls in model-heavy tests that
+instantiate real `SentenceTransformer` / torch models. Refactor those unit tests to use
+fake embeddings or injected fake models before relying on full-suite pytest as a merge gate.
+
+**3. TX-power extractor / anchoring**
 The maximum RF output power question currently answers `+0 dBm` from a transmit-current table
 instead of the expected `+20 dBm`. Keep this as a narrow `feature/tx-power-extractor` branch.
 
 ### Medium Priority
 
-**3. Add RF Driver API PDF to corpus**
+**4. Add RF Driver API PDF to corpus**
 Adding TI's RF Driver API Reference would fix ~12 failing questions (debugging + factual + negation categories).
 Steps: place PDF in `data/raw/`, re-run `src/build_index.py` with the new document.
 This is major corpus work. Use `exp/rf-driver-api-corpus`, rebuild indexes, update manifest/report,
 rerun eval, and only merge to `main` if the full submission audit passes.
 
-**4. Comparison questions**
+**5. Comparison questions**
 8/10 comparison questions require CC2652R1/CC2652P/CC1352R specs not in corpus.
 Either add those datasheets or rewrite the comparison questions to be self-referential.
 Use `exp/competitor-datasheets` or a dedicated gold-set branch; do not mix this with small fixes.
@@ -213,4 +218,4 @@ python demo.py
 | src/rag_system.py | ~150 | Orchestrator |
 | src/build_index.py | ~80 | Run once |
 | eval/run_eval.py | ~92 | Eval harness |
-| tests/ | ~43 tests | Targeted Session E tests pass; latest full-suite attempt was stopped in model-heavy paths |
+| tests/ | ~43 tests | Source-label/generation/utils subset passed 27 tests; latest full-suite attempt segfaulted in torch model-heavy paths |

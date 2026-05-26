@@ -7,7 +7,7 @@ built as a university mid-assignment. The system demonstrates that bare Llama 3.
 hallucinates on device-specific questions while RAG grounds answers in TI documentation.
 
 **Assignment:** Build, evaluate, and report on a RAG system.
-**Submission state:** `main` is submission-safe and pushed to GitHub as of 2026-05-26. `report.md` and a 2-page `report.pdf` reflect the latest Session E eval. The active local work branch is `feature/source-label-eval`, aligned with `main`.
+**Submission state:** `main` is submission-safe and pushed to GitHub as of 2026-05-26. `report.md` and a 2-page `report.pdf` on `main` reflect the latest Session E eval. The active local work branch is `feature/source-label-eval` at commit `d7ce7d9`, one commit ahead of `main`, with source-labeled metrics and refreshed report artifacts.
 **Deadline:** Original deadline was 2026-05-26 at 12:00 noon Asia/Jerusalem. A one-week extension was granted; treat the working deadline as 2026-06-02, exact time TBD, assuming noon until clarified.
 **Internal design note:** `SYSTEM_DESIGN_NOTES.md` explains the architecture, design tradeoffs, industry alignment, and modern retrieval/indexing alternatives beyond FAISS/Chroma.
 
@@ -16,7 +16,7 @@ hallucinates on device-specific questions while RAG grounds answers in TI docume
 - `main` is the stable submission branch. Keep it runnable and do not force-push it.
 - Session D (`fix/answerability-normalization`) was merged to `main` at commit `48dbd30`.
 - Session E (`feature/negation-handling`) was verified and merged at commit `ab8b70c`; post-Session E handoff docs are current on `main`.
-- Current branch for the next improvement is `feature/source-label-eval`.
+- Current branch is `feature/source-label-eval` at local commit `d7ce7d9` (`Add source-labeled retrieval metrics`).
 - Use short-lived branches for narrow optional improvements, for example `feature/negation-handling`, `feature/source-label-eval`, or `feature/tx-power-extractor`.
 - Use experimental branches for major work, for example `exp/rf-driver-api-corpus` or `exp/competitor-datasheets`.
 - Do not merge corpus expansion, gold-set rewrites, retrieval changes, or answer-generation behavior changes into `main` unless tests, `python eval/run_eval.py`, report updates, PDF regeneration, and `pdfinfo report.pdf` all pass.
@@ -186,6 +186,15 @@ Source-label evaluation update on `feature/source-label-eval`:
 - `eval/run_eval.py` reports source-labeled Hit@5 and MRR@5 separately from legacy Hit@5.
 - Latest branch eval: legacy Hit@5 = 1.000, source-labeled Hit@5 = 1.000 over 14 labels,
   source-labeled MRR@5 = 0.964, and Answerable@Context = 0.560.
+- Latest focused tests: `python -m pytest tests/test_eval_metrics.py tests/test_generation.py tests/test_utils.py -q`
+  passed 27 tests.
+- Full `python -m pytest tests/ -q` was attempted after the source-label commit and
+  crashed with a Python segmentation fault inside `torch/nn/functional.py` after a long
+  silent startup.
+- Isolated model-heavy test files (`tests/test_build_index.py`, `tests/test_retrieval.py`,
+  and `tests/test_rag_system.py`) stalled silently. These instantiate real
+  `SentenceTransformer` / torch models. Treat this as test-infrastructure fragility,
+  not a source-label logic failure.
 
 Session E verification before merging to `main`:
 
@@ -199,10 +208,13 @@ Session E verification before merging to `main`:
 
 The one-week extension should be used for controlled, reportable improvements:
 
-1. Finish or merge `feature/source-label-eval`; the first 14-label source-hit/MRR implementation is in place. Further work can expand labels and rerun retrieval ablations with source-labeled metrics.
-2. Create `feature/tx-power-extractor` for the narrow max RF output power / standard-mode TX-power answer failure after source-label evaluation is handled.
-3. Refresh `report.md` and `report.pdf` after metric or claim changes.
-4. Treat RF Driver API corpus expansion as experimental only (`exp/rf-driver-api-corpus`), because it requires source approval, index rebuild, manifest/report updates, and a full audit.
+1. Stabilize the test suite on `feature/source-label-eval` by replacing real model startup
+   in unit tests with deterministic fake embeddings/fake model injection, then rerun
+   `python -m pytest tests/ -q`.
+2. Finish or merge `feature/source-label-eval`; the first 14-label source-hit/MRR implementation is in place. Further work can expand labels and rerun retrieval ablations with source-labeled metrics.
+3. Create `feature/tx-power-extractor` for the narrow max RF output power / standard-mode TX-power answer failure after source-label evaluation is handled.
+4. Refresh `report.md` and `report.pdf` after metric or claim changes.
+5. Treat RF Driver API corpus expansion as experimental only (`exp/rf-driver-api-corpus`), because it requires source approval, index rebuild, manifest/report updates, and a full audit.
 
 ---
 

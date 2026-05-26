@@ -9,7 +9,8 @@ Continue from the current local branch state on `feature/source-label-eval`.
 
 The branch now contains the first source-label evaluation increment: focused metric
 tests, source-labeled Hit@5/MRR reporting, and 14 obvious `datasheet_hier_chunk_0000`
-labels without changing gold Q/A text.
+labels without changing gold Q/A text. Current local branch HEAD is `d7ce7d9`
+(`Add source-labeled retrieval metrics`), one commit ahead of `main`/`origin/main`.
 
 An internal architecture/tradeoff note now exists at `SYSTEM_DESIGN_NOTES.md`. Read it
 before proposing retrieval or indexing changes; it explains why the current FAISS+BM25
@@ -29,7 +30,7 @@ Branch policy:
 
 - `main` is the stable submission branch. It should remain runnable and submission-ready.
 - Current pushed `main`: post-Session E handoff docs are current.
-- Current work branch: `feature/source-label-eval`.
+- Current work branch: `feature/source-label-eval` at local commit `d7ce7d9`.
 - Session E commit chain on `main`: `93789fb Handle unsupported connectivity anchors`, `d9a2fe6 Update next session handoff`, `ab8b70c Refresh Session E verification artifacts`.
 - The current workspace should be clean, but inspect `git status` first.
 - Do not make risky changes directly on `main`.
@@ -102,6 +103,9 @@ Latest verified `feature/source-label-eval` branch results:
 python -m pytest tests/test_eval_metrics.py -q
 5 passed
 
+python -m pytest tests/test_eval_metrics.py tests/test_generation.py tests/test_utils.py -q
+27 passed
+
 python eval/run_eval.py
 Legacy Hit@5 = 1.000 (50/50)
 Source-labeled Hit@5 = 1.000 (14 labeled)
@@ -114,6 +118,26 @@ completed
 pdfinfo report.pdf
 Pages: 2
 ```
+
+Full pytest status after source-label commit:
+
+```text
+python -m pytest tests/ -q
+FAILED: Python process crashed with a segmentation fault inside torch/nn/functional.py
+after a long silent startup.
+```
+
+Follow-up isolation:
+
+- `tests/test_eval_metrics.py tests/test_generation.py tests/test_utils.py` passed 27 tests.
+- `tests/test_build_index.py`, `tests/test_retrieval.py`, and `tests/test_rag_system.py`
+  stalled silently when run in isolation and were stopped.
+- These files instantiate real `SentenceTransformer` / torch models. Treat this as
+  existing test-infrastructure fragility, not as evidence that the source-label metric
+  implementation failed.
+- Recommended next technical task: refactor model-heavy unit tests to use fake
+  embeddings/fake model injection so `python -m pytest tests/ -q` can become a reliable
+  merge gate.
 
 ## Current Answer Behavior to Preserve
 
@@ -130,7 +154,9 @@ Saved eval output now shows these unsupported-feature answers cite
 
 Headline metrics did not change:
 
-- Hit@5 = 1.000
+- Legacy Hit@5 = 1.000
+- Source-labeled Hit@5 = 1.000 over 14 labeled rows
+- Source-labeled MRR@5 = 0.964
 - Answerable@Context = 0.560
 - Report remains 2 pages
 
@@ -188,18 +214,24 @@ Read these before changing code:
 
 ## Recommended Session Order Under the Extension
 
-1. **Source-label evaluation**
-   Finish or merge `feature/source-label-eval`; optionally expand labels and rerun
+1. **Test-infrastructure stabilization**
+   Keep working on `feature/source-label-eval`. Replace real `SentenceTransformer` /
+   torch usage in unit tests with deterministic fake embeddings or injected fake models,
+   then rerun `python -m pytest tests/ -q`.
+
+2. **Source-label branch finish**
+   After full pytest is reliable or the limitation is explicitly accepted, merge or PR
+   `feature/source-label-eval`. Optional later work can expand labels and rerun
    dense-only/no-rerank ablations with source-labeled metrics.
 
-2. **TX-power extractor**
+3. **TX-power extractor**
    Create `feature/tx-power-extractor`. Fix the max RF output power / standard-mode TX-power
    behavior without corpus expansion.
 
-3. **Report refresh**
+4. **Report refresh**
    Update `report.md`, regenerate `report.pdf`, and verify `pdfinfo report.pdf` is 4 pages or fewer.
 
-4. **Experimental only if time remains**
+5. **Experimental only if time remains**
    Consider `exp/rf-driver-api-corpus`. Do not start competitor datasheets unless everything
    else is complete and the user explicitly accepts the scope risk.
 
@@ -225,7 +257,8 @@ Branch policy:
 Current state:
 - Sessions A-E are complete and merged to main.
 - Current pushed main has current post-Session E handoff docs.
-- feature/source-label-eval started aligned with main and now contains source-label eval changes.
+- feature/source-label-eval was branched from main and now contains source-label eval changes.
+- Current local HEAD should be d7ce7d9 (`Add source-labeled retrieval metrics`), one commit ahead of main/origin/main.
 - The workspace should be clean, but inspect git status first.
 - Merged Session E changes:
   - Unsupported connectivity/support questions now anchor datasheet_hier_chunk_0000.
@@ -239,6 +272,12 @@ Current state:
   - Source-labeled MRR@5 = 0.964
   - Answerable@Context = 0.560 (28/50)
   - report.pdf is 2 pages.
+- Full pytest was attempted after the source-label commit and crashed with a Python
+  segmentation fault inside torch/nn/functional.py after a long silent startup.
+- Isolated non-model tests passed: python -m pytest tests/test_eval_metrics.py tests/test_generation.py tests/test_utils.py -q -> 27 passed.
+- Isolated model-heavy test files stalled silently: tests/test_build_index.py,
+  tests/test_retrieval.py, and tests/test_rag_system.py. They instantiate real
+  SentenceTransformer/torch models.
 
 First read:
 1. NEW_SESSION_BRIEF.md
@@ -259,11 +298,11 @@ First read:
 
 Task:
 1. Inspect git status and confirm the current branch/commit.
-2. Continue feature/source-label-eval only to review, merge, expand labels, or rerun ablations. The first source-labeled Hit@5/MRR implementation is in place. Do not change the gold Q/A content unless explicitly necessary and documented.
-3. If present locally, use docs/superpowers/plans/2026-05-26-source-label-eval.md as the detailed implementation plan for source-label evaluation; otherwise follow WORK_PLAN.md Session F.
-4. Add focused tests for source-labeled Hit@k/MRR behavior before implementation.
-5. Run targeted tests and python eval/run_eval.py.
-6. If metrics or report claims change, update report.md, regenerate report.pdf with python scripts/render_report.py, and verify pdfinfo report.pdf is <= 4 pages.
+2. Recommended next task: make full pytest reliable by refactoring model-heavy unit tests to use fake embeddings/fake model injection instead of real SentenceTransformer/torch startup.
+3. Preserve production retrieval/index behavior; this should be a test-infrastructure change only.
+4. After test refactoring, run python -m pytest tests/ -q, python eval/run_eval.py, python scripts/render_report.py if report claims change, and pdfinfo report.pdf.
+5. If full pytest remains blocked, document the exact blocker and keep targeted verification explicit.
+6. Do not change the gold Q/A content unless explicitly necessary and documented.
 7. Do not migrate from FAISS or BM25 yet. If retrieval modernization is considered, first use SYSTEM_DESIGN_NOTES.md to frame options, then wait until source-label evaluation exists so alternatives can be measured.
 
 Constraints:
@@ -271,7 +310,7 @@ Constraints:
 - Do not add competitor datasheets except on exp/competitor-datasheets.
 - Do not rebuild indexes unless on an experimental corpus/index branch.
 - Do not do broad retrieval/corpus refactors.
-- Do not start feature/tx-power-extractor until source-label evaluation is reviewed/merged or intentionally deferred.
+- Do not start feature/tx-power-extractor until source-label evaluation is reviewed/merged or intentionally deferred; preferably make full pytest reliable first.
 - Do not treat FAISS/Chroma as the full design space; SYSTEM_DESIGN_NOTES.md lists stronger modern options. Still, no backend migration should happen before measurable source-label eval.
-- If full pytest stalls in model-heavy tests, stop it and report the attempt; do not claim full-suite pass.
+- If full pytest stalls or segfaults in model-heavy tests, stop it and report the attempt; do not claim full-suite pass.
 ```

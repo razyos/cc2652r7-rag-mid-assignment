@@ -15,7 +15,17 @@
 focused metric tests, source-labeled Hit@5/MRR reporting, and 14 obvious
 `datasheet_hier_chunk_0000` labels without changing gold Q/A text. Latest branch eval:
 legacy Hit@5 = 1.000, source-labeled Hit@5 = 1.000 over 14 labels,
-source-labeled MRR@5 = 0.964, and Answerable@Context = 0.560.
+source-labeled MRR@5 = 0.964, and Answerable@Context = 0.560. Local HEAD is `d7ce7d9`
+(`Add source-labeled retrieval metrics`).
+
+**Status update, 2026-05-26, full-test audit:** Full `python -m pytest tests/ -q`
+was attempted after the source-label commit and crashed with a Python segmentation fault
+inside `torch/nn/functional.py` after a long silent startup. The non-model subset
+`python -m pytest tests/test_eval_metrics.py tests/test_generation.py tests/test_utils.py -q`
+passed 27 tests. Isolated `tests/test_build_index.py`, `tests/test_retrieval.py`, and
+`tests/test_rag_system.py` stalled silently because they instantiate real
+`SentenceTransformer` / torch models. Next recommended work is test-infrastructure
+stabilization with fake embeddings/fake model injection.
 
 **Design note, 2026-05-26:** `SYSTEM_DESIGN_NOTES.md` was added as an internal architecture and tradeoff reference. It explains each pipeline stage, why the current design fits the assignment, where it aligns with industry practice, and when more advanced options such as RRF, Qdrant, Weaviate, Milvus, pgvector, sparse+dense retrieval, BGE-M3, ColBERT-style late interaction, or GraphRAG would be worth testing. Use it before proposing retrieval modernization.
 
@@ -30,7 +40,7 @@ Standalone repository:
 - Session D branch: `fix/answerability-normalization` was merged and pushed to `main` at commit `48dbd30`.
 - Session E branch: `feature/negation-handling` was merged at commit `ab8b70c`.
 - Current pushed `main`: post-Session E handoff docs are current.
-- Current work branch: `feature/source-label-eval`, aligned with `main`.
+- Current work branch: `feature/source-label-eval` at local commit `d7ce7d9`, one commit ahead of `main`.
 
 DevOps policy:
 
@@ -63,7 +73,7 @@ Current verified project status:
 - Hit@5 = 1.000
 - Answerable@Context = 0.560
 - Focused verification after Session D merge to `main`: `python -m pytest tests/test_generation.py tests/test_utils.py -q` passed 21 tests; `python eval/run_eval.py` completed with Hit@5 = 1.000 and Answerable@Context = 0.560; `pdfinfo report.pdf` reports 2 pages.
-- Full 37-test suite was previously passing as of `PROJECT_STATUS.md`, but the latest full-suite audit attempt stalled during model-heavy tests and was stopped without a pass/fail result
+- Full 37-test suite was previously passing as of older `PROJECT_STATUS.md`, but the latest full-suite audit attempt after source-label work crashed inside torch. Do not report a full-suite pass until model-heavy tests are refactored or otherwise stabilized.
 - Stress test passing as of the project status note
 - `demo.py` ready for live demo
 - `report.md` and `report.pdf` are present; `scripts/render_report.py` regenerates the PDF from Markdown
@@ -104,8 +114,9 @@ Steps 1-4 are complete. Avoid merging corpus expansion or broad comparison suppo
 Recommended remaining order:
 
 1. Keep `main` frozen and submission-safe unless a clearly verified improvement is ready.
-2. Finish or merge `feature/source-label-eval`; the first 14-label source-hit/MRR implementation is in place, and further work can expand labels or rerun ablations with source metrics.
-3. Use `feature/tx-power-extractor` for the next narrow answer-quality improvement after source-label evaluation is handled.
+2. Stabilize model-heavy tests by replacing real `SentenceTransformer` / torch startup in unit tests with fake embeddings or injected fake models, then rerun full pytest.
+3. Finish or merge `feature/source-label-eval`; the first 14-label source-hit/MRR implementation is in place, and further work can expand labels or rerun ablations with source metrics.
+4. Use `feature/tx-power-extractor` for the next narrow answer-quality improvement after source-label evaluation is handled.
 4. Run a final submission audit after each merge that changes code, metrics, report text, or PDF artifacts.
 5. Use experimental branches for major work: `exp/rf-driver-api-corpus`, `exp/competitor-datasheets`, or similar.
 
