@@ -25,8 +25,8 @@ Deadline status:
 Branching policy:
 - `main` is the stable submission branch. Keep it runnable and submission-ready.
 - Session D (`fix/answerability-normalization`) was merged to `main` at commit `48dbd30`.
-- Session E (`feature/negation-handling`) was verified and merged at `ab8b70c`; handoff docs were refreshed at `aecde5e`.
-- Current local branch for the next improvement is `feature/source-label-eval`, aligned with `main` at `aecde5e`.
+- Session E (`feature/negation-handling`) was verified and merged at `ab8b70c`; post-Session E handoff docs are current on `main`.
+- Current local branch for the next improvement is `feature/source-label-eval`, aligned with `main`.
 - Use short-lived branches for optional work, such as `feature/negation-handling`, `feature/source-label-eval`, or `feature/tx-power-extractor`.
 - Use experimental branches for major work, such as `exp/rf-driver-api-corpus` or `exp/competitor-datasheets`.
 - Do not make risky changes directly on `main`.

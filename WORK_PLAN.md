@@ -9,7 +9,7 @@
 
 **Status update, 2026-05-24:** Session E was completed on `feature/negation-handling`. The branch improved unsupported connectivity answers for Wi-Fi, USB, LTE/cellular, Ethernet, and Bluetooth Classic by anchoring `datasheet_hier_chunk_0000` and keeping answers grounded in the CC2652R7 feature/protocol list. Branch eval remained Hit@5 = 1.000 and Answerable@Context = 0.560. `report.md` and `report.pdf` were refreshed; `pdfinfo report.pdf` reported 2 pages.
 
-**Status update, 2026-05-26:** Session E was verified and fast-forward merged at `ab8b70c`; post-merge handoff docs were refreshed and pushed at `aecde5e`. Fresh verification before merge: `tests/test_generation.py` passed 12 tests, the focused unsupported-connectivity RAG test passed 5 tests, `python eval/run_eval.py` reported Hit@5 = 1.000 and Answerable@Context = 0.560, `python scripts/render_report.py` completed, and `pdfinfo report.pdf` reported 2 pages. The active local branch is now `feature/source-label-eval`. A comparison repo (`insurance-rag`) showed a stronger anchor/MRR-style retrieval evaluation pattern. Borrow the concept only; do not copy code or switch this project from FAISS to Chroma.
+**Status update, 2026-05-26:** Session E was verified and fast-forward merged at `ab8b70c`; post-merge handoff docs are current on `main`. Fresh verification before merge: `tests/test_generation.py` passed 12 tests, the focused unsupported-connectivity RAG test passed 5 tests, `python eval/run_eval.py` reported Hit@5 = 1.000 and Answerable@Context = 0.560, `python scripts/render_report.py` completed, and `pdfinfo report.pdf` reported 2 pages. The active local branch is now `feature/source-label-eval`. A comparison repo (`insurance-rag`) showed a stronger anchor/MRR-style retrieval evaluation pattern. Borrow the concept only; do not copy code or switch this project from FAISS to Chroma.
 
 **Design note, 2026-05-26:** `SYSTEM_DESIGN_NOTES.md` was added as an internal architecture and tradeoff reference. It explains each pipeline stage, why the current design fits the assignment, where it aligns with industry practice, and when more advanced options such as RRF, Qdrant, Weaviate, Milvus, pgvector, sparse+dense retrieval, BGE-M3, ColBERT-style late interaction, or GraphRAG would be worth testing. Use it before proposing retrieval modernization.
 
@@ -23,8 +23,8 @@ Standalone repository:
 - Current stable branch: `main`
 - Session D branch: `fix/answerability-normalization` was merged and pushed to `main` at commit `48dbd30`.
 - Session E branch: `feature/negation-handling` was merged at commit `ab8b70c`.
-- Current pushed `main`: `aecde5e Update post-Session E handoff docs`.
-- Current work branch: `feature/source-label-eval`, aligned with `main` at `aecde5e`.
+- Current pushed `main`: post-Session E handoff docs are current.
+- Current work branch: `feature/source-label-eval`, aligned with `main`.
 
 DevOps policy:
 
@@ -325,7 +325,7 @@ If the metric changes, update report.md, regenerate report.pdf with python scrip
 
 **Dependencies:** Session B draft exists; preferably after Session D
 
-**Priority:** Completed, verified, and merged at `ab8b70c`; handoff docs refreshed at `aecde5e`.
+**Priority:** Completed, verified, and merged at `ab8b70c`; handoff docs are current on `main`.
 
 **Important context:**
 
@@ -403,7 +403,7 @@ Rerun targeted tests, rerun python eval/run_eval.py if feasible, regenerate repo
 **Copy-paste prompt:**
 
 ```text
-Continue feature/source-label-eval from `main` at `aecde5e`.
+Continue feature/source-label-eval from current `main`.
 Read NEW_SESSION_BRIEF.md, WORK_PLAN.md, PROJECT_STATUS.md, FOR_AI_MODELS.md, REPORT_NOTES.md, eval/gold_set.jsonl, eval/run_eval.py, data/processed/chunks.json, and report.md.
 Goal: make Hit@5 meaningful. Add source labels or an anchor-style source-hit metric without rewriting the gold Q/A content.
 Start with a focused, defensible labeled subset if full labeling is too slow. Prefer obvious labels such as datasheet_hier_chunk_0000 for flash/SRAM/protocol/voltage/GPIO/package/unsupported-connectivity questions.
@@ -544,7 +544,7 @@ Keep this separate from the CC2652R7 report unless there is time after report.pd
 **May 25-26**
 
 - Session E was verified and merged at `ab8b70c`.
-- Post-Session E handoff docs were refreshed at `aecde5e`.
+- Post-Session E handoff docs are current on `main`.
 - `feature/source-label-eval` is aligned with updated `main`.
 
 **May 27-28**

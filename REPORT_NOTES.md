@@ -10,7 +10,7 @@ Critical path: `report.pdf` is complete; the extension should be used for contro
 Post-freeze update: Sessions B-D are complete and merged to `main`. Session D fixed the
 Answerable@Context hyphen/spacing normalization false negative and was merged to `main`
 at commit `48dbd30`. Session E was verified and merged at `ab8b70c`, and handoff docs
-were refreshed at `aecde5e`; Session E improves unsupported connectivity answers without changing headline metrics. The latest
+are current on `main`; Session E improves unsupported connectivity answers without changing headline metrics. The latest
 eval is Hit@5 = 1.000 and Answerable@Context = 0.560 (28/50). `report.pdf`
 remains 2 pages.
 
