@@ -8,7 +8,7 @@ A complete Retrieval-Augmented Generation (RAG) pipeline over TI CC2652R7 docume
 - Extension: one week from May 26, 2026. Treat the working deadline as Tuesday, June 2, 2026, with the exact time still to confirm.
 - `main` is the stable submission branch and includes the current failure-analysis and improvement-roadmap docs.
 - Current local branch: `main`.
-- Recommended next order: improve source-label evaluation, classify failures by root cause, then address TX-power extraction/table parsing.
+- Recommended next order: improve source-label evaluation; compute labeled retrieval metrics (`Source Hit@1`, `Source Hit@5`, `MRR`, `Precision@5`, `Recall@5`); classify failures by root cause; then address TX-power extraction/table parsing.
 - New case-study doc: `RAG_EXPLICIT_DATA_FAILURE_CASE_STUDY.md` explains the standard-mode TX-power failure where the answer exists in the corpus but generic retrieval selects misleading TRM evidence.
 
 ## Repository

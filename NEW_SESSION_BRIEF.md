@@ -10,7 +10,9 @@ updated improvement roadmap.
 
 The highest-value next improvement is `feature/source-label-eval`: make retrieval
 evaluation meaningful by adding real source labels or an anchor-style metric, inspired
-by the comparison `insurance-rag` repo.
+by the comparison `insurance-rag` repo. The next session should compute source metrics
+only on labeled questions: `Source Hit@1`, `Source Hit@5`, `MRR`, `Precision@5`, and
+`Recall@5`. MRR means mean reciprocal rank; MMR is a different retrieval/diversity method.
 
 After source-label evaluation, the next narrow answer-quality branch is
 `feature/tx-power-extractor`. Treat the standard-mode TX-power failure as an
@@ -130,7 +132,7 @@ directory (`/private/tmp/insurance-rag`) for design comparison only.
 Useful ideas to borrow conceptually:
 
 - Add source-label or anchor-style retrieval evaluation so Hit@5 is meaningful.
-- Report MRR in addition to Hit@k.
+- Report MRR, Precision@5, and Recall@5 in addition to Hit@k, but only on labeled questions.
 - Use dependency injection/fake embeddings in tests to avoid model-heavy stalls.
 
 Do not copy code from that repo. Do not switch this project from FAISS to Chroma or any
@@ -179,7 +181,9 @@ Read these before changing code:
 
 1. **Source-label evaluation**
    Continue `feature/source-label-eval`. Add meaningful retrieval evidence labels or
-   anchor-style matching so Hit@5 is no longer vacuous. Add MRR if feasible.
+   anchor-style matching so Hit@5 is no longer vacuous. Compute `Source Hit@1`,
+   `Source Hit@5`, `MRR`, `Precision@5`, and `Recall@5` on the labeled subset only.
+   Do not report these metrics for unlabeled questions.
 
 2. **Failure taxonomy**
    Classify failures as missing-source, retrieval miss, generation/validation error, or
@@ -254,13 +258,14 @@ First read:
 
 Task:
 1. Inspect git status and confirm the current branch/commit.
-2. Continue feature/source-label-eval. Goal: make Hit@5 meaningful by adding source labels or anchor-style source matching, preferably with MRR. Do not change the gold Q/A content unless explicitly necessary and documented.
+2. Continue feature/source-label-eval. Goal: make Hit@5 meaningful by adding source labels or anchor-style source matching. Do not change the gold Q/A content unless explicitly necessary and documented.
 3. Label the TX-power questions with their true answer-bearing chunks, especially datasheet_hier_chunk_0001_sub0 and datasheet_hier_chunk_0030, so eval can distinguish retrieval misses from missing-source failures.
-4. If present locally, use docs/superpowers/plans/2026-05-26-source-label-eval.md as the detailed implementation plan for source-label evaluation; otherwise follow WORK_PLAN.md Session F.
-5. Add focused tests for source-labeled Hit@k/MRR behavior before implementation.
-6. Run targeted tests and python eval/run_eval.py.
-7. If metrics or report claims change, update report.md, regenerate report.pdf with python scripts/render_report.py, and verify pdfinfo report.pdf is <= 4 pages.
-8. Do not migrate from FAISS or BM25 yet. If retrieval modernization is considered, first use SYSTEM_DESIGN_NOTES.md to frame options, then wait until source-label evaluation exists so alternatives can be measured.
+4. Add metrics for labeled questions only: Source Hit@1, Source Hit@5, MRR, Precision@5, and Recall@5. Do not report MRR/Precision/Recall for unlabeled questions. MRR means mean reciprocal rank, not MMR.
+5. If present locally, use docs/superpowers/plans/2026-05-26-source-label-eval.md as the detailed implementation plan for source-label evaluation; otherwise follow WORK_PLAN.md Session F.
+6. Add focused tests for source-labeled Hit@k, MRR, Precision@5, and Recall@5 behavior before implementation.
+7. Run targeted tests and python eval/run_eval.py.
+8. If metrics or report claims change, update report.md, regenerate report.pdf with python scripts/render_report.py, and verify pdfinfo report.pdf is <= 4 pages.
+9. Do not migrate from FAISS or BM25 yet. If retrieval modernization is considered, first use SYSTEM_DESIGN_NOTES.md to frame options, then wait until source-label evaluation exists so alternatives can be measured.
 
 Constraints:
 - Do not add RF Driver API docs except on exp/rf-driver-api-corpus.

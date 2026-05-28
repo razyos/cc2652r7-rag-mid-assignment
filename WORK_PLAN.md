@@ -9,7 +9,9 @@
 
 **Status update, 2026-05-24:** Session E was completed on `feature/negation-handling`. The branch improved unsupported connectivity answers for Wi-Fi, USB, LTE/cellular, Ethernet, and Bluetooth Classic by anchoring `datasheet_hier_chunk_0000` and keeping answers grounded in the CC2652R7 feature/protocol list. Branch eval remained Hit@5 = 1.000 and Answerable@Context = 0.560. `report.md` and `report.pdf` were refreshed; `pdfinfo report.pdf` reported 2 pages.
 
-**Status update, 2026-05-26:** Session E was verified and fast-forward merged at `ab8b70c`; post-merge handoff docs are current on `main`. Fresh verification before merge: `tests/test_generation.py` passed 12 tests, the focused unsupported-connectivity RAG test passed 5 tests, `python eval/run_eval.py` reported Hit@5 = 1.000 and Answerable@Context = 0.560, `python scripts/render_report.py` completed, and `pdfinfo report.pdf` reported 2 pages. The active local branch is now `feature/source-label-eval`. A comparison repo (`insurance-rag`) showed a stronger anchor/MRR-style retrieval evaluation pattern. Borrow the concept only; do not copy code or switch this project from FAISS to Chroma.
+**Status update, 2026-05-26:** Session E was verified and fast-forward merged at `ab8b70c`; post-merge handoff docs are current on `main`. Fresh verification before merge: `tests/test_generation.py` passed 12 tests, the focused unsupported-connectivity RAG test passed 5 tests, `python eval/run_eval.py` reported Hit@5 = 1.000 and Answerable@Context = 0.560, `python scripts/render_report.py` completed, and `pdfinfo report.pdf` reported 2 pages. A comparison repo (`insurance-rag`) showed a stronger anchor/MRR-style retrieval evaluation pattern. Borrow the concept only; do not copy code or switch this project from FAISS to Chroma.
+
+**Status update, 2026-05-28:** `main` now includes the explicit-data RAG failure case study and updated future plan. The current local branch is `main`; create `feature/source-label-eval` from `main` for the next session before code or metric changes. The next branch should add source labels and labeled-only retrieval metrics: `Source Hit@1`, `Source Hit@5`, `MRR`, `Precision@5`, and `Recall@5`.
 
 **Design note, 2026-05-26:** `SYSTEM_DESIGN_NOTES.md` was added as an internal architecture and tradeoff reference. It explains each pipeline stage, why the current design fits the assignment, where it aligns with industry practice, and when more advanced options such as RRF, Qdrant, Weaviate, Milvus, pgvector, sparse+dense retrieval, BGE-M3, ColBERT-style late interaction, or GraphRAG would be worth testing. Use it before proposing retrieval modernization.
 
@@ -98,11 +100,12 @@ Steps 1-4 are complete. Avoid merging corpus expansion or broad comparison suppo
 Recommended remaining order:
 
 1. Keep `main` frozen and submission-safe unless a clearly verified improvement is ready.
-2. Continue `feature/source-label-eval` to replace the vacuous Hit@5 with real source labels or an anchor-style retrieval metric, preferably adding MRR.
-3. Add or maintain a failure taxonomy: missing-source, retrieval miss, generation/validation error, or gold mismatch.
-4. Use `feature/tx-power-extractor` for the next narrow answer-quality improvement after source-label evaluation is handled.
-5. Run a final submission audit after each merge that changes code, metrics, report text, or PDF artifacts.
-6. Use experimental branches for major work: `exp/rf-driver-api-corpus`, `exp/competitor-datasheets`, or similar.
+2. Continue `feature/source-label-eval` to replace the vacuous Hit@5 with real source labels or an anchor-style retrieval metric.
+3. Add labeled retrieval metrics for the labeled subset only: `Source Hit@1`, `Source Hit@5`, `MRR`, `Precision@5`, and `Recall@5`.
+4. Add or maintain a failure taxonomy: missing-source, retrieval miss, generation/validation error, or gold mismatch.
+5. Use `feature/tx-power-extractor` for the next narrow answer-quality improvement after source-label evaluation is handled.
+6. Run a final submission audit after each merge that changes code, metrics, report text, or PDF artifacts.
+7. Use experimental branches for major work: `exp/rf-driver-api-corpus`, `exp/competitor-datasheets`, or similar.
 
 ## Session A - Report Evidence Freeze
 
@@ -360,7 +363,7 @@ Rerun targeted tests, rerun python eval/run_eval.py if feasible, regenerate repo
 
 ## Session F - Source-Label Evaluation Upgrade
 
-**Goal:** Make retrieval evaluation meaningful by replacing the current vacuous Hit@5 setup with source labels or an anchor-style evidence metric.
+**Goal:** Make retrieval evaluation meaningful by replacing the current vacuous Hit@5 setup with source labels or an anchor-style evidence metric, then compute honest retrieval metrics over the labeled subset.
 
 **Inputs:**
 
@@ -375,7 +378,7 @@ Rerun targeted tests, rerun python eval/run_eval.py if feasible, regenerate repo
 **Outputs:**
 
 - Either non-empty `must_cite_chunk_ids` for a focused gold-set subset or a separate anchor/source-label file that leaves Q/A content unchanged
-- Updated eval metric reporting real Hit@k and preferably MRR
+- Updated eval metric reporting `Source Hit@1`, `Source Hit@5`, `MRR`, `Precision@5`, and `Recall@5` on labeled questions only
 - Focused tests for metric behavior
 - Refreshed `eval/eval_results.json`
 - Updated `report.md` and regenerated `report.pdf` if metrics/claims change
@@ -391,7 +394,9 @@ Rerun targeted tests, rerun python eval/run_eval.py if feasible, regenerate repo
 - Do not rewrite the gold questions or reference answers unless absolutely necessary.
 - Prefer adding source evidence labels while preserving existing Q/A content.
 - Avoid index rebuilds and broad retrieval changes.
-- Keep old Answerable@Context for continuity, but add a clearly named source-hit metric.
+- Keep old Answerable@Context for continuity, but add clearly named source-retrieval metrics.
+- MRR means mean reciprocal rank; do not confuse it with MMR, which is a retrieval/diversity method.
+- Do not compute or report MRR, Precision@k, or Recall@k for unlabeled questions.
 - If labels are incomplete, report the labeled subset size honestly.
 
 **Likely implementation direction:**
@@ -399,8 +404,8 @@ Rerun targeted tests, rerun python eval/run_eval.py if feasible, regenerate repo
 - Inspect core factual/numerical/negation questions first because many map cleanly to `datasheet_hier_chunk_0000`.
 - Label TX-power questions with the actual answer-bearing datasheet chunks, especially `datasheet_hier_chunk_0001_sub0` and `datasheet_hier_chunk_0030`, so the eval can distinguish "answer exists but retrieval missed it" from "answer missing from corpus."
 - Add labels in small batches and test `compute_hit_at_k()`.
-- Consider MRR using retrieved chunk rank when at least one labeled chunk appears.
-- Update report caveats from "Hit@5 is vacuous" to "Hit@5 is measured on N labeled questions" only after verification.
+- Add tests for MRR, Precision@5, and Recall@5 behavior with one valid source chunk and multiple valid source chunks.
+- Update report caveats from "Hit@5 is vacuous" to "source metrics are measured on N labeled questions" only after verification.
 
 **Copy-paste prompt:**
 
@@ -409,7 +414,7 @@ Continue feature/source-label-eval from current `main`.
 Read NEW_SESSION_BRIEF.md, WORK_PLAN.md, PROJECT_STATUS.md, FOR_AI_MODELS.md, REPORT_NOTES.md, eval/gold_set.jsonl, eval/run_eval.py, data/processed/chunks.json, and report.md.
 Goal: make Hit@5 meaningful. Add source labels or an anchor-style source-hit metric without rewriting the gold Q/A content.
 Start with a focused, defensible labeled subset if full labeling is too slow. Prefer obvious labels such as datasheet_hier_chunk_0000 for flash/SRAM/protocol/voltage/GPIO/package/unsupported-connectivity questions.
-Add focused tests for Hit@k/MRR behavior. Run targeted tests and python eval/run_eval.py.
+Add focused tests for Source Hit@1, Source Hit@5, MRR, Precision@5, and Recall@5 on labeled questions only. Run targeted tests and python eval/run_eval.py.
 If metrics or report claims change, update report.md, regenerate report.pdf with python scripts/render_report.py, and verify pdfinfo report.pdf is <= 4 pages.
 Do not rebuild indexes, add RF Driver API docs, add competitor datasheets, or do broad retrieval refactors.
 ```

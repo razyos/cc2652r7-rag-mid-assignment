@@ -458,8 +458,14 @@ Why this is not enough:
 Best next improvement:
 
 - Add source labels or an anchor-style evidence file for a focused subset.
-- Compute real Hit@k over labeled questions.
-- Add MRR so rank quality matters.
+- Compute real source-retrieval metrics only over labeled questions:
+  - `Source Hit@1`
+  - `Source Hit@5`
+  - `MRR` (mean reciprocal rank; not MMR)
+  - `Precision@5`
+  - `Recall@5`
+- Do not report MRR, Precision@k, or Recall@k for unlabeled questions; those scores
+  would be misleading without known relevant chunks.
 - Keep Answerable@Context for continuity, but stop treating it as answer accuracy.
 
 Production-style evaluation would include:
@@ -657,7 +663,8 @@ Priority 1: source-label evaluation.
 
 - Branch: `feature/source-label-eval`.
 - Add non-empty source labels for a defensible subset or a separate anchor-source file.
-- Compute real Hit@k and MRR.
+- Compute `Source Hit@1`, `Source Hit@5`, `MRR`, `Precision@5`, and `Recall@5` on the
+  labeled subset only.
 - Update report claims honestly.
 
 Priority 2: TX-power extractor.

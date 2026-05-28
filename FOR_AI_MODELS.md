@@ -130,7 +130,11 @@ and Bluetooth Classic absence answers now cite `datasheet_hier_chunk_0000`.
 **1. Source-label evaluation**
 Hit@5 is not meaningful because `must_cite_chunk_ids` is empty for all current gold entries.
 Use `feature/source-label-eval` to add real source labels or a separate anchor-style source-hit
-metric, preferably with MRR. Preserve gold Q/A content unless a correction is explicitly documented.
+metric. Preserve gold Q/A content unless a correction is explicitly documented.
+After labeling, compute `Source Hit@1`, `Source Hit@5`, `MRR`, `Precision@5`, and
+`Recall@5` on the labeled subset only. Do not report MRR/Precision/Recall for unlabeled
+questions. MRR means mean reciprocal rank; do not confuse it with MMR, which is a
+retrieval diversity method.
 Label the standard-mode TX-power question with the true answer-bearing chunks
 `datasheet_hier_chunk_0001_sub0` and/or `datasheet_hier_chunk_0030` so evaluation can
 separate "answer exists but retrieval missed it" from "answer missing from corpus."

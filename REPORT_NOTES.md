@@ -249,10 +249,11 @@ Use these in the report.
 Report-first priority order:
 
 1. Keep `main` frozen as the stable submission branch unless a branch passes verification.
-2. Continue `feature/source-label-eval`; fill `must_cite_chunk_ids` for a defensible subset or add anchor-style matching so Hit@5 becomes meaningful, preferably with MRR.
-3. Next small answer-quality branch: `feature/tx-power-extractor`, focused on the explicit-data TX-power failures rather than broad retrieval changes.
-4. Run a final submission audit after any merge.
-5. Larger branches: `exp/rf-driver-api-corpus` and `exp/competitor-datasheets`; rebuild indexes and rerun eval before considering merge.
+2. Continue `feature/source-label-eval`; fill `must_cite_chunk_ids` for a defensible subset or add anchor-style matching so Hit@5 becomes meaningful.
+3. Add labeled retrieval metrics on the labeled subset only: `Source Hit@1`, `Source Hit@5`, `MRR`, `Precision@5`, and `Recall@5`. Do not report these for unlabeled questions.
+4. Next small answer-quality branch: `feature/tx-power-extractor`, focused on the explicit-data TX-power failures rather than broad retrieval changes.
+5. Run a final submission audit after any merge.
+6. Larger branches: `exp/rf-driver-api-corpus` and `exp/competitor-datasheets`; rebuild indexes and rerun eval before considering merge.
 
 Do not merge RF Driver API corpus expansion, competitor corpus expansion, gold-set rewrites, or broad refactors into `main` before a full eval/report/PDF audit passes.
 

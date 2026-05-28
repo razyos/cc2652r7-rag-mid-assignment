@@ -189,11 +189,12 @@ Session E verification before merging to `main`:
 
 The one-week extension should be used for controlled, reportable improvements:
 
-1. Continue `feature/source-label-eval` to add meaningful source labels or anchor-style source-hit evaluation, preferably with MRR. This addresses the biggest current evaluation weakness: Hit@5 is vacuous because `must_cite_chunk_ids` is empty.
-2. Classify each failure as a missing-source issue, retrieval miss, generation/validation error, or gold-set mismatch. This prevents optimizing the wrong part of the pipeline.
-3. Create `feature/tx-power-extractor` for the narrow max RF output power / standard-mode TX-power failures after source-label evaluation is handled.
-4. Refresh `report.md` and `report.pdf` after metric or claim changes.
-5. Treat RF Driver API corpus expansion as experimental only (`exp/rf-driver-api-corpus`), because it requires source approval, index rebuild, manifest/report updates, and a full audit.
+1. Continue `feature/source-label-eval` to add meaningful source labels or anchor-style source-hit evaluation. This addresses the biggest current evaluation weakness: Hit@5 is vacuous because `must_cite_chunk_ids` is empty.
+2. Add labeled retrieval metrics on the labeled subset only: `Source Hit@1`, `Source Hit@5`, `MRR`, `Precision@5`, and `Recall@5`. Do not report these for unlabeled questions.
+3. Classify each failure as a missing-source issue, retrieval miss, generation/validation error, or gold-set mismatch. This prevents optimizing the wrong part of the pipeline.
+4. Create `feature/tx-power-extractor` for the narrow max RF output power / standard-mode TX-power failures after source-label evaluation is handled.
+5. Refresh `report.md` and `report.pdf` after metric or claim changes.
+6. Treat RF Driver API corpus expansion as experimental only (`exp/rf-driver-api-corpus`), because it requires source approval, index rebuild, manifest/report updates, and a full audit.
 
 ---
 
