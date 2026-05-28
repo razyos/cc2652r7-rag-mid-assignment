@@ -109,10 +109,10 @@ Source: `eval/eval_results.json` after Session E was merged to `main` on 2026-05
 |---|---:|---:|---|
 | Gold-set size | 50 | 50 | 10 questions each across factual, numerical, negation, comparison, debugging. |
 | k | 5 | - | Eval output uses `k=5`. |
-| Hit@5 | 1.000 | 50/50 | Caveat: every gold entry currently has empty `must_cite_chunk_ids`, so this metric is vacuous. |
+| Hit@5 | 1.000 | 50/50 | Caveat: every gold entry currently has empty `must_cite_chunk_ids`, so this metric is non-discriminative. |
 | Answerable@Context | 0.560 | 28/50 | Checks whether reference key technical terms appear in final retrieved context. This is not answer accuracy. |
 
-Metric caveats to state honestly in the report:
+Metric caveats to state explicitly in the report:
 
 - `eval/gold_set.jsonl` has 0/50 non-empty `must_cite_chunk_ids`. Therefore Hit@5=1.000 only proves the eval harness ran; it does not prove the retriever found a labeled relevant chunk.
 - Answerable@Context now normalizes spaces and hyphens for key-term matching. This fixed the voltage case where the answer/reference contains `1.8V` and `3.8V`, while the corpus writes `1.8-V` and `3.8-V`.
@@ -144,7 +144,7 @@ The first sandboxed attempt failed because `SentenceTransformer` tried to resolv
 
 | Experiment | Command | Reported metric | Result | Interpretation |
 |---|---|---:|---:|---|
-| Full current pipeline | `python eval/run_eval.py` / existing `eval/eval_results.json` | Hit@5 / Answerable@Context | 1.000 / 0.560 | Current headline numbers, but Hit@5 is vacuous because cite labels are empty. |
+| Full current pipeline | `python eval/run_eval.py` / existing `eval/eval_results.json` | Hit@5 / Answerable@Context | 1.000 / 0.560 | Current headline numbers, but Hit@5 is non-discriminative because cite labels are empty. |
 | Dense-only retrieval | `python eval/run_eval_dense_only.py 5` | Hit@5 | 1.000 | Inconclusive for the same empty-cite-label reason. |
 | Hybrid without rerank | `python eval/run_eval_no_rerank.py 5` | Hit@5 | 1.000 | Inconclusive for the same empty-cite-label reason. |
 

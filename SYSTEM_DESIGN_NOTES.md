@@ -444,7 +444,7 @@ Current metrics:
 
 | Metric | Value | Caveat |
 |---|---:|---|
-| Hit@5 | 1.000 | Vacuous because current `must_cite_chunk_ids` are empty |
+| Hit@5 | 1.000 | Non-discriminative because current `must_cite_chunk_ids` are empty |
 | Answerable@Context | 0.560 | Checks context term presence, not answer correctness |
 
 Why this is not enough:
@@ -461,7 +461,7 @@ Best next improvement:
 - Compute real source-retrieval metrics only over labeled questions:
   - `Source Hit@1`
   - `Source Hit@5`
-  - `MRR` (mean reciprocal rank; not MMR)
+  - `MRR`
   - `Precision@5`
   - `Recall@5`
 - Do not report MRR, Precision@k, or Recall@k for unlabeled questions; those scores
@@ -665,7 +665,7 @@ Priority 1: source-label evaluation.
 - Add non-empty source labels for a defensible subset or a separate anchor-source file.
 - Compute `Source Hit@1`, `Source Hit@5`, `MRR`, `Precision@5`, and `Recall@5` on the
   labeled subset only.
-- Update report claims honestly.
+- Update report claims with the labeled subset size and metric scope.
 
 Priority 2: TX-power extractor.
 

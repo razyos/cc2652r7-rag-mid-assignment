@@ -12,7 +12,7 @@ The highest-value next improvement is `feature/source-label-eval`: make retrieva
 evaluation meaningful by adding real source labels or an anchor-style metric, inspired
 by the comparison `insurance-rag` repo. The next session should compute source metrics
 only on labeled questions: `Source Hit@1`, `Source Hit@5`, `MRR`, `Precision@5`, and
-`Recall@5`. MRR means mean reciprocal rank; MMR is a different retrieval/diversity method.
+`Recall@5`.
 
 After source-label evaluation, the next narrow answer-quality branch is
 `feature/tx-power-extractor`. Treat the standard-mode TX-power failure as an
@@ -133,7 +133,7 @@ Useful ideas to borrow conceptually:
 
 - Add source-label or anchor-style retrieval evaluation so Hit@5 is meaningful.
 - Report MRR, Precision@5, and Recall@5 in addition to Hit@k, but only on labeled questions.
-- Use dependency injection/fake embeddings in tests to avoid model-heavy stalls.
+- Use dependency injection and embedding test doubles to avoid model-heavy stalls in tests.
 
 Do not copy code from that repo. Do not switch this project from FAISS to Chroma or any
 other backend before source-label evaluation exists and the change can be measured. Chroma
@@ -168,12 +168,12 @@ Read these before changing code:
 - Do not force-push `main`.
 - Do not add RF Driver API docs on a feature branch; use `exp/rf-driver-api-corpus` only.
 - Do not add competitor datasheets on a feature branch; use `exp/competitor-datasheets` only.
-- Do not rewrite the gold set casually. If source labels are added, keep Q/A content stable and document the change.
+- Do not rewrite the gold set without a documented reason. If source labels are added, keep Q/A content stable and document the change.
 - Do not rebuild indexes unless working on an experimental corpus/index branch.
 - Do not do broad retrieval/corpus refactors.
 - Preserve local inference only: Ollama Llama 3.2 3B, no hosted LLM APIs for core answering.
 - Preserve the report's caveats about corpus gaps and gold-set mistakes.
-- Do not treat FAISS, Chroma, or any vector backend as dogma. Read `SYSTEM_DESIGN_NOTES.md`
+- Do not treat FAISS, Chroma, or any vector backend as the only valid option. Read `SYSTEM_DESIGN_NOTES.md`
   for modern alternatives, but do not migrate retrieval infrastructure until source-label
   evaluation can measure the change.
 
@@ -181,7 +181,7 @@ Read these before changing code:
 
 1. **Source-label evaluation**
    Continue `feature/source-label-eval`. Add meaningful retrieval evidence labels or
-   anchor-style matching so Hit@5 is no longer vacuous. Compute `Source Hit@1`,
+   anchor-style matching so Hit@5 has discriminative value. Compute `Source Hit@1`,
    `Source Hit@5`, `MRR`, `Precision@5`, and `Recall@5` on the labeled subset only.
    Do not report these metrics for unlabeled questions.
 
@@ -260,7 +260,7 @@ Task:
 1. Inspect git status and confirm the current branch/commit.
 2. Continue feature/source-label-eval. Goal: make Hit@5 meaningful by adding source labels or anchor-style source matching. Do not change the gold Q/A content unless explicitly necessary and documented.
 3. Label the TX-power questions with their true answer-bearing chunks, especially datasheet_hier_chunk_0001_sub0 and datasheet_hier_chunk_0030, so eval can distinguish retrieval misses from missing-source failures.
-4. Add metrics for labeled questions only: Source Hit@1, Source Hit@5, MRR, Precision@5, and Recall@5. Do not report MRR/Precision/Recall for unlabeled questions. MRR means mean reciprocal rank, not MMR.
+4. Add metrics for labeled questions only: Source Hit@1, Source Hit@5, MRR, Precision@5, and Recall@5. Do not report MRR/Precision/Recall for unlabeled questions.
 5. If present locally, use docs/superpowers/plans/2026-05-26-source-label-eval.md as the detailed implementation plan for source-label evaluation; otherwise follow WORK_PLAN.md Session F.
 6. Add focused tests for source-labeled Hit@k, MRR, Precision@5, and Recall@5 behavior before implementation.
 7. Run targeted tests and python eval/run_eval.py.

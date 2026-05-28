@@ -100,7 +100,7 @@ Steps 1-4 are complete. Avoid merging corpus expansion or broad comparison suppo
 Recommended remaining order:
 
 1. Keep `main` frozen and submission-safe unless a clearly verified improvement is ready.
-2. Continue `feature/source-label-eval` to replace the vacuous Hit@5 with real source labels or an anchor-style retrieval metric.
+2. Continue `feature/source-label-eval` to replace the non-discriminative Hit@5 with real source labels or an anchor-style retrieval metric.
 3. Add labeled retrieval metrics for the labeled subset only: `Source Hit@1`, `Source Hit@5`, `MRR`, `Precision@5`, and `Recall@5`.
 4. Add or maintain a failure taxonomy: missing-source, retrieval miss, generation/validation error, or gold mismatch.
 5. Use `feature/tx-power-extractor` for the next narrow answer-quality improvement after source-label evaluation is handled.
@@ -209,7 +209,7 @@ Write the final 4-page report.pdf for the CC2652R7 RAG assignment.
 First read mid_term_assignment.pdf, PROJECT_STATUS.md, FOR_AI_MODELS.md, data/MANIFEST.md, and REPORT_NOTES.md.
 Cover exactly: corpus, architecture, chunking strategies, embedding/index choice, retrieval, prompt/generation design, evaluation, ablations, failure analysis, and future work.
 Use current numbers: Hit@5=1.000 and Answerable@Context=0.560 unless REPORT_NOTES.md has newer verified results.
-Keep it concise, technical, and honest about corpus gaps, metric limitations, stale/incorrect gold answers, and local Llama 3.2 constraints.
+Keep it concise and technical, with explicit treatment of corpus gaps, metric limitations, stale/incorrect gold answers, and local Llama 3.2 constraints.
 Produce report.pdf and leave the editable source file in the repo.
 ```
 
@@ -363,7 +363,7 @@ Rerun targeted tests, rerun python eval/run_eval.py if feasible, regenerate repo
 
 ## Session F - Source-Label Evaluation Upgrade
 
-**Goal:** Make retrieval evaluation meaningful by replacing the current vacuous Hit@5 setup with source labels or an anchor-style evidence metric, then compute honest retrieval metrics over the labeled subset.
+**Goal:** Make retrieval evaluation meaningful by replacing the current non-discriminative Hit@5 setup with source labels or an anchor-style evidence metric, then compute retrieval metrics over the labeled subset.
 
 **Inputs:**
 
@@ -395,9 +395,8 @@ Rerun targeted tests, rerun python eval/run_eval.py if feasible, regenerate repo
 - Prefer adding source evidence labels while preserving existing Q/A content.
 - Avoid index rebuilds and broad retrieval changes.
 - Keep old Answerable@Context for continuity, but add clearly named source-retrieval metrics.
-- MRR means mean reciprocal rank; do not confuse it with MMR, which is a retrieval/diversity method.
 - Do not compute or report MRR, Precision@k, or Recall@k for unlabeled questions.
-- If labels are incomplete, report the labeled subset size honestly.
+- If labels are incomplete, report the labeled subset size explicitly.
 
 **Likely implementation direction:**
 
@@ -405,7 +404,7 @@ Rerun targeted tests, rerun python eval/run_eval.py if feasible, regenerate repo
 - Label TX-power questions with the actual answer-bearing datasheet chunks, especially `datasheet_hier_chunk_0001_sub0` and `datasheet_hier_chunk_0030`, so the eval can distinguish "answer exists but retrieval missed it" from "answer missing from corpus."
 - Add labels in small batches and test `compute_hit_at_k()`.
 - Add tests for MRR, Precision@5, and Recall@5 behavior with one valid source chunk and multiple valid source chunks.
-- Update report caveats from "Hit@5 is vacuous" to "source metrics are measured on N labeled questions" only after verification.
+- Update report caveats from "Hit@5 is non-discriminative" to "source metrics are measured on N labeled questions" only after verification.
 
 **Copy-paste prompt:**
 
@@ -593,6 +592,6 @@ Keep this separate from the CC2652R7 report unless there is time after report.pd
 
 Recommended answers:
 
-1. Yes. It is the highest-value academic improvement because current Hit@5 is vacuous without source labels.
+1. Yes. It is the highest-value academic improvement because current Hit@5 is non-discriminative without source labels.
 2. Yes. TX power is useful but narrower; do it only after the evaluation metric is defensible.
 3. Yes. RF Driver API corpus expansion is major corpus/index work and should not merge without a full rebuild, eval, report refresh, PDF verification, and user approval.
