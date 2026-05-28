@@ -272,7 +272,3 @@ Recommended improvements:
 9. Keep refusal behavior for truly missing sources.
 
    The TX-power case should be fixed by better retrieval and extraction because the answer exists. The RF API cases should still refuse until the RF Driver API Reference is indexed. This distinction prevents the system from learning the wrong lesson: not every failure should be answered, and not every refusal is bad.
-
-## Report-Ready Summary
-
-Some failures occur even when the answer is explicitly present in the indexed corpus. In this project, the datasheet states that the CC2652R7 supports `+5 dBm TX at 9.7 mA`, and Table 7-1 lists a TX power setting of `5` with typical output power of `4.8 dBm`. However, the system failed the question about standard RF transmit power because retrieval selected TRM chunks about `CMD_SET_TX20_POWER` and the `20 dBm PA` path instead of the datasheet TX-power specification. This does not prove that the question is impossible for every RAG system; it shows that a generic RAG pipeline is not guaranteed to find and use the right evidence even when the answer exists. The required fix is to label the question as answerable with required source chunks, add TX-power-specific retrieval and table extraction, penalize contradictory PA evidence, normalize `4.8 dBm` and `+5 dBm` as equivalent specification answers, and validate numeric answers against retrieved `dBm` evidence. Truly missing-source questions, such as RF Driver API calls and CPE patch order, should continue to be refused until the missing API reference is indexed.
