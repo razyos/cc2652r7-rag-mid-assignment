@@ -155,11 +155,19 @@ This is why source-labeled evaluation is important. Without required source labe
 
 ## What Has To Be Done
 
-The fix is not only "use a better LLM". The system needs stronger retrieval and extraction controls for high-risk specification questions.
+This example should not be described as "impossible for the best RAG." The correct conclusion is more precise:
+
+```text
+The answer exists in the corpus, but a generic RAG pipeline is not guaranteed to retrieve and use it correctly.
+```
+
+That is different from the RF API failures. For questions about `RFCCpePatchFxp`, `RF_open`, `RF_close`, or CPE patch order, the required RF Driver API Reference is missing. A grounded RAG system cannot answer those questions correctly until the missing source is added.
+
+For the TX-power failure, the source is present. Therefore the fix is not only "use a better LLM" and not only "add more documents." The system needs retrieval, parsing, and validation changes that make the answer-bearing datasheet evidence more likely to be selected than misleading TRM evidence.
 
 Recommended improvements:
 
-1. Add required source labels for every gold question.
+1. Label the question as answerable and attach required source chunks.
 
    For this question, acceptable source chunks should include:
 
@@ -168,11 +176,28 @@ Recommended improvements:
    datasheet_hier_chunk_0030
    ```
 
-2. Add a TX-power-specific retrieval route.
+   This lets evaluation separate two different failures:
+
+   ```text
+   The answer exists but retrieval missed it.
+   The answer does not exist in the corpus.
+   ```
+
+2. Add a TX-power-specific retrieval route before normal RAG fallback.
 
    Queries containing terms like `TX power`, `transmit power`, `output power`, `dBm`, or `RF transmit` should strongly prefer datasheet electrical specification chunks and TX performance tables before TRM command-reference chunks.
 
-3. Penalize excluded concepts during retrieval or reranking.
+   In this project, the route should boost chunks containing:
+
+   ```text
+   +5 dBm TX
+   Typical Output Power [dBm]
+   Table 7-1
+   TX Current and Output Power
+   2.4-GHz band
+   ```
+
+3. Penalize excluded or contradictory concepts during retrieval or reranking.
 
    For this question, `without PA` should penalize chunks about:
 
@@ -183,7 +208,9 @@ Recommended improvements:
    PA bias control
    ```
 
-4. Add table-aware extraction.
+   This is important because the wrong retrieved chunk was not random. It was semantically close but contradicted the intended mode.
+
+4. Add table-aware extraction for datasheet specification tables.
 
    The system should parse Table 7-1 as structured data:
 
@@ -195,7 +222,19 @@ Recommended improvements:
 
    Then the answer generator can round or normalize this to `about +5 dBm`.
 
-5. Separate RF output power from current and power-management terms.
+5. Normalize engineering equivalents.
+
+   The system should understand that these are compatible answers in this context:
+
+   ```text
+   +5 dBm TX
+   4.8 dBm typical output power
+   TX power setting 5
+   ```
+
+   Without this normalization, the system may fail even after retrieving the right table because the gold answer expects the rounded specification value.
+
+6. Separate RF output power from current and power-management terms.
 
    The index should distinguish:
 
@@ -209,11 +248,11 @@ Recommended improvements:
 
    These are not interchangeable, even though they all contain the word "power".
 
-6. Add answer validation for numeric specification questions.
+7. Add answer validation for numeric specification questions.
 
    If the question asks for a value in `dBm`, the final answer should be supported by a retrieved quote or table cell that also contains a `dBm` value. A chunk about power domains or PA command fields should not pass validation.
 
-7. Improve query rewriting.
+8. Improve query rewriting.
 
    The query:
 
@@ -230,6 +269,10 @@ Recommended improvements:
    CC2652R7 2.4 GHz TX at 9.7 mA
    ```
 
+9. Keep refusal behavior for truly missing sources.
+
+   The TX-power case should be fixed by better retrieval and extraction because the answer exists. The RF API cases should still refuse until the RF Driver API Reference is indexed. This distinction prevents the system from learning the wrong lesson: not every failure should be answered, and not every refusal is bad.
+
 ## Report-Ready Summary
 
-Some failures occur even when the answer is explicitly present in the indexed corpus. In this project, the datasheet states that the CC2652R7 supports `+5 dBm TX at 9.7 mA`, and Table 7-1 lists a TX power setting of `5` with typical output power of `4.8 dBm`. However, the system failed the question about standard RF transmit power because retrieval selected TRM chunks about `CMD_SET_TX20_POWER` and the `20 dBm PA` path instead of the datasheet TX-power specification. This demonstrates that RAG accuracy depends not only on corpus coverage, but also on retrieval ranking, negation handling, table parsing, and domain-specific normalization. The required fix is to label source chunks, add TX-power-specific retrieval and table extraction, penalize excluded PA evidence, and validate numeric answers against retrieved `dBm` evidence.
+Some failures occur even when the answer is explicitly present in the indexed corpus. In this project, the datasheet states that the CC2652R7 supports `+5 dBm TX at 9.7 mA`, and Table 7-1 lists a TX power setting of `5` with typical output power of `4.8 dBm`. However, the system failed the question about standard RF transmit power because retrieval selected TRM chunks about `CMD_SET_TX20_POWER` and the `20 dBm PA` path instead of the datasheet TX-power specification. This does not prove that the question is impossible for every RAG system; it shows that a generic RAG pipeline is not guaranteed to find and use the right evidence even when the answer exists. The required fix is to label the question as answerable with required source chunks, add TX-power-specific retrieval and table extraction, penalize contradictory PA evidence, normalize `4.8 dBm` and `+5 dBm` as equivalent specification answers, and validate numeric answers against retrieved `dBm` evidence. Truly missing-source questions, such as RF Driver API calls and CPE patch order, should continue to be refused until the missing API reference is indexed.
