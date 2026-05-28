@@ -36,11 +36,12 @@ Branch policy:
 
 - `main` is the stable submission branch. It should remain runnable and submission-ready.
 - Current pushed `main`: post-Session E handoff docs plus updated RAG failure-analysis docs are current.
-- Current work branch: `main`; create a short-lived feature branch before code or metric changes.
+- The checkout may start on `main`, but no edits or commits should be made there. Create a short-lived branch before code, metric, corpus, or documentation changes.
 - Session E commit chain on `main`: `93789fb Handle unsupported connectivity anchors`, `d9a2fe6 Update next session handoff`, `ab8b70c Refresh Session E verification artifacts`.
 - The current workspace should be clean, but inspect `git status` first.
-- Do not make risky changes directly on `main`.
+- Do not make changes directly on `main`.
 - Do not force-push `main`.
+- Validate changes on the branch, open a pull request, and merge into `main` only through the PR.
 - Use short-lived branches for narrow improvements:
   - `feature/source-label-eval`
   - `feature/tx-power-extractor`
@@ -165,6 +166,7 @@ Read these before changing code:
 ## Constraints
 
 - Keep `main` stable.
+- Do not edit, commit, or push work directly on `main`.
 - Do not force-push `main`.
 - Do not add RF Driver API docs on a feature branch; use `exp/rf-driver-api-corpus` only.
 - Do not add competitor datasheets on a feature branch; use `exp/competitor-datasheets` only.
@@ -218,9 +220,10 @@ https://github.com/razyos/cc2652r7-rag-mid-assignment
 
 Branch policy:
 - main is the stable submission branch.
-- Do not make risky changes directly on main.
+- Do not edit, commit, or push work directly on main.
 - Do not force-push main.
-- Current local branch may be main. Create feature/source-label-eval before code or metric changes.
+- The local checkout may start on main. Create feature/source-label-eval before code, metric, corpus, or documentation changes.
+- Validate on the feature branch, open a pull request, and merge into main through the PR.
 
 Current state:
 - Sessions A-E are complete and merged to main.
@@ -258,14 +261,15 @@ First read:
 
 Task:
 1. Inspect git status and confirm the current branch/commit.
-2. Continue feature/source-label-eval. Goal: make Hit@5 meaningful by adding source labels or anchor-style source matching. Do not change the gold Q/A content unless explicitly necessary and documented.
+2. If on main, create and switch to feature/source-label-eval before editing. Goal: make Hit@5 meaningful by adding source labels or anchor-style source matching. Do not change the gold Q/A content unless explicitly necessary and documented.
 3. Label the TX-power questions with their true answer-bearing chunks, especially datasheet_hier_chunk_0001_sub0 and datasheet_hier_chunk_0030, so eval can distinguish retrieval misses from missing-source failures.
 4. Add metrics for labeled questions only: Source Hit@1, Source Hit@5, MRR, Precision@5, and Recall@5. Do not report MRR/Precision/Recall for unlabeled questions.
 5. If present locally, use docs/superpowers/plans/2026-05-26-source-label-eval.md as the detailed implementation plan for source-label evaluation; otherwise follow WORK_PLAN.md Session F.
 6. Add focused tests for source-labeled Hit@k, MRR, Precision@5, and Recall@5 behavior before implementation.
 7. Run targeted tests and python eval/run_eval.py.
 8. If metrics or report claims change, update report.md, regenerate report.pdf with python scripts/render_report.py, and verify pdfinfo report.pdf is <= 4 pages.
-9. Do not migrate from FAISS or BM25 yet. If retrieval modernization is considered, first use SYSTEM_DESIGN_NOTES.md to frame options, then wait until source-label evaluation exists so alternatives can be measured.
+9. Push the branch, open a pull request, and merge only after validation passes.
+10. Do not migrate from FAISS or BM25 yet. If retrieval modernization is considered, first use SYSTEM_DESIGN_NOTES.md to frame options, then wait until source-label evaluation exists so alternatives can be measured.
 
 Constraints:
 - Do not add RF Driver API docs except on exp/rf-driver-api-corpus.
