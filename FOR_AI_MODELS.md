@@ -30,10 +30,11 @@ Branching policy:
 - Create `feature/source-label-eval` from `main` for the next metric improvement.
 - Use short-lived branches for optional work, such as `feature/negation-handling`, `feature/source-label-eval`, or `feature/tx-power-extractor`.
 - Use experimental branches for major work, such as `exp/rf-driver-api-corpus` or `exp/competitor-datasheets`.
-- Do not make risky changes directly on `main`.
-- Before merging to `main`, run relevant tests; run `python eval/run_eval.py` for metric-affecting changes.
+- Do not edit, commit, or push work directly on `main`.
+- Before opening a PR, run relevant tests; run `python eval/run_eval.py` for metric-affecting changes.
 - If `report.md`, metrics, or report claims change, regenerate `report.pdf` with `python scripts/render_report.py` and verify it is <= 4 pages.
 - Corpus expansion, gold-set rewrites, retrieval changes, or answer-generation behavior changes require a full eval/report/PDF audit before merging to `main`.
+- Open a pull request for every change and merge into `main` only through the PR after validation passes.
 - Do not force-push `main`, and do not commit ignored local artifacts.
 
 ---

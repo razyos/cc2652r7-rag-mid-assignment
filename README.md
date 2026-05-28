@@ -7,7 +7,7 @@ A complete Retrieval-Augmented Generation (RAG) pipeline over TI CC2652R7 docume
 - Original deadline: Tuesday, May 26, 2026 at 12:00 noon Asia/Jerusalem.
 - Extension: one week from May 26, 2026. Treat the working deadline as Tuesday, June 2, 2026, with the exact time still to confirm.
 - `main` is the stable submission branch and includes the current failure-analysis and improvement-roadmap docs.
-- Current local branch: `main`.
+- Current checkout may be `main`, but all changes must start by creating a short-lived branch.
 - Recommended next order: improve source-label evaluation; compute labeled retrieval metrics (`Source Hit@1`, `Source Hit@5`, `MRR`, `Precision@5`, `Recall@5`); classify failures by root cause; then address TX-power extraction/table parsing.
 - New case-study doc: `RAG_EXPLICIT_DATA_FAILURE_CASE_STUDY.md` explains the standard-mode TX-power failure where the answer exists in the corpus but generic retrieval selects misleading TRM evidence.
 
@@ -18,11 +18,13 @@ GitHub: https://github.com/razyos/cc2652r7-rag-mid-assignment
 Branch strategy:
 
 - `main` is the stable submission branch. It should always contain a runnable, audited assignment state.
+- Do not edit, commit, or push work directly on `main`.
 - Feature or fix work happens on short-lived branches, for example `feature/negation-handling`, `feature/source-label-eval`, or `feature/tx-power-extractor`.
 - Major or risky work must happen on separate experimental branches, for example `exp/rf-driver-api-corpus` or `exp/competitor-datasheets`.
-- Merge into `main` only after targeted tests, `python eval/run_eval.py` when relevant, and report regeneration if metrics or claims change.
+- Validate on the branch before integration: run targeted tests, `python eval/run_eval.py` when relevant, and regenerate `report.pdf` if metrics or report claims change.
+- Open a pull request for every change and merge into `main` only through the PR.
 - Corpus expansion, gold-set rewrites, retrieval changes, or answer-generation behavior changes require a full report/eval audit before they can merge into `main`.
-- Do not force-push `main`. Prefer a pull request or a fast-forward/merge commit with a clear summary.
+- Do not force-push `main`.
 - If `report.md` changes, regenerate `report.pdf` with `python scripts/render_report.py` and verify the PDF remains within the 4-page limit.
 
 ## Setup

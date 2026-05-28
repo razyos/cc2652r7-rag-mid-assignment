@@ -11,7 +11,7 @@
 
 **Status update, 2026-05-26:** Session E was verified and fast-forward merged at `ab8b70c`; post-merge handoff docs are current on `main`. Fresh verification before merge: `tests/test_generation.py` passed 12 tests, the focused unsupported-connectivity RAG test passed 5 tests, `python eval/run_eval.py` reported Hit@5 = 1.000 and Answerable@Context = 0.560, `python scripts/render_report.py` completed, and `pdfinfo report.pdf` reported 2 pages. A comparison repo (`insurance-rag`) showed a stronger anchor/MRR-style retrieval evaluation pattern. Borrow the concept only; do not copy code or switch this project from FAISS to Chroma.
 
-**Status update, 2026-05-28:** `main` now includes the explicit-data RAG failure case study and updated future plan. The current local branch is `main`; create `feature/source-label-eval` from `main` for the next session before code or metric changes. The next branch should add source labels and labeled-only retrieval metrics: `Source Hit@1`, `Source Hit@5`, `MRR`, `Precision@5`, and `Recall@5`.
+**Status update, 2026-05-28:** `main` now includes the explicit-data RAG failure case study and updated future plan. Future work must not edit or commit directly on `main`; create `feature/source-label-eval` from `main` for the next session before code or metric changes. The next branch should add source labels and labeled-only retrieval metrics: `Source Hit@1`, `Source Hit@5`, `MRR`, `Precision@5`, and `Recall@5`.
 
 **Design note, 2026-05-26:** `SYSTEM_DESIGN_NOTES.md` was added as an internal architecture and tradeoff reference. It explains each pipeline stage, why the current design fits the assignment, where it aligns with industry practice, and when more advanced options such as RRF, Qdrant, Weaviate, Milvus, pgvector, sparse+dense retrieval, BGE-M3, ColBERT-style late interaction, or GraphRAG would be worth testing. Use it before proposing retrieval modernization.
 
@@ -26,18 +26,20 @@ Standalone repository:
 - Session D branch: `fix/answerability-normalization` was merged and pushed to `main` at commit `48dbd30`.
 - Session E branch: `feature/negation-handling` was merged at commit `ab8b70c`.
 - Current pushed `main`: post-Session E handoff docs plus updated failure-analysis and improvement-roadmap docs are current.
-- Current work branch: `main`; create a short-lived branch such as `feature/source-label-eval` before code, metric, corpus, or report changes.
+- Current checkout may be `main`, but all work must start on a short-lived branch such as `feature/source-label-eval` before code, metric, corpus, or report changes.
 
 DevOps policy:
 
 - Treat `main` as the stable submission branch. It should always be runnable and contain a valid `report.pdf`.
+- Do not edit, commit, or push work directly on `main`.
 - Do optional work on short-lived branches named by intent, such as `feature/negation-handling`, `feature/source-label-eval`, `feature/tx-power-extractor`, `exp/rf-driver-api-corpus`, or `exp/competitor-datasheets`.
 - Major or risky work is allowed only away from `main`. Corpus expansion, gold-set rewrites, retrieval changes, or answer-generation behavior changes must stay on separate branches until fully verified.
-- Before merging a branch into `main`, run the smallest relevant tests and record the result in the final session summary.
+- Before opening a PR, run the smallest relevant tests and record the result in the final session summary.
 - If code changes can affect metrics, run `python eval/run_eval.py`.
 - If metrics, report claims, or report source change, update `report.md`, regenerate `report.pdf` with `python scripts/render_report.py`, and verify `pdfinfo report.pdf` reports 4 pages or fewer.
 - For corpus expansion or gold-set changes, also rebuild indexes as needed, rerun eval from scratch, re-audit `report.md`/`report.pdf`, and only merge if the new result is clearly submission-safe.
-- Do not force-push `main`. Prefer a pull request or a fast-forward/merge commit.
+- Open a pull request for every change. Merge into `main` only through the PR after validation passes.
+- Do not force-push `main`.
 - Do not commit local caches, `.DS_Store`, `.claude/`, `__pycache__/`, `.pytest_cache/`, or stale eval artifacts ignored by `.gitignore`.
 
 ## Current Project State
