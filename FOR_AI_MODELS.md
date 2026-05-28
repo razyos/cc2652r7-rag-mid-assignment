@@ -25,8 +25,9 @@ Deadline status:
 Branching policy:
 - `main` is the stable submission branch. Keep it runnable and submission-ready.
 - Session D (`fix/answerability-normalization`) was merged to `main` at commit `48dbd30`.
-- Session E (`feature/negation-handling`) was verified and merged at `ab8b70c`; post-Session E handoff docs are current on `main`.
-- Current local branch for the next improvement is `feature/source-label-eval`, aligned with `main`.
+- Session E (`feature/negation-handling`) was verified and merged at `ab8b70c`.
+- Current pushed `main` includes post-Session E handoff docs plus updated failure-analysis and improvement-roadmap docs, including `RAG_EXPLICIT_DATA_FAILURE_CASE_STUDY.md`.
+- Create `feature/source-label-eval` from `main` for the next metric improvement.
 - Use short-lived branches for optional work, such as `feature/negation-handling`, `feature/source-label-eval`, or `feature/tx-power-extractor`.
 - Use experimental branches for major work, such as `exp/rf-driver-api-corpus` or `exp/competitor-datasheets`.
 - Do not make risky changes directly on `main`.
@@ -77,6 +78,7 @@ mid_ass/
 ├── tests/                  # pytest suite; use targeted tests for model-heavy paths
 ├── demo.py                 # Two-demo comparison: bare LLM vs RAG
 ├── SYSTEM_DESIGN_NOTES.md  # Internal architecture/tradeoff notes
+├── RAG_EXPLICIT_DATA_FAILURE_CASE_STUDY.md  # Answer-present RAG failure case study
 ├── PROJECT_STATUS.md       # Full project status, results, known issues
 └── FOR_AI_MODELS.md        # This file
 ```
@@ -129,20 +131,33 @@ and Bluetooth Classic absence answers now cite `datasheet_hier_chunk_0000`.
 Hit@5 is not meaningful because `must_cite_chunk_ids` is empty for all current gold entries.
 Use `feature/source-label-eval` to add real source labels or a separate anchor-style source-hit
 metric, preferably with MRR. Preserve gold Q/A content unless a correction is explicitly documented.
+Label the standard-mode TX-power question with the true answer-bearing chunks
+`datasheet_hier_chunk_0001_sub0` and/or `datasheet_hier_chunk_0030` so evaluation can
+separate "answer exists but retrieval missed it" from "answer missing from corpus."
 
-**2. TX-power extractor / anchoring**
+**2. Failure taxonomy**
+Track failures by root cause: missing-source, retrieval miss, generation/validation error,
+or gold mismatch. Safe refusals for missing RF API sources should not be treated the same
+as retriever mistakes on answer-present questions.
+
+**3. TX-power extractor / anchoring**
 The maximum RF output power question currently answers `+0 dBm` from a transmit-current table
-instead of the expected `+20 dBm`. Keep this as a narrow `feature/tx-power-extractor` branch.
+instead of the expected `+20 dBm`. The standard-mode TX-power question also fails even
+though the datasheet contains `+5 dBm TX at 9.7 mA` and Table 7-1 contains `4.8 dBm`
+typical output power for TX power setting `5`. Keep this as a narrow
+`feature/tx-power-extractor` branch: prefer datasheet `dBm` chunks, parse Table 7-1,
+penalize contradictory `20 dBm PA` evidence for "without PA" queries, normalize `4.8 dBm`
+to `+5 dBm`, and validate numeric answers against cited `dBm` evidence.
 
 ### Medium Priority
 
-**3. Add RF Driver API PDF to corpus**
+**4. Add RF Driver API PDF to corpus**
 Adding TI's RF Driver API Reference would fix ~12 failing questions (debugging + factual + negation categories).
 Steps: place PDF in `data/raw/`, re-run `src/build_index.py` with the new document.
 This is major corpus work. Use `exp/rf-driver-api-corpus`, rebuild indexes, update manifest/report,
 rerun eval, and only merge to `main` if the full submission audit passes.
 
-**4. Comparison questions**
+**5. Comparison questions**
 8/10 comparison questions require CC2652R1/CC2652P/CC1352R specs not in corpus.
 Either add those datasheets or rewrite the comparison questions to be self-referential.
 Use `exp/competitor-datasheets` or a dedicated gold-set branch; do not mix this with small fixes.

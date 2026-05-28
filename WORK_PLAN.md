@@ -23,8 +23,8 @@ Standalone repository:
 - Current stable branch: `main`
 - Session D branch: `fix/answerability-normalization` was merged and pushed to `main` at commit `48dbd30`.
 - Session E branch: `feature/negation-handling` was merged at commit `ab8b70c`.
-- Current pushed `main`: post-Session E handoff docs are current.
-- Current work branch: `feature/source-label-eval`, aligned with `main`.
+- Current pushed `main`: post-Session E handoff docs plus updated failure-analysis and improvement-roadmap docs are current.
+- Current work branch: `main`; create a short-lived branch such as `feature/source-label-eval` before code, metric, corpus, or report changes.
 
 DevOps policy:
 
@@ -99,9 +99,10 @@ Recommended remaining order:
 
 1. Keep `main` frozen and submission-safe unless a clearly verified improvement is ready.
 2. Continue `feature/source-label-eval` to replace the vacuous Hit@5 with real source labels or an anchor-style retrieval metric, preferably adding MRR.
-3. Use `feature/tx-power-extractor` for the next narrow answer-quality improvement after source-label evaluation is handled.
-4. Run a final submission audit after each merge that changes code, metrics, report text, or PDF artifacts.
-5. Use experimental branches for major work: `exp/rf-driver-api-corpus`, `exp/competitor-datasheets`, or similar.
+3. Add or maintain a failure taxonomy: missing-source, retrieval miss, generation/validation error, or gold mismatch.
+4. Use `feature/tx-power-extractor` for the next narrow answer-quality improvement after source-label evaluation is handled.
+5. Run a final submission audit after each merge that changes code, metrics, report text, or PDF artifacts.
+6. Use experimental branches for major work: `exp/rf-driver-api-corpus`, `exp/competitor-datasheets`, or similar.
 
 ## Session A - Report Evidence Freeze
 
@@ -396,6 +397,7 @@ Rerun targeted tests, rerun python eval/run_eval.py if feasible, regenerate repo
 **Likely implementation direction:**
 
 - Inspect core factual/numerical/negation questions first because many map cleanly to `datasheet_hier_chunk_0000`.
+- Label TX-power questions with the actual answer-bearing datasheet chunks, especially `datasheet_hier_chunk_0001_sub0` and `datasheet_hier_chunk_0030`, so the eval can distinguish "answer exists but retrieval missed it" from "answer missing from corpus."
 - Add labels in small batches and test `compute_hit_at_k()`.
 - Consider MRR using retrieved chunk rank when at least one labeled chunk appears.
 - Update report caveats from "Hit@5 is vacuous" to "Hit@5 is measured on N labeled questions" only after verification.
@@ -439,8 +441,10 @@ Do not rebuild indexes, add RF Driver API docs, add competitor datasheets, or do
 **Important context:**
 
 - The current max RF output power answer selects `+0 dBm` from a transmit-current table instead of the expected max-output-power fact.
-- Do not add RF characterization tables or new corpus on this branch.
-- If the gold "standard mode without PA" answer is not directly supported by current corpus text, answer conservatively and document the limitation.
+- The standard-mode TX-power answer is present but missed: `datasheet_hier_chunk_0001_sub0` states `+5 dBm TX at 9.7 mA`, and `datasheet_hier_chunk_0030` lists TX power setting `5` with `4.8 dBm` typical output power.
+- The current failure retrieves TRM chunks about `CMD_SET_TX20_POWER` and the `20 dBm PA` path. That evidence is semantically close but contradictory for "without PA" queries.
+- Do not add RF characterization tables or new corpus on this branch; fix retrieval, extraction, normalization, and validation.
+- If a future TX-power question is not supported by current corpus text, answer conservatively and document the limitation.
 
 **Copy-paste prompt:**
 
@@ -449,6 +453,7 @@ Start feature/tx-power-extractor as a narrow answer-quality branch.
 Read NEW_SESSION_BRIEF.md, WORK_PLAN.md, FOR_AI_MODELS.md, PROJECT_STATUS.md, src/generation.py, src/rag_system.py, tests/test_generation.py, eval/eval_results.json, and data/processed/chunks.json.
 Reproduce current RF TX-power answers. Add focused tests before implementation.
 Fix only the TX-power extractor/anchor behavior needed for maximum RF output power and standard-mode TX-power questions.
+Prefer datasheet `dBm` chunks and Table 7-1 evidence; penalize contradictory 20 dBm PA evidence for "without PA" queries; normalize 4.8 dBm typical output power to the +5 dBm specification answer; validate numeric answers against cited dBm evidence.
 Do not add corpus, rebuild indexes, rewrite gold answers, or touch unrelated retrieval logic.
 Run targeted tests and python eval/run_eval.py. If metrics or report claims change, update report.md, regenerate report.pdf, and verify pdfinfo report.pdf is <= 4 pages.
 ```

@@ -15,8 +15,9 @@ hallucinates on device-specific questions while RAG grounds answers in TI docume
 
 - `main` is the stable submission branch. Keep it runnable and do not force-push it.
 - Session D (`fix/answerability-normalization`) was merged to `main` at commit `48dbd30`.
-- Session E (`feature/negation-handling`) was verified and merged at commit `ab8b70c`; post-Session E handoff docs are current on `main`.
-- Current branch for the next improvement is `feature/source-label-eval`.
+- Session E (`feature/negation-handling`) was verified and merged at commit `ab8b70c`.
+- Current pushed `main` also includes updated failure-analysis and improvement-roadmap docs, including `RAG_EXPLICIT_DATA_FAILURE_CASE_STUDY.md`.
+- Create `feature/source-label-eval` from `main` for the next metric improvement.
 - Use short-lived branches for narrow optional improvements, for example `feature/negation-handling`, `feature/source-label-eval`, or `feature/tx-power-extractor`.
 - Use experimental branches for major work, for example `exp/rf-driver-api-corpus` or `exp/competitor-datasheets`.
 - Do not merge corpus expansion, gold-set rewrites, retrieval changes, or answer-generation behavior changes into `main` unless tests, `python eval/run_eval.py`, report updates, PDF regeneration, and `pdfinfo report.pdf` all pass.
@@ -161,7 +162,7 @@ Each entry: `{"question", "reference_answer", "must_cite_chunk_ids", "category"}
 
 | Category | Hit@5 | Answerable | Notes |
 |----------|-------|------------|-------|
-| numerical | 1.000 | 0.900 | 9/10 — only RF TX power (5 dBm) missing from corpus |
+| numerical | 1.000 | 0.900 | 9/10 — remaining miss is an RF TX-power retrieval/extraction error |
 | factual | 1.000 | 0.700 | 7/10 — one voltage normalization false negative fixed; remaining misses are TX-power/gold/corpus issues |
 | negation | 1.000 | 0.600 | 6/10 — LTE/USB/Ethernet/Wi-Fi are corpus-absent |
 | debugging | 1.000 | 0.400 | 4/10 — RF API symbols absent from corpus |
@@ -189,9 +190,10 @@ Session E verification before merging to `main`:
 The one-week extension should be used for controlled, reportable improvements:
 
 1. Continue `feature/source-label-eval` to add meaningful source labels or anchor-style source-hit evaluation, preferably with MRR. This addresses the biggest current evaluation weakness: Hit@5 is vacuous because `must_cite_chunk_ids` is empty.
-2. Create `feature/tx-power-extractor` for the narrow max RF output power / standard-mode TX-power answer failure after source-label evaluation is handled.
-3. Refresh `report.md` and `report.pdf` after metric or claim changes.
-4. Treat RF Driver API corpus expansion as experimental only (`exp/rf-driver-api-corpus`), because it requires source approval, index rebuild, manifest/report updates, and a full audit.
+2. Classify each failure as a missing-source issue, retrieval miss, generation/validation error, or gold-set mismatch. This prevents optimizing the wrong part of the pipeline.
+3. Create `feature/tx-power-extractor` for the narrow max RF output power / standard-mode TX-power failures after source-label evaluation is handled.
+4. Refresh `report.md` and `report.pdf` after metric or claim changes.
+5. Treat RF Driver API corpus expansion as experimental only (`exp/rf-driver-api-corpus`), because it requires source approval, index rebuild, manifest/report updates, and a full audit.
 
 ---
 
@@ -222,10 +224,15 @@ Ethernet, and Bluetooth Classic answers now cite `datasheet_hier_chunk_0000`. Th
 changed Answerable@Context because the metric checks gold reference key terms, not answer
 quality or citation quality.
 
-### 5. RF TX Power — "5 dBm Standard Mode" Not in Corpus
-**Problem:** Gold answer says "5 dBm standard mode" but corpus only has "0 dBm" and
-"+5 dBm output power setting" without the label "standard mode without PA."
-**Fix:** Either correct the gold answer or add the RF characterization table text to corpus.
+### 5. RF TX Power — Answer Present, Retrieval/Extraction Fails
+**Problem:** The standard-mode answer is present, but not in the same wording as the
+question. `datasheet_hier_chunk_0001_sub0` states `+5 dBm TX at 9.7 mA`, and
+`datasheet_hier_chunk_0030` lists TX power setting `5` with `4.8 dBm` typical output
+power. The system retrieves TRM chunks about `CMD_SET_TX20_POWER` and the `20 dBm PA`
+path instead.
+**Fix:** Add source labels for the TX-power questions, then add TX-power-specific
+retrieval/reranking, table-aware extraction for Table 7-1, normalization of `4.8 dBm`
+to `+5 dBm`, and numeric answer validation against cited `dBm` evidence.
 
 ### 6. Evaluation Metric Weakness — Source Labels Missing
 **Problem:** `must_cite_chunk_ids` is empty for all current gold entries, making Hit@5

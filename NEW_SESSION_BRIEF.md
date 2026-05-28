@@ -5,12 +5,16 @@ current state.
 
 ## Goal for the New Session
 
-Continue from the current local branch state on `feature/source-label-eval`, which was
-aligned with pushed `main`.
+Continue from pushed `main`, which now includes the failure-analysis case study and
+updated improvement roadmap.
 
 The highest-value next improvement is `feature/source-label-eval`: make retrieval
 evaluation meaningful by adding real source labels or an anchor-style metric, inspired
 by the comparison `insurance-rag` repo.
+
+After source-label evaluation, the next narrow answer-quality branch is
+`feature/tx-power-extractor`. Treat the standard-mode TX-power failure as an
+answer-present retrieval/extraction problem, not as missing corpus evidence.
 
 An internal architecture/tradeoff note now exists at `SYSTEM_DESIGN_NOTES.md`. Read it
 before proposing retrieval or indexing changes; it explains why the current FAISS+BM25
@@ -29,8 +33,8 @@ Standalone GitHub repo: `https://github.com/razyos/cc2652r7-rag-mid-assignment`
 Branch policy:
 
 - `main` is the stable submission branch. It should remain runnable and submission-ready.
-- Current pushed `main`: post-Session E handoff docs are current.
-- Current work branch: `feature/source-label-eval`.
+- Current pushed `main`: post-Session E handoff docs plus updated RAG failure-analysis docs are current.
+- Current work branch: `main`; create a short-lived feature branch before code or metric changes.
 - Session E commit chain on `main`: `93789fb Handle unsupported connectivity anchors`, `d9a2fe6 Update next session handoff`, `ab8b70c Refresh Session E verification artifacts`.
 - The current workspace should be clean, but inspect `git status` first.
 - Do not make risky changes directly on `main`.
@@ -50,7 +54,7 @@ Extension: one week from May 26, 2026. Treat the working deadline as Tuesday,
 June 2, 2026, with exact time still to confirm. If no time is provided, plan as if the
 deadline is June 2, 2026 at 12:00 noon Asia/Jerusalem.
 
-## Current State as of 2026-05-26
+## Current State as of 2026-05-28
 
 This is a university mid-assignment RAG project over TI CC2652R7 technical documentation.
 The system uses a manual 7-stage pipeline: dense FAISS retrieval with
@@ -58,7 +62,7 @@ The system uses a manual 7-stage pipeline: dense FAISS retrieval with
 datasheet anchor injection, context budgeting, deterministic extractors, and local
 Ollama `llama3.2` fallback.
 
-Sessions A-E are complete and merged to `main`. The Session E verification artifact commit is `ab8b70c`, and the post-Session E handoff docs are current on `main`:
+Sessions A-E are complete and merged to `main`. The Session E verification artifact commit is `ab8b70c`. Later documentation commits added `RAG_EXPLICIT_DATA_FAILURE_CASE_STUDY.md` and updated the report roadmap:
 
 - Unsupported connectivity questions now force `datasheet_hier_chunk_0000` into the final context:
   - Wi-Fi
@@ -73,6 +77,8 @@ Sessions A-E are complete and merged to `main`. The Session E verification artif
 - `eval/eval_results.json` was refreshed.
 - `report.md` was updated to describe unsupported-connectivity extraction behavior.
 - `report.pdf` was regenerated and remains 2 A4 pages.
+- `RAG_EXPLICIT_DATA_FAILURE_CASE_STUDY.md` explains the standard-mode TX-power failure: the answer exists in the datasheet, but retrieval selects misleading TRM evidence about `CMD_SET_TX20_POWER` and the `20 dBm PA` path.
+- `report.md`, `REPORT_NOTES.md`, `PROJECT_STATUS.md`, `WORK_PLAN.md`, `SYSTEM_DESIGN_NOTES.md`, `README.md`, and `FOR_AI_MODELS.md` now distinguish missing-source failures from answer-present retrieval/extraction failures.
 
 Latest verified Session E command results before merge:
 
@@ -152,6 +158,7 @@ Read these before changing code:
 13. `eval/gold_set.jsonl`
 14. `eval/eval_results.json`
 15. `report.md`
+16. `RAG_EXPLICIT_DATA_FAILURE_CASE_STUDY.md`
 
 ## Constraints
 
@@ -174,14 +181,21 @@ Read these before changing code:
    Continue `feature/source-label-eval`. Add meaningful retrieval evidence labels or
    anchor-style matching so Hit@5 is no longer vacuous. Add MRR if feasible.
 
-2. **TX-power extractor**
-   Create `feature/tx-power-extractor`. Fix the max RF output power / standard-mode TX-power
-   behavior without corpus expansion.
+2. **Failure taxonomy**
+   Classify failures as missing-source, retrieval miss, generation/validation error, or
+   gold mismatch. This prevents treating safe refusals and retriever mistakes as the
+   same kind of failure.
 
-3. **Report refresh**
+3. **TX-power extractor**
+   Create `feature/tx-power-extractor`. Fix the max RF output power / standard-mode TX-power
+   behavior without corpus expansion. Prefer datasheet `dBm` chunks, parse Table 7-1,
+   penalize contradictory `20 dBm PA` evidence for "without PA" queries, and normalize
+   `4.8 dBm` typical output to the `+5 dBm` specification answer.
+
+4. **Report refresh**
    Update `report.md`, regenerate `report.pdf`, and verify `pdfinfo report.pdf` is 4 pages or fewer.
 
-4. **Experimental only if time remains**
+5. **Experimental only if time remains**
    Consider `exp/rf-driver-api-corpus`. Do not start competitor datasheets unless everything
    else is complete and the user explicitly accepts the scope risk.
 
@@ -191,7 +205,7 @@ Read these before changing code:
 We are continuing the CC2652R7 RAG mid-assignment project in:
 /Users/razyosef/AI_course/mid_ass/
 
-Current date: May 26, 2026 Asia/Jerusalem.
+Current date: May 28, 2026 Asia/Jerusalem.
 Original deadline: Tuesday, May 26, 2026 at 12:00 noon Asia/Jerusalem.
 Extension: one week. Treat the working deadline as Tuesday, June 2, 2026, exact time TBD; assume 12:00 noon Asia/Jerusalem until clarified.
 
@@ -202,12 +216,11 @@ Branch policy:
 - main is the stable submission branch.
 - Do not make risky changes directly on main.
 - Do not force-push main.
-- Current local branch should be feature/source-label-eval.
+- Current local branch may be main. Create feature/source-label-eval before code or metric changes.
 
 Current state:
 - Sessions A-E are complete and merged to main.
-- Current pushed main has current post-Session E handoff docs.
-- feature/source-label-eval is aligned with main.
+- Current pushed main has current post-Session E handoff docs plus updated failure-analysis and roadmap docs.
 - The workspace should be clean, but inspect git status first.
 - Merged Session E changes:
   - Unsupported connectivity/support questions now anchor datasheet_hier_chunk_0000.
@@ -215,6 +228,7 @@ Current state:
   - LTE/cellular combined wording now says "LTE or cellular connectivity."
 - eval/eval_results.json, report.md, and report.pdf were refreshed.
 - SYSTEM_DESIGN_NOTES.md was added as an internal architecture/tradeoff note covering current design, industry alignment, and modern alternatives beyond FAISS/Chroma.
+- RAG_EXPLICIT_DATA_FAILURE_CASE_STUDY.md documents the standard-mode TX-power failure where the answer exists in the datasheet but retrieval selects misleading TRM evidence.
 - Latest verified metrics on `main`:
   - Hit@5 = 1.000 (50/50)
   - Answerable@Context = 0.560 (28/50)
@@ -236,22 +250,24 @@ First read:
 13. eval/gold_set.jsonl
 14. eval/eval_results.json
 15. report.md
+16. RAG_EXPLICIT_DATA_FAILURE_CASE_STUDY.md
 
 Task:
 1. Inspect git status and confirm the current branch/commit.
 2. Continue feature/source-label-eval. Goal: make Hit@5 meaningful by adding source labels or anchor-style source matching, preferably with MRR. Do not change the gold Q/A content unless explicitly necessary and documented.
-3. If present locally, use docs/superpowers/plans/2026-05-26-source-label-eval.md as the detailed implementation plan for source-label evaluation; otherwise follow WORK_PLAN.md Session F.
-4. Add focused tests for source-labeled Hit@k/MRR behavior before implementation.
-5. Run targeted tests and python eval/run_eval.py.
-6. If metrics or report claims change, update report.md, regenerate report.pdf with python scripts/render_report.py, and verify pdfinfo report.pdf is <= 4 pages.
-7. Do not migrate from FAISS or BM25 yet. If retrieval modernization is considered, first use SYSTEM_DESIGN_NOTES.md to frame options, then wait until source-label evaluation exists so alternatives can be measured.
+3. Label the TX-power questions with their true answer-bearing chunks, especially datasheet_hier_chunk_0001_sub0 and datasheet_hier_chunk_0030, so eval can distinguish retrieval misses from missing-source failures.
+4. If present locally, use docs/superpowers/plans/2026-05-26-source-label-eval.md as the detailed implementation plan for source-label evaluation; otherwise follow WORK_PLAN.md Session F.
+5. Add focused tests for source-labeled Hit@k/MRR behavior before implementation.
+6. Run targeted tests and python eval/run_eval.py.
+7. If metrics or report claims change, update report.md, regenerate report.pdf with python scripts/render_report.py, and verify pdfinfo report.pdf is <= 4 pages.
+8. Do not migrate from FAISS or BM25 yet. If retrieval modernization is considered, first use SYSTEM_DESIGN_NOTES.md to frame options, then wait until source-label evaluation exists so alternatives can be measured.
 
 Constraints:
 - Do not add RF Driver API docs except on exp/rf-driver-api-corpus.
 - Do not add competitor datasheets except on exp/competitor-datasheets.
 - Do not rebuild indexes unless on an experimental corpus/index branch.
 - Do not do broad retrieval/corpus refactors.
-- Do not start feature/tx-power-extractor until source-label evaluation is handled or intentionally deferred.
+- Do not start feature/tx-power-extractor until source-label evaluation is handled or intentionally deferred. When it starts, treat TX power as a targeted retrieval/table-extraction/validation fix, not a corpus expansion.
 - Do not treat FAISS/Chroma as the full design space; SYSTEM_DESIGN_NOTES.md lists stronger modern options. Still, no backend migration should happen before measurable source-label eval.
 - If full pytest stalls in model-heavy tests, stop it and report the attempt; do not claim full-suite pass.
 ```

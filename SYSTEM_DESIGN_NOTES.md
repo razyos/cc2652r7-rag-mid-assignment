@@ -640,13 +640,16 @@ Why not now:
 1. Hit@5 is not meaningful until source labels are added.
 2. RF Driver API questions are out of corpus.
 3. Competitor comparison questions are mostly out of corpus.
-4. TX-power extraction selects the wrong table evidence in at least one case.
+4. TX-power extraction/retrieval selects misleading evidence even when the correct
+   datasheet answer is present.
 5. Some gold answers appear inconsistent with the indexed CC2652R7 datasheet.
 6. Full test suite can stall on model-heavy paths.
 7. The LLM fallback can still produce generic or weak debugging answers.
 8. Context budgeting is word-based, not tokenizer-based.
 9. Score fusion is simple max-score merging, not calibrated fusion.
 10. Table parsing is not structured.
+11. Failure analysis needs to stay separated by root cause: missing source, retrieval
+    miss, generation/validation error, or gold mismatch.
 
 ## 15. Recommended Improvement Roadmap
 
@@ -661,7 +664,12 @@ Priority 2: TX-power extractor.
 
 - Branch: `feature/tx-power-extractor`.
 - Fix maximum RF output power and standard-mode TX-power behavior.
-- Prefer table-aware evidence if it can be done narrowly.
+- Treat this as an explicit-data retrieval/extraction problem, not a corpus gap.
+- Prefer datasheet chunks that contain `dBm`, `Typical Output Power`, and Table 7-1.
+- Penalize contradictory `20 dBm PA` evidence when the query says "without PA".
+- Normalize `4.8 dBm` typical output power and `+5 dBm TX` as equivalent for the
+  standard-mode answer.
+- Validate numeric `dBm` answers against cited retrieved `dBm` evidence.
 
 Priority 3: RF Driver API corpus expansion.
 
@@ -679,6 +687,14 @@ Priority 4: broader retrieval modernization.
   - Weaviate hybrid
   - pgvector if a relational app layer appears
   - ColBERT-style reranking/retrieval for hard cases
+
+Priority 5: failure taxonomy and answer policy.
+
+- Add a lightweight report/eval field or manual audit table that classifies failures as:
+  missing-source, retrieval miss, generation/validation error, or gold mismatch.
+- Keep refusals for missing-source RF API questions until the RF Driver API Reference is indexed.
+- Fix answer-present failures, such as standard-mode TX power, with targeted retrieval,
+  table parsing, and validation instead of broad corpus expansion.
 
 ## 16. Design Principles to Preserve
 

@@ -227,7 +227,18 @@ Use these in the report.
 - Cause: selected a transmit-current table cell instead of the maximum-output-power feature/spec.
 - Improvement: add "rf output power", "tx power", and "transmit power" to anchor injection terms and/or strengthen TX-power extractor ranking. Do this only after report safety.
 
-7. Fallback answer quality
+7. Explicit-data retrieval failure: standard-mode TX power
+
+- Question: "What is the RF transmit power in standard mode (without PA) for CC2652R7?"
+- Current answer: says the value is not directly stated and discusses `CMD_SET_TX20_POWER`.
+- Expected: `+5 dBm in standard mode`.
+- Correct corpus evidence:
+  - `datasheet_hier_chunk_0001_sub0`: CC2652R7 supports `+5 dBm TX at 9.7 mA`.
+  - `datasheet_hier_chunk_0030`: Table 7-1 maps TX power setting `5` to `4.8 dBm` typical output power.
+- Cause: retrieval selected TRM chunks about the `20 dBm PA` path because they share terms like "transmit power" and "PA". The query phrase "without PA" should have penalized those chunks, but generic retrieval treated them as relevant.
+- Improvement: label this question as answerable with required source chunks; add TX-power-specific retrieval/reranking; parse Table 7-1 as structured evidence; normalize `4.8 dBm` and `+5 dBm`; validate that any numeric answer to a `dBm` question cites retrieved `dBm` evidence.
+
+8. Fallback answer quality
 
 - Example: standard-mode TX power answer includes an uncited explanation and "However", which the prompt says to avoid.
 - Example: hard-fault debugging answer quotes generic exception text.
@@ -239,7 +250,7 @@ Report-first priority order:
 
 1. Keep `main` frozen as the stable submission branch unless a branch passes verification.
 2. Continue `feature/source-label-eval`; fill `must_cite_chunk_ids` for a defensible subset or add anchor-style matching so Hit@5 becomes meaningful, preferably with MRR.
-3. Next small answer-quality branch: `feature/tx-power-extractor`.
+3. Next small answer-quality branch: `feature/tx-power-extractor`, focused on the explicit-data TX-power failures rather than broad retrieval changes.
 4. Run a final submission audit after any merge.
 5. Larger branches: `exp/rf-driver-api-corpus` and `exp/competitor-datasheets`; rebuild indexes and rerun eval before considering merge.
 
